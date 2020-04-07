@@ -1,0 +1,110 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="include">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;hm;inl;inc;ipp;xsd</Extensions>
+    </Filter>
+    <Filter Include="source">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="include\tiny_gl_text_renderer">
+      <UniqueIdentifier>{bf862b76-daca-47d3-8ac0-68582366d140}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="include\canvas.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\canvas_manager.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\canvas_shader_sources.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\glew_routines.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\glfw_callback_functions.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\graph.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\graph_manager.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\grid.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\size_info.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\tiny_graph_plot.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\user_window.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\xy_range.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\tiny_gl_text_renderer\colors.h">
+      <Filter>include\tiny_gl_text_renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="include\tiny_gl_text_renderer\data_types.h">
+      <Filter>include\tiny_gl_text_renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="include\tiny_gl_text_renderer\font_table.h">
+      <Filter>include\tiny_gl_text_renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="include\tiny_gl_text_renderer\label.h">
+      <Filter>include\tiny_gl_text_renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="include\tiny_gl_text_renderer\mat3.h">
+      <Filter>include\tiny_gl_text_renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="include\tiny_gl_text_renderer\mat4.h">
+      <Filter>include\tiny_gl_text_renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="include\tiny_gl_text_renderer\text_rend_shader_sources.h">
+      <Filter>include\tiny_gl_text_renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="include\tiny_gl_text_renderer\text_renderer.h">
+      <Filter>include\tiny_gl_text_renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="include\tiny_gl_text_renderer\texture_filler.h">
+      <Filter>include\tiny_gl_text_renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="include\tiny_gl_text_renderer\vec2.h">
+      <Filter>include\tiny_gl_text_renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="include\tiny_gl_text_renderer\vec3.h">
+      <Filter>include\tiny_gl_text_renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="include\tiny_gl_text_renderer\vec4.h">
+      <Filter>include\tiny_gl_text_renderer</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="source\canvas.cpp">
+      <Filter>source</Filter>
+    </ClCompile>
+    <ClCompile Include="source\canvas_manager.cpp">
+      <Filter>source</Filter>
+    </ClCompile>
+    <ClCompile Include="source\glfw_callback_functions.cpp">
+      <Filter>source</Filter>
+    </ClCompile>
+    <ClCompile Include="source\main.cpp">
+      <Filter>source</Filter>
+    </ClCompile>
+    <ClCompile Include="source\text_renderer.cpp">
+      <Filter>source</Filter>
+    </ClCompile>
+    <ClCompile Include="source\user_window.cpp">
+      <Filter>source</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>
