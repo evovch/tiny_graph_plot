@@ -1,5 +1,4 @@
-#include <cstdio>
-#include <thread>
+//#include <cstdio>
 
 #include "tiny_graph_plot.h"
 
@@ -62,7 +61,6 @@ int main(int argc, char** argv)
     Graph& gr1 = graph_manager.CreateGraph();
     gr1.SetSharedBuffer(N, xy1);
     gr1.SetColor(tiny_gl_text_renderer::colors::red);
-    gr1.SetMarkerSize(10.0f);
     gr1.SetLineWidth(6.0f);
 
     Graph& gr2 = graph_manager.CreateGraph();
@@ -135,7 +133,7 @@ int main(int argc, char** argv)
     canv1.AddGraph(gr1);
     canv1.AddGraph(gr2);
     canv1.AddGraph(gr3);
-    //canv1.AddGraph(gr4);
+    canv1.AddGraph(gr4);
     canv1.AddGraph(gr5);
     canv1.AddGraph(gr6);
 
