@@ -201,7 +201,8 @@ Build instructions
 
 However, there is no fancy C++ used in this project, so building under other OS using other compiler should also work, maybe with minor modifications. I plan to introduce official Linux and GCC support soon.
 
-If you are absolutely not familiar how to import external code into you project, please refer to the last section.
+If you are absolutely not familiar how to import external code into you project, please refer to the
+[msvs2019_instructions](msvs2019_instructions.md).
 
 Limitations, known issues, bugs, further development
 ====================================================
@@ -218,9 +219,3 @@ On the other hand I've put some checks trying to avoid the crash or any kind of 
 There are some minor "features" which are obvious due to the limited scope of **tiny_graph_plot**. I never intended to write a perfect graph rendering software, but more focus on a minimalistic tool which will do the job. Thus, some text may overlap or not fit into the window, or whatever. Having such problems fixed is not worth the number of lines of code to be spent.
 
 As one of the next steps I plan to implement histograms, mainly because this is a very desired feature with many use-cases and also because it does not seem to be a big development taking into account the current state of the code.
-
-Detailed instructions on how to import **tiny_graph_plot** into your project
-============================================================================
-
-1.
-
