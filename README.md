@@ -43,7 +43,7 @@ int main(int argc, char** argv) {
 }
 ```
 
-A complete example is available here: ![](source/main.cpp).
+A complete example is available [here](source/main.cpp).
 
 Currently only one way of feeding the data into the graph is implemented. You have to manage your `tiny_graph_plot::Vec2<T>` array and supply it to the `tiny_graph_plot::Graph<T>::SetSharedBuffer()` call. Other methods might be implemented later on. For example, I consider implementing the possibility to have the `tiny_graph_plot::Graph<T>` object manage the memory. Another option which I have in mind is similar to how data is supplied to GPU through OpenGL buffers. This would allow the user to build a graph from more or less arbitrary data storage by providing the address offsets. I am open for suggestions!
 
