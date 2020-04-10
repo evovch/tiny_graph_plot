@@ -43,7 +43,7 @@ int main(int argc, char** argv) {
 }
 ```
 
-A complete example is available here: ![]().
+A complete example is available here: ![](source/main.cpp).
 
 Currently only one way of feeding the data into the graph is implemented. You have to manage your `tiny_graph_plot::Vec2<T>` array and supply it to the `tiny_graph_plot::Graph<T>::SetSharedBuffer()` call. Other methods might be implemented later on. For example, I consider implementing the possibility to have the `tiny_graph_plot::Graph<T>` object manage the memory. Another option which I have in mind is similar to how data is supplied to GPU through OpenGL buffers. This would allow the user to build a graph from more or less arbitrary data storage by providing the address offsets. I am open for suggestions!
 
@@ -194,6 +194,15 @@ In the end, the graphs are sent to the GPU which anyway operate using single pre
 
 However, if you already have you data in double precision, you can activate the corresponding version of the selector.
 
+Build instructions
+==================
+
+**tiny_graph_plot** has been written using MSVS 2019, the project and solution files are included. For MSVS 2019 compiler everything should work smoothly.
+
+However, there is no fancy C++ used in this project, so building under other OS using other compiler should also work, maybe with minor modifications. I plan to introduce official Linux and GCC support soon.
+
+If you are absolutely not familiar how to import external code into you project, please refer to the last section.
+
 Limitations, known issues, bugs, further development
 ====================================================
 
@@ -209,3 +218,9 @@ On the other hand I've put some checks trying to avoid the crash or any kind of 
 There are some minor "features" which are obvious due to the limited scope of **tiny_graph_plot**. I never intended to write a perfect graph rendering software, but more focus on a minimalistic tool which will do the job. Thus, some text may overlap or not fit into the window, or whatever. Having such problems fixed is not worth the number of lines of code to be spent.
 
 As one of the next steps I plan to implement histograms, mainly because this is a very desired feature with many use-cases and also because it does not seem to be a big development taking into account the current state of the code.
+
+Detailed instructions on how to import **tiny_graph_plot** into your project
+============================================================================
+
+1.
+
