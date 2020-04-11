@@ -46,6 +46,7 @@ void UserWindow::framebuffer_size_event(int width, int height) {
 #ifdef SET_CONTEXT
     glfwMakeContextCurrent(_window);
 #endif
+    if (width == 0 && height == 0) return; // Window minimized
     _window_w = width;
     _window_h = height;
     this->Reshape(width, height);
