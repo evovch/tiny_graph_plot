@@ -208,9 +208,7 @@ Limitations, known issues, bugs, further development
 ====================================================
 
 One very annoying bug I will be working on as the next step is related to the usage of **tiny_graph_plot** to draw multiple canvases.
-For unknown (yet!) reason for me, GLFW hangs if one of the windows is minimized. This is a showstopper at this point which makes the usage of **tiny_graph_plot** with multiple canvases very inconvenient.
-
-Related to that is another problem which is that the 'Esc' key keyboard event is only processed by the very first window. You can only terminate GLFW by closing the first window or, which is equivalent, by pressing 'Esc' key when the focus is on the first window.
+You can only terminate GLFW by closing the first window or, which is equivalent, by pressing 'Esc' key when the focus is on the first window.
 
 One serious limitation is that you can not infinitely zoom in or zoom out. At some point the image becomse glitchy. And the reason for that is pretty obvious. The GPU which draws everything works with single precision floating point numbers. These have quite a limited precision and you can easily hit their limits. This, however, can be fixed with a bunch of "hacks" (not really hacks, just clever tricks).
 Thus, if by some chance you tried to use **tiny_graph_plot** and you face the precision limitation and you're reading these lines (so many conditions!), please, contact me. I will adjust the code for your use case, make a summary and probably implement this improvement as a feature.
