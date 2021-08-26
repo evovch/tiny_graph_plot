@@ -200,6 +200,7 @@ Build instructions
 **tiny_graph_plot** has been written using MSVS 2019, the project and solution files are included. For MSVS 2019 compiler everything should work smoothly.
 
 However, there is no fancy C++ used in this project, so building under other OS using other compiler should also work, maybe with minor modifications. I plan to introduce official Linux and GCC support soon.
+Update 2021/08/26 - tested MSVS2017 support.
 
 If you are absolutely not familiar how to import external code into you project, please refer to the
 [msvs2019_instructions](msvs2019_instructions.md).
