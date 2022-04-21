@@ -6,6 +6,7 @@
 #include <algorithm>
 #include "GL/glew.h"
 #include "GLFW/glfw3.h"
+#include "stb_image_write.h"
 #include "canvas_shader_sources.h"
 #include "graph.h"
 #include "histogram1d.h"
@@ -1781,6 +1782,26 @@ void Canvas<T>::FixedAspRatCamera(void) {
 }
 
 template<typename T>
+void Canvas<T>::ExportSnapshot(void) {
+#ifdef DEBUG_CALLS
+    printf("Canvas::ExportSnapshot\n");
+#endif
+
+#ifdef _WIN32
+    size_t len[2];
+    char drive_dir[2][_MAX_PATH];
+    getenv_s(&len[0], drive_dir[0], _MAX_PATH, "HOMEDRIVE");
+    getenv_s(&len[1], drive_dir[1], _MAX_PATH, "HOMEPATH");
+    if (len[0] == 0 || len[1] == 0) return;
+    const std::string dir = std::string(drive_dir[0]) + std::string(drive_dir[1]);
+    const char filename[] = "snapshot.png";
+    this->ExportPNG(dir.c_str(), filename);
+#else
+    //TODO implement
+#endif
+}
+
+template<typename T>
 bool Canvas<T>::PointerInFrame(const double xs, const double ys) const {
 ////#ifdef SET_CONTEXT
 ////    glfwMakeContextCurrent(_window);
@@ -1818,6 +1839,17 @@ void Canvas<T>::ToggleGraphVisibility(const int iGraph) const {
     if (iGraph >= _graphs.size()) return;
     const bool curVisibility = _graphs.at(iGraph)->GetVisible();
     _graphs.at(iGraph)->SetVisible(!curVisibility);
+}
+
+template<typename T>
+void Canvas<T>::ExportPNG(const char* const dir, const char* const filename) const {
+    unsigned char* const data = new unsigned char[_window_h * _window_w * 3];
+    if (!data) return;
+    glReadPixels(0, 0, _window_w, _window_h, GL_RGB, GL_UNSIGNED_BYTE, data);
+    const std::string path = std::string(dir) + std::string("\\") + std::string(filename);
+    stbi_flip_vertically_on_write(1);
+    stbi_write_png(path.c_str(), _window_w, _window_h, 3, data, _window_w * 3 * sizeof(unsigned char));
+    delete[] data;
 }
 
 template<typename T>

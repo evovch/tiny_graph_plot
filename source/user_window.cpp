@@ -125,6 +125,9 @@ void UserWindow::key_event(int key, int scancode, int action, int mods) {
             this->FixedAspRatCamera();
             this->window_refresh_event();
             break;
+        case GLFW_KEY_F1:
+            this->ExportSnapshot();
+            break;
 
         case GLFW_KEY_GRAVE_ACCENT: this->ToggleGraphVisibility(0); this->window_refresh_event(); break;
         case GLFW_KEY_1: this->ToggleGraphVisibility(1);  this->window_refresh_event(); break;

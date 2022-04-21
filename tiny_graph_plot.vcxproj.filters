@@ -112,5 +112,8 @@
     <ClCompile Include="source\user_window.cpp">
       <Filter>source</Filter>
     </ClCompile>
+    <ClCompile Include="source\stb_image_write_impl.cpp">
+      <Filter>source</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

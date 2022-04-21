@@ -74,7 +74,7 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>$(ProjectDir)\include\;$(SolutionDir)\third_party\glfw-3.3.2.bin.WIN64\include\;$(SolutionDir)\third_party\glew-2.1.0\include\;$(IncludePath)</IncludePath>
+    <IncludePath>$(ProjectDir)\include\;$(SolutionDir)\third_party\glfw-3.3.2.bin.WIN64\include\;$(SolutionDir)\third_party\glew-2.1.0\include\;$(SolutionDir)\third_party\stbi\;$(IncludePath)</IncludePath>
     <LibraryPath>$(SolutionDir)\third_party\glfw-3.3.2.bin.WIN64\lib-vc2019\;$(SolutionDir)\third_party\glew-2.1.0\lib\Release\x64\;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -82,7 +82,7 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>$(ProjectDir)\include\;$(SolutionDir)\third_party\glfw-3.3.2.bin.WIN64\include\;$(SolutionDir)\third_party\glew-2.1.0\include\;$(IncludePath)</IncludePath>
+    <IncludePath>$(ProjectDir)\include\;$(SolutionDir)\third_party\glfw-3.3.2.bin.WIN64\include\;$(SolutionDir)\third_party\glew-2.1.0\include\;$(SolutionDir)\third_party\stbi\;$(IncludePath)</IncludePath>
     <LibraryPath>$(SolutionDir)\third_party\glfw-3.3.2.bin.WIN64\lib-vc2019\;$(SolutionDir)\third_party\glew-2.1.0\lib\Release\x64\;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -180,6 +180,7 @@
     <ClCompile Include="source\canvas_manager.cpp" />
     <ClCompile Include="source\glfw_callback_functions.cpp" />
     <ClCompile Include="source\main.cpp" />
+    <ClCompile Include="source\stb_image_write_impl.cpp" />
     <ClCompile Include="source\text_renderer.cpp" />
     <ClCompile Include="source\user_window.cpp" />
   </ItemGroup>

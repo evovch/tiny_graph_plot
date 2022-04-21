@@ -164,11 +164,13 @@ private:
     virtual void ResetCamera(void) override;
     virtual void SetPrevViewport(void) override;
     virtual void FixedAspRatCamera(void) override;
+    virtual void ExportSnapshot(void) override;
     virtual bool PointerInFrame(const double xs, const double ys) const override;
     virtual void ClampToFrame(const double xs, const double ys,
                               double& o_xs, double& o_ys) const override;
     virtual void SaveStartState(void) override;
     virtual void ToggleGraphVisibility(const int iGraph) const override;
+    void ExportPNG(const char* const dir, const char* const filename) const;
     void UpdateMatricesReshape(void);
     void UpdateMatricesPanZoom(void);
     // Transformation matrices are stored using single precision floats,

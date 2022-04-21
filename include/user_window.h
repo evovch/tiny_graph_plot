@@ -45,6 +45,7 @@ protected:
     virtual void ResetCamera(void) = 0;
     virtual void SetPrevViewport(void) = 0;
     virtual void FixedAspRatCamera(void) = 0;
+    virtual void ExportSnapshot(void) = 0;
     virtual bool PointerInFrame(const double xs, const double ys) const = 0;
     virtual void ClampToFrame(const double xs, const double ys,
                               double& o_xs, double& o_ys) const = 0;
