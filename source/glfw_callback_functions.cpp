@@ -36,6 +36,11 @@ void mouse_pos_callback(GLFWwindow* window, double xpos, double ypos) {
     if (userwin) userwin->mouse_pos_event(xpos, ypos);
 }
 
+void scroll_callback(GLFWwindow* window, double xoffset, double yoffset) {
+    UserWindow* userwin = reinterpret_cast<UserWindow*>(glfwGetWindowUserPointer(window));
+    if (userwin) userwin->scroll_event(xoffset, yoffset);
+}
+
 void window_pos_callback(GLFWwindow* window, int xpos, int ypos) {
     UserWindow* userwin = reinterpret_cast<UserWindow*>(glfwGetWindowUserPointer(window));
     if (userwin) userwin->window_pos_event(xpos, ypos);

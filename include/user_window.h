@@ -32,6 +32,7 @@ public:
     void key_event(int key, int scancode, int action, int mods);
     void mouse_button_event(int button, int action, int mods);
     void mouse_pos_event(double xs, double ys_inv);
+    void scroll_event(double xoffset, double yoffset);
 protected:
     virtual void CenterView(const double xs,  const double ys) = 0;
     virtual void Pan       (const double xs,  const double ys) = 0;
@@ -48,6 +49,7 @@ protected:
     virtual void ClampToFrame(const double xs, const double ys,
                               double& o_xs, double& o_ys) const = 0;
     virtual void SaveStartState(void) = 0;
+    virtual void ToggleGraphVisibility(const int iGraph) const = 0;
     virtual void Clear(void) const = 0;
     virtual void Reshape(int p_width, int p_height) = 0;
     virtual void Draw(void) /*const*/ = 0;

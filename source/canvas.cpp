@@ -8,6 +8,7 @@
 #include "GLFW/glfw3.h"
 #include "canvas_shader_sources.h"
 #include "graph.h"
+#include "histogram1d.h"
 
 namespace tiny_graph_plot
 {
@@ -107,6 +108,11 @@ void Canvas<T>::AddGraph(const Graph<T>& p_graph) {
 }
 
 template<typename T>
+void Canvas<T>::AddHistogram(const Histogram1d<T, unsigned long>& p_histo) {
+    _histograms.push_back(&p_histo);
+}
+
+template<typename T>
 void Canvas<T>::Show(void) {
 #ifdef DEBUG_CALLS
     printf("Canvas::Show\n");
@@ -127,6 +133,10 @@ void Canvas<T>::Show(void) {
     for (const auto* const gr : _graphs) {
         total_size += gr->GetSizeInfo();
         _total_xy_range.Include(gr->GetXYrange());
+    }
+    for (const auto* const histo : _histograms) {
+        total_size += histo->GetSizeInfo();
+        _total_xy_range.Include(histo->GetXYrange());
     }
 
     // Allocate vertex buffer space for all graphs. ------------------------------
@@ -157,8 +167,12 @@ void Canvas<T>::Show(void) {
 
     SizeInfo cur_offset; // Zeroed on construction
     for (const auto* const gr : _graphs) {
-        this->SendGraphToGPU(gr, cur_offset);
+        this->SendDrawableToGPU(gr, cur_offset);
         cur_offset += gr->GetSizeInfo();
+    }
+    for (const auto* const histo : _histograms) {
+        this->SendDrawableToGPU(histo, cur_offset);
+        cur_offset += histo->GetSizeInfo();
     }
 
     // +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -167,7 +181,7 @@ void Canvas<T>::Show(void) {
     const int line_height = (int)(_font_size * (float)tiny_gl_text_renderer::CHAR_HEIGHT);
     const size_t BUFSIZE = 32;
     char buf[BUFSIZE];
-    
+
     int i_label = 0;
     int voffset = _v_offset;
 
@@ -335,8 +349,16 @@ void Canvas<T>::Draw(void) /*const*/ {
     this->SwitchToFrame();
     SizeInfo cur_offset; // Zeroed on construction
     for (const auto* const gr : _graphs) {
-        this->DrawGraph(gr, cur_offset);
+        if (gr->GetVisible()) {
+            this->DrawDrawable(gr, cur_offset);
+        }
         cur_offset += gr->GetSizeInfo();
+    }
+    for (const auto* const histo : _histograms) {
+        if (histo->GetVisible()) {
+            this->DrawDrawable(histo, cur_offset);
+        }
+        cur_offset += histo->GetSizeInfo();
     }
 
     this->SwitchToFullWindow();
@@ -584,7 +606,7 @@ void Canvas<T>::Reshape(int p_width, int p_height) {
 
     const int ch_width = (int)(_font_size * (float)tiny_gl_text_renderer::CHAR_WIDTH);
     const int line_height = (int)(_font_size * (float)tiny_gl_text_renderer::CHAR_HEIGHT);
-    
+
     const int line_len_x = (int)_x_axis_title.size();
     _text_rend.UpdatePosition(
         _window_w - _margin_xr_pix - line_len_x * ch_width,
@@ -985,7 +1007,7 @@ void Canvas<T>::DrawVref(void) const {
 
         glBindVertexArray(_vaoID_vref);
         glBindBuffer(GL_ARRAY_BUFFER, _vboID_vref);
-        glBufferSubData(GL_ARRAY_BUFFER, 0, 
+        glBufferSubData(GL_ARRAY_BUFFER, 0,
             n_vert * sizeof(vertex_colored_t), vertices);
         glBindVertexArray(0);
     }
@@ -1096,7 +1118,7 @@ void Canvas<T>::DrawFrame(void) const {
 // 5. Graphs =====================================================================
 
 template<typename T>
-void Canvas<T>::SendGraphToGPU(const Graph<T>* const p_graph,
+void Canvas<T>::SendDrawableToGPU(const Drawable<T>* const p_graph,
     const SizeInfo& p_offset) const {
 #ifdef DEBUG_CALLS
     printf("Canvas::SendGraphToGPU\n");
@@ -1155,7 +1177,7 @@ void Canvas<T>::SendGraphToGPU(const Graph<T>* const p_graph,
 }
 
 template<typename T>
-void Canvas<T>::DrawGraph(const Graph<T>* const p_graph,
+void Canvas<T>::DrawDrawable(const Drawable<T>* const p_graph,
     const SizeInfo& p_offset) const {
 #ifdef DEBUG_CALLS
     printf("Canvas::DrawGraph\n");
@@ -1323,7 +1345,8 @@ void Canvas<T>::DrawCircles(const double xs, const double ys) const {
     this->SwitchToFrame(); //TODO move outside?
 
     const unsigned int n_vert = (unsigned int)_graphs.size();
-    const unsigned int n_markers = (unsigned int)_graphs.size();
+    //const unsigned int n_markers = (unsigned int)_graphs.size();
+    unsigned int n_markers = 0;
 
     // Send vertices and colors. -------------------------------------------------
     {
@@ -1333,12 +1356,14 @@ void Canvas<T>::DrawCircles(const double xs, const double ys) const {
         const Vec4f pr = this->TransformToVisrange(xs, ys);
         int i_gr = 0;
         for (const auto* const gr : _graphs) {
+            if (!gr->GetVisible()) continue;
             const T y = gr->Evaluate(static_cast<T>(pr.x()));
             vertices[i_gr]._coords = point_t(
                 pr.x(), static_cast<float>(y), 0.0f, 1.0f);
             vertices[i_gr]._color = gr->GetColor();
             markers[i_gr].v0 = i_gr;
             i_gr++;
+            n_markers++;
         }
 
         glBindVertexArray(_vaoID_c);
@@ -1532,13 +1557,13 @@ void Canvas<T>::UpdateTexAxesValues(void) {
     for (unsigned int i = nx; i < _n_x_axis_value_labels_max; i++) {
         _text_rend.UpdateLabel(" ", _x_axis_values_lables_start_idx + (size_t)i);
     }
-    
+
     // Y axis --------------------------------------------------------------------
 
     for (unsigned int i = 0; i < ny; i++) {
         const unsigned int idx0 = wires[nx_+i].v0;
         //const unsigned int idx1 = wires[nx_+i].v1;
-        
+
         snprintf(buf, BUFSIZE, "%g", vertices[idx0]._coords.y());
         const int offset = (ch_width * (int)strlen(buf)) / 2;
         _text_rend.UpdateLabel(buf, _y_axis_values_lables_start_idx + (size_t)i);
@@ -1747,7 +1772,7 @@ void Canvas<T>::FixedAspRatCamera(void) {
         _visible_range.SetXrange1(
             static_cast<float>(midx - new_half_range * asp_rat),
             static_cast<float>(midx + new_half_range * asp_rat));
-    } 
+    }
 
     this->UpdateMatricesReshape();
     this->UpdateMatricesPanZoom();
@@ -1786,6 +1811,13 @@ void Canvas<T>::ClampToFrame(const double xs, const double ys,
 template<typename T>
 void Canvas<T>::SaveStartState(void) {
     _visible_range_start = _visible_range;
+}
+
+template<typename T>
+void Canvas<T>::ToggleGraphVisibility(const int iGraph) const {
+    if (iGraph >= _graphs.size()) return;
+    const bool curVisibility = _graphs.at(iGraph)->GetVisible();
+    _graphs.at(iGraph)->SetVisible(!curVisibility);
 }
 
 template<typename T>
@@ -1887,7 +1919,7 @@ void Canvas<T>::UpdateMatricesReshape(void) {
     ////glProgramUniformMatrix4fv(_progID_onscr_w, _s2v_unif_onscr_w, 1, GL_FALSE, _screen_to_viewport.GetData());
     ////glProgramUniformMatrix4fv(_progID_onscr_w, _v2c_unif_onscr_w, 1, GL_FALSE, _viewport_to_clip.GetData());
     glProgramUniformMatrix4fv(_progID_onscr_w, _s2c_unif_onscr_w, 1, GL_FALSE, _screen_to_clip.GetData());
-    
+
     glProgramUniformMatrix4fv(_progID_m, _s2v_unif_m, 1, GL_FALSE, _screen_to_viewport.GetData());
     glProgramUniformMatrix4fv(_progID_m, _v2c_unif_m, 1, GL_FALSE, _viewport_to_clip.GetData());
     glProgramUniformMatrix4fv(_progID_m, _s2c_unif_m, 1, GL_FALSE, _screen_to_clip.GetData());

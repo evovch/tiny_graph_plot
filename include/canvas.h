@@ -22,7 +22,9 @@ using tiny_gl_text_renderer::Mat4d;
 
 typedef unsigned int GLuint;
 
+template<typename T> class Drawable;
 template<typename T> class Graph;
+template<typename T, typename VALUETYPE> class Histogram1d;
 class SizeInfo;
 
 template<typename T>
@@ -35,6 +37,7 @@ private:
     virtual ~Canvas(void) override;
 public:
     void AddGraph(const Graph<T>& p_graph);
+    void AddHistogram(const Histogram1d<T, unsigned long>& p_histo);
     void Show(void);
     virtual void Draw(void) /*const*/ override;
 private:
@@ -53,8 +56,8 @@ private:
     void SendFrameVerticesToGPU(void) const;
     void FillInFrame(void) const;
     void DrawFrame(void) const;
-    void SendGraphToGPU(const Graph<T>* const p_graph, const SizeInfo& p_offset) const;
-    void DrawGraph     (const Graph<T>* const p_graph, const SizeInfo& p_offset) const;
+    void SendDrawableToGPU(const Drawable<T>* const p_graph, const SizeInfo& p_offset) const;
+    void DrawDrawable     (const Drawable<T>* const p_graph, const SizeInfo& p_offset) const;
     virtual void DrawCursor(const double xs, const double ys) const override;
     virtual void DrawSelRectangle(const double xs0, const double ys0,
                           const double xs1, const double ys1) const override;
@@ -143,6 +146,7 @@ private:
     // ----------------
 private:
     std::vector<const Graph<T>*> _graphs;
+    std::vector<const Histogram1d<T, unsigned long>*> _histograms;
     XYrange<float> _total_xy_range;
     XYrange<float> _visible_range;
     XYrange<float> _visible_range_start; //!< At mouse press
@@ -164,6 +168,7 @@ private:
     virtual void ClampToFrame(const double xs, const double ys,
                               double& o_xs, double& o_ys) const override;
     virtual void SaveStartState(void) override;
+    virtual void ToggleGraphVisibility(const int iGraph) const override;
     void UpdateMatricesReshape(void);
     void UpdateMatricesPanZoom(void);
     // Transformation matrices are stored using single precision floats,

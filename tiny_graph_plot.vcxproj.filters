@@ -86,6 +86,12 @@
     <ClInclude Include="include\tiny_gl_text_renderer\vec4.h">
       <Filter>include\tiny_gl_text_renderer</Filter>
     </ClInclude>
+    <ClInclude Include="include\histogram1d.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\drawable.h">
+      <Filter>include</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="source\canvas.cpp">

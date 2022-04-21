@@ -22,8 +22,8 @@ UserWindow::UserWindow(GLFWwindow* window, const unsigned int w, const unsigned 
 }
 
 void UserWindow::SetCallbacks(void) const {
-#ifdef DEBUG_CALLS
-    printf("Canvas::SetCallbacks\n");
+#ifdef DEBUG_WIN_ACTIONS
+    printf("UserWindow::SetCallbacks\n");
 #endif
 #ifdef SET_CONTEXT
     glfwMakeContextCurrent(_window);
@@ -33,6 +33,7 @@ void UserWindow::SetCallbacks(void) const {
     glfwSetKeyCallback(_window, glfw_callback_functions::key_callback);
     glfwSetMouseButtonCallback(_window, glfw_callback_functions::mouse_button_callback);
     glfwSetCursorPosCallback(_window, glfw_callback_functions::mouse_pos_callback);
+    glfwSetScrollCallback(_window, glfw_callback_functions::scroll_callback);
     glfwSetWindowPosCallback(_window, glfw_callback_functions::window_pos_callback);
     glfwSetWindowIconifyCallback(_window, glfw_callback_functions::window_iconify_callback);
     glfwSetWindowMaximizeCallback(_window, glfw_callback_functions::window_maximize_callback);
@@ -41,7 +42,7 @@ void UserWindow::SetCallbacks(void) const {
 
 void UserWindow::framebuffer_size_event(int width, int height) {
 #ifdef DEBUG_WIN_ACTIONS
-    printf("Canvas::framebuffer_size_event: %d, %d\n", width, height);
+    printf("UserWindow::framebuffer_size_event: %d, %d\n", width, height);
 #endif
 #ifdef SET_CONTEXT
     glfwMakeContextCurrent(_window);
@@ -90,7 +91,7 @@ void UserWindow::window_focus_event(int focused) {
 
 void UserWindow::window_refresh_event() {
 #ifdef DEBUG_WIN_ACTIONS
-    printf("Canvas::window_refresh_event\n");
+    printf("UserWindow::window_refresh_event\n");
 #endif
 #ifdef SET_CONTEXT
     glfwMakeContextCurrent(_window);
@@ -101,11 +102,11 @@ void UserWindow::window_refresh_event() {
 }
 
 void UserWindow::key_event(int key, int scancode, int action, int mods) {
-#ifdef DEBUG_WIN_ACTIONS
-    printf("Canvas::key_event\n");
-#endif
 #ifdef SET_CONTEXT
     glfwMakeContextCurrent(_window);
+#endif
+#ifdef DEBUG_WIN_ACTIONS
+    printf("UserWindow::key_event\n");
 #endif
     if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS) {
         glfwSetWindowShouldClose(_window, GLFW_TRUE);
@@ -124,6 +125,19 @@ void UserWindow::key_event(int key, int scancode, int action, int mods) {
             this->FixedAspRatCamera();
             this->window_refresh_event();
             break;
+
+        case GLFW_KEY_GRAVE_ACCENT: this->ToggleGraphVisibility(0); this->window_refresh_event(); break;
+        case GLFW_KEY_1: this->ToggleGraphVisibility(1);  this->window_refresh_event(); break;
+        case GLFW_KEY_2: this->ToggleGraphVisibility(2);  this->window_refresh_event(); break;
+        case GLFW_KEY_3: this->ToggleGraphVisibility(3);  this->window_refresh_event(); break;
+        case GLFW_KEY_4: this->ToggleGraphVisibility(4);  this->window_refresh_event(); break;
+        case GLFW_KEY_5: this->ToggleGraphVisibility(5);  this->window_refresh_event(); break;
+        case GLFW_KEY_6: this->ToggleGraphVisibility(6);  this->window_refresh_event(); break;
+        case GLFW_KEY_7: this->ToggleGraphVisibility(7);  this->window_refresh_event(); break;
+        case GLFW_KEY_8: this->ToggleGraphVisibility(8);  this->window_refresh_event(); break;
+        case GLFW_KEY_9: this->ToggleGraphVisibility(9);  this->window_refresh_event(); break;
+        case GLFW_KEY_0: this->ToggleGraphVisibility(10); this->window_refresh_event(); break;
+
         default:
             break;
         }
@@ -137,9 +151,8 @@ void UserWindow::mouse_button_event(int button, int action, int mods) {
     double xs; double ys_inv;
     glfwGetCursorPos(_window, &xs, &ys_inv);
     const double ys = (double)_window_h - ys_inv;
-
 #ifdef DEBUG_WIN_ACTIONS
-    printf("Canvas::mouse_button_event: % 0.6f\t% 0.6f\n", xs, ys);
+    printf("UserWindow::mouse_button_event: % 0.6f\t% 0.6f\n", xs, ys);
 #endif
 
     if (action == GLFW_PRESS &&
@@ -199,10 +212,9 @@ void UserWindow::mouse_pos_event(double xs, double ys_inv) {
 #ifdef SET_CONTEXT
     glfwMakeContextCurrent(_window);
 #endif
-
     const double ys = (double)_window_h - ys_inv;
 #ifdef DEBUG_WIN_ACTIONS
-    printf("Canvas::mouse_pos_event: % 0.6f\t% 0.6f\n", xs, ys);
+    printf("UserWindow::mouse_pos_event: % 0.6f\t% 0.6f\n", xs, ys);
 #endif
 
     _mouse_moved = true;
@@ -246,6 +258,27 @@ void UserWindow::mouse_pos_event(double xs, double ys_inv) {
     _xs_prev = xs; _ys_prev = ys;
 
     this->window_refresh_event();
+}
+
+void UserWindow::scroll_event(double xoffset, double yoffset) {
+#ifdef SET_CONTEXT
+    glfwMakeContextCurrent(_window);
+#endif
+#ifdef DEBUG_WIN_ACTIONS
+    printf("UserWindow::scroll_event: % 0.6f\t% 0.6f\n", xoffset, yoffset);
+#endif
+
+//TODO implement
+
+//    double xs; double ys_inv;
+//    glfwGetCursorPos(_window, &xs, &ys_inv);
+//    const double ys = (double)_window_h - ys_inv;
+//
+//    _xs_start = xs; _ys_start = ys;
+//    constexpr double s = 1.0;
+//    this->ZoomF(_xs_start + s * xoffset, _ys_start + s * yoffset);
+//
+//    this->window_refresh_event();
 }
 
 } // end of namespace tiny_graph_plot
