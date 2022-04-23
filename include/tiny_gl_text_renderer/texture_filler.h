@@ -6,9 +6,9 @@
 
 namespace tiny_gl_text_renderer {
 
-const int CHAR_WIDTH = 16;
-const int CHAR_HEIGHT = 18;
-const int OFFSET = 2;
+constexpr int CHAR_WIDTH = 16;
+constexpr int CHAR_HEIGHT = 18;
+constexpr int OFFSET = 2;
 
 /**
     The target 'texture' must be of the following structure:

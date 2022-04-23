@@ -27,12 +27,13 @@ template<typename T>
 Canvas<T>& CanvasManager<T>::CreateCanvas(const char* name,
     const unsigned int w, const unsigned int h,
     const unsigned int x, const unsigned int y) {
-	GLFWwindow* window = glfwCreateWindow(w, h, name, NULL, NULL);
-	if (!window) {
-		fprintf(stderr, "GLFW: error: failed to create a window.\n\nAborting.\n");
-		glfwTerminate();
-		exit(EXIT_FAILURE);
-	}
+    glfwWindowHint(GLFW_SAMPLES, 4);
+    GLFWwindow* window = glfwCreateWindow(w, h, name, NULL, NULL);
+    if (!window) {
+        fprintf(stderr, "GLFW: error: failed to create a window.\n\nAborting.\n");
+        glfwTerminate();
+        exit(EXIT_FAILURE);
+    }
     glfwSetWindowPos(window, x, y);
     glfwMakeContextCurrent(window);
 
@@ -43,9 +44,9 @@ Canvas<T>& CanvasManager<T>::CreateCanvas(const char* name,
 
     glfwHideWindow(window);
 
-	Canvas<T>* new_canv = new Canvas<T>(window, w, h);
-	_canvases.push_back(new_canv);
-	return *new_canv;
+    Canvas<T>* new_canv = new Canvas<T>(window, w, h);
+    _canvases.push_back(new_canv);
+    return *new_canv;
 }
 
 template<typename T>

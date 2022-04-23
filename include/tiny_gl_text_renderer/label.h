@@ -53,7 +53,7 @@ public:
     __forceinline void UpdatePositionY(const int y) { _y = y; }
     __forceinline void UpdateRotation(const float angle) { _angle = angle; }
     const Mat3f GetMatrix(void) const {
-        const double deg_to_rad = 3.14159265358979323846 / 180.0;
+        constexpr double deg_to_rad = 3.14159265358979323846 / 180.0;
         const float angle_rad = _angle * (float)deg_to_rad;
         const float sintheta = sinf(angle_rad);
         const float costheta = cosf(angle_rad);

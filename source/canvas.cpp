@@ -566,6 +566,7 @@ void Canvas<T>::Init(void) {
     //glEnable(GL_STENCIL_TEST);
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	glEnable(GL_MULTISAMPLE);
     // This has to be done after the program has been compiled and the uniform
     // variable located
     glProgramUniform4fv(_progID_onscr_q, _fr_bg_unif_onscr_q, 1,
