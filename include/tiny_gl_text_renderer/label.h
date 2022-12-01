@@ -1,6 +1,7 @@
 #pragma once
 
 #include <string>
+#include <cmath>
 
 #include "data_types.h"
 #include "mat3.h"
@@ -55,8 +56,8 @@ public:
     const Mat3f GetMatrix(void) const {
         constexpr double deg_to_rad = 3.14159265358979323846 / 180.0;
         const float angle_rad = _angle * (float)deg_to_rad;
-        const float sintheta = sinf(angle_rad);
-        const float costheta = cosf(angle_rad);
+        const float sintheta = std::sin(angle_rad);
+        const float costheta = std::cos(angle_rad);
         return Mat3f(
             _scaling * costheta, -_scaling * sintheta, 0.0f,
             _scaling * sintheta,  _scaling * costheta, 0.0f,
