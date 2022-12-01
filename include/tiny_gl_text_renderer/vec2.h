@@ -2,6 +2,10 @@
 
 #include <cstdio>
 
+#if defined(__linux__)
+#define __forceinline inline
+#endif
+
 namespace tiny_gl_text_renderer {
 
 template<typename T>
