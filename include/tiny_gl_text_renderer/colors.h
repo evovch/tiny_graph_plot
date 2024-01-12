@@ -2,8 +2,10 @@
 
 #include "data_types.h"
 
-namespace tiny_gl_text_renderer {
-namespace colors {
+namespace tiny_gl_text_renderer
+{
+namespace colors
+{
 
 const color_t sel_color = { 0.0f,  0.5f,  0.5f,  1.0f };
 

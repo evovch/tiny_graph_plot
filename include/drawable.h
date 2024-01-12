@@ -4,7 +4,8 @@
 #include "size_info.h"
 #include "xy_range.h"
 
-namespace tiny_graph_plot {
+namespace tiny_graph_plot
+{
 
 using tiny_gl_text_renderer::color_t;
 
@@ -12,8 +13,8 @@ template<typename T>
 class Drawable
 {
 protected:
-    Drawable(void) :
-        _points(nullptr),
+    Drawable(void)
+    :   _points(nullptr),
         _size_info(0, 0, 0, 0),
         _xy_range(0.0, 1.0, 0.0, 1.0) {
     }

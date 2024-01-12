@@ -5,7 +5,8 @@
 
 #include "drawable.h"
 
-namespace tiny_graph_plot {
+namespace tiny_graph_plot
+{
 
 template<typename T> class GraphManager;
 

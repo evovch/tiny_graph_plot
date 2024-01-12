@@ -12,7 +12,8 @@
 
 struct GLFWwindow;
 
-namespace tiny_graph_plot {
+namespace tiny_graph_plot
+{
 
 using tiny_gl_text_renderer::color_t;
 using tiny_gl_text_renderer::Vec4f;

@@ -4,7 +4,8 @@
 
 #include "font_table.h"
 
-namespace tiny_gl_text_renderer {
+namespace tiny_gl_text_renderer
+{
 
 constexpr int CHAR_WIDTH = 16;
 constexpr int CHAR_HEIGHT = 18;

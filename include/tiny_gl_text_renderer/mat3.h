@@ -2,7 +2,8 @@
 
 #include "vec3.h"
 
-namespace tiny_gl_text_renderer {
+namespace tiny_gl_text_renderer
+{
 
 template<typename T>
 class Mat3

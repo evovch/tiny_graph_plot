@@ -5,7 +5,8 @@
 
 #include "GL/glew.h"
 
-namespace tiny_graph_plot {
+namespace tiny_graph_plot
+{
 
 void init_glew(void) {
     GLenum err = glewInit();

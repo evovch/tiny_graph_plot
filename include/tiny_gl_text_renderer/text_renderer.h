@@ -6,7 +6,8 @@
 #include "mat4.h"
 #include "label.h"
 
-namespace tiny_gl_text_renderer {
+namespace tiny_gl_text_renderer
+{
 
 typedef unsigned int GLuint;
 

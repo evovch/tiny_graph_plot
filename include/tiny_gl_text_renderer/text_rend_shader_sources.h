@@ -1,6 +1,7 @@
 #pragma once
 
-namespace tiny_gl_text_renderer {
+namespace tiny_gl_text_renderer
+{
 
 const char* text_rend_vp_source = R"(#version 400
 layout (location = 0) in vec4 in_position;

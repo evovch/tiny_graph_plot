@@ -1,6 +1,7 @@
 #pragma once
 
-namespace tiny_gl_text_renderer {
+namespace tiny_gl_text_renderer
+{
 
 const unsigned short int set1[][22] = {
 {   0b0000000000000000,

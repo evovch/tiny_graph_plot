@@ -1,8 +1,10 @@
 #pragma once
 
-namespace tiny_graph_plot {
+namespace tiny_graph_plot
+{
 
-class SizeInfo {
+class SizeInfo
+{
 public:
     unsigned int _n_v;
     unsigned int _n_m;

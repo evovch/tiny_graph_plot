@@ -1,6 +1,7 @@
 #pragma once
 
-namespace tiny_graph_plot {
+namespace tiny_graph_plot
+{
 
 // ===============================================================================
 const char* canvas_sel_q_vp_source = R"(#version 400

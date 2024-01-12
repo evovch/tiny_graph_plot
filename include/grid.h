@@ -5,7 +5,8 @@
 
 #define GRID_PRECISION 1.0e-10
 
-namespace tiny_graph_plot {
+namespace tiny_graph_plot
+{
 
 using tiny_gl_text_renderer::point_t;
 using tiny_gl_text_renderer::color_t;
@@ -16,8 +17,8 @@ template<typename T>
 class Grid
 {
 public:
-    Grid(void) :
-        _fine_step_x(static_cast<T>(0.2)),
+    Grid(void)
+    :   _fine_step_x(static_cast<T>(0.2)),
         _fine_step_y(static_cast<T>(0.2)),
         _coarse_step_x(static_cast<T>(1.0)),
         _coarse_step_y(static_cast<T>(1.0))

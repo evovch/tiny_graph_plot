@@ -5,7 +5,8 @@
 #include "tiny_gl_text_renderer/text_rend_shader_sources.h"
 #include "tiny_gl_text_renderer/mat3.h"
 
-namespace tiny_gl_text_renderer {
+namespace tiny_gl_text_renderer
+{
 
 /*static*/
 /*GLuint TextRenderer::_labels_counter = 0;*/

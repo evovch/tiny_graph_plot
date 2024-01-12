@@ -5,13 +5,15 @@
 
 #include <utility> // required for std::move
 
-namespace tiny_gl_text_renderer {
+namespace tiny_gl_text_renderer
+{
 
 typedef Vec4f point_t;
 typedef Vec4f color_t;
 typedef Vec2f tex_coords_t;
 
-class vertex_colored_t {
+class vertex_colored_t
+{
 public:
     vertex_colored_t(void) {}
     vertex_colored_t(
@@ -36,7 +38,8 @@ public:
     color_t _color;
 };
 
-class vertex_textured_t {
+class vertex_textured_t
+{
 public:
     vertex_textured_t(void) {}
     vertex_textured_t(
@@ -61,7 +64,8 @@ public:
     tex_coords_t _tex_coords;
 };
 
-class marker_t {
+class marker_t
+{
 public:
     marker_t(void) : v0(0) {}
     marker_t(const unsigned int p0, const unsigned int p1) : v0(p0) {}
@@ -76,7 +80,8 @@ public:
     unsigned int v0;
 };
 
-class wire_t {
+class wire_t
+{
 public:
     wire_t(void) : v0(0), v1(0) {}
     wire_t(const unsigned int p0, const unsigned int p1) : v0(p0), v1(p1) {}
@@ -93,7 +98,8 @@ public:
     unsigned int v1;
 };
 
-class triangle_t {
+class triangle_t
+{
 public:
     triangle_t(void) :
         v0(0), v1(0), v2(0) {}
@@ -117,7 +123,8 @@ public:
     unsigned int v2;
 };
 
-class quad_t {
+class quad_t
+{
 public:
     quad_t(void) :
         v0(0), v1(0), v2(0), v3(0) {}

@@ -5,7 +5,8 @@
 
 #include "drawable.h"
 
-namespace tiny_graph_plot {
+namespace tiny_graph_plot
+{
 
 using tiny_gl_text_renderer::Vec2;
 

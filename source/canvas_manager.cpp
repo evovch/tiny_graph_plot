@@ -3,7 +3,8 @@
 #include "glew_routines.h"
 #include "glfw_callback_functions.h"
 
-namespace tiny_graph_plot {
+namespace tiny_graph_plot
+{
 
 template<typename T>
 CanvasManager<T>::CanvasManager(void) {

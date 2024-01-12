@@ -2,9 +2,11 @@
 
 struct GLFWwindow;
 
-namespace tiny_graph_plot {
+namespace tiny_graph_plot
+{
 
-enum class action_t {
+enum class action_t
+{
     ACT_NO_ACT,
     ACT_PAN,
     ACT_ZOOM,

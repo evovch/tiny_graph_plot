@@ -4,12 +4,14 @@
 
 #include "tiny_gl_text_renderer/vec2.h"
 
-namespace tiny_graph_plot {
+namespace tiny_graph_plot
+{
 
 using tiny_gl_text_renderer::Vec2;
 
 template<typename T>
-class XYrange {
+class XYrange
+{
 public:
     explicit XYrange(void) :
         _x_min(0.0), _dx(1.0), _y_min(0.0), _dy(1.0) {}

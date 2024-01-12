@@ -7,7 +7,8 @@
 #include "mat3.h"
 #include "texture_filler.h"
 
-namespace tiny_gl_text_renderer {
+namespace tiny_gl_text_renderer
+{
 
 typedef unsigned int GLuint;
 

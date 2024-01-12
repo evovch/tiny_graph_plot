@@ -4,8 +4,10 @@
 
 #include "user_window.h"
 
-namespace tiny_graph_plot {
-namespace glfw_callback_functions {
+namespace tiny_graph_plot
+{
+namespace glfw_callback_functions
+{
 
 void error_callback_glfw(int error, const char* description) {
     printf("GLFW: error %d: %s\n", error, description);
