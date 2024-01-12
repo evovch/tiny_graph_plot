@@ -17,7 +17,7 @@ protected:
         _size_info(0, 0, 0, 0),
         _xy_range(0.0, 1.0, 0.0, 1.0) {
     }
-    virtual ~Drawable(void) = 0 {}
+    virtual ~Drawable(void) {}
 public:
     const Vec2<T>& GetPoint(const size_t idx) const { return _points[idx]; }
     const SizeInfo& GetSizeInfo(void) const { return _size_info; }

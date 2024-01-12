@@ -18,7 +18,7 @@ class UserWindow
 {
 protected:
     UserWindow(GLFWwindow* window, const unsigned int w, const unsigned int h);
-    virtual ~UserWindow(void) = 0 {};
+    virtual ~UserWindow(void) {}
 private:
     void SetCallbacks(void) const;
 public:

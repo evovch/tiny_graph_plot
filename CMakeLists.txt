@@ -20,7 +20,12 @@ include_directories(include)
 include_directories(third_party/glfw-3.3.2.bin.WIN64/include)
 include_directories(third_party/glew-2.1.0/include)
 include_directories(third_party/stbi)
-link_directories(third_party/glfw-3.3.2.bin.WIN64/lib-vc2017)
+
+# Choose one depending on your build environment.
+link_directories(third_party/glfw-3.3.2.bin.WIN64/lib-mingw-w64)
+#link_directories(third_party/glfw-3.3.2.bin.WIN64/lib-vc2017)
+#link_directories(third_party/glfw-3.3.2.bin.WIN64/lib-vc2019)
+
 link_directories(third_party/glew-2.1.0/lib/Release/x64)
 
 add_executable(tiny_graph_plot ${SOURCES})

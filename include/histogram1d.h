@@ -7,11 +7,12 @@
 
 namespace tiny_graph_plot {
 
+template<typename T> class GraphManager;
+
 template<typename T, typename VALUETYPE>
 class Histogram1d : public Drawable<T>
 {
-    template<typename T>
-    friend class GraphManager;
+    friend class GraphManager<T>;
 private:
     Histogram1d(void) : Drawable<T>(),
         _n_bins(0),
@@ -74,8 +75,8 @@ public:
             this->_points[iBin*3+0] = Vec2<T>(x - T(0.5) * bin_width, y);
             this->_points[iBin*3+1] = Vec2<T>(x,                      y);
             this->_points[iBin*3+2] = Vec2<T>(x + T(0.5) * bin_width, y);
-            y_min = std::min(y_min, floor(y));
-            y_max = std::max(y_max, floor(y));
+            y_min = std::min(y_min, std::floor(y));
+            y_max = std::max(y_max, std::floor(y));
         }
         this->_size_info = SizeInfo(3 * _n_bins, 3 * _n_bins, 3 * _n_bins - 1, 0); //TODO
         this->_xy_range = XYrange<T>(_x_min, _x_max - _x_min, y_min, y_max - y_min);

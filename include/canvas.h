@@ -22,6 +22,7 @@ using tiny_gl_text_renderer::Mat4d;
 
 typedef unsigned int GLuint;
 
+template<typename T> class CanvasManager;
 template<typename T> class Drawable;
 template<typename T> class Graph;
 template<typename T, typename VALUETYPE> class Histogram1d;
@@ -30,8 +31,7 @@ class SizeInfo;
 template<typename T>
 class Canvas : public UserWindow
 {
-    template<typename T>
-    friend class CanvasManager;
+    friend class CanvasManager<T>;
 private:
     Canvas(GLFWwindow* window, const unsigned int w, const unsigned int h);
     virtual ~Canvas(void) override;

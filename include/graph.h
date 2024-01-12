@@ -9,11 +9,12 @@ namespace tiny_graph_plot {
 
 using tiny_gl_text_renderer::Vec2;
 
+template<typename T> class GraphManager;
+
 template<typename T>
 class Graph : public Drawable<T>
 {
-    template<typename T>
-    friend class GraphManager;
+    friend class GraphManager<T>;
 private:
     Graph(void) : Drawable<T>(),
         _n_p(0),
