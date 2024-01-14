@@ -4,7 +4,7 @@
 #include <cassert>
 #include <type_traits>
 
-#include "vec4.h"
+#include "vec.h"
 
 namespace tiny_gl_text_renderer
 {

@@ -5,7 +5,7 @@
 // except critical error messages
 #define SUPPRESS_ALL_OUTPUT
 
-#include "tiny_gl_text_renderer/vec2.h"
+#include "tiny_gl_text_renderer/vec.h"
 #include "tiny_gl_text_renderer/colors.h"
 #include "graph_manager.h"
 #include "canvas_manager.h"

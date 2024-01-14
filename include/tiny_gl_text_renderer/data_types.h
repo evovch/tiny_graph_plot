@@ -1,7 +1,6 @@
 #pragma once
 
-#include "vec2.h"
-#include "vec4.h"
+#include "vec.h"
 
 namespace tiny_gl_text_renderer
 {

@@ -2,7 +2,7 @@
 
 #include <cmath>
 
-#include "tiny_gl_text_renderer/vec2.h"
+#include "tiny_gl_text_renderer/vec.h"
 
 namespace tiny_graph_plot
 {
