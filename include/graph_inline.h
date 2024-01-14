@@ -6,7 +6,7 @@ namespace tiny_graph_plot
 {
 
 template<typename T>
-T Graph<T>::Evaluate(const T x) const
+inline T Graph<T>::Evaluate(const T x) const
 {
     if (!this->xy_range_.IncludesX(x)) return std::numeric_limits<T>::quiet_NaN();
 
@@ -32,7 +32,7 @@ T Graph<T>::Evaluate(const T x) const
 }
 
 template<typename T>
-void Graph<T>::CalculateRanges() const
+inline void Graph<T>::CalculateRanges() const
 {
     unsigned int start_i = 0;
     bool start_i_found = false;

@@ -6,7 +6,7 @@ namespace tiny_graph_plot
 {
 
 template<typename T, typename VALUETYPE>
-void Histogram1d<T, VALUETYPE>::GenGauss(
+inline void Histogram1d<T, VALUETYPE>::GenGauss(
     const unsigned int nbins, const T xmin, const T xmax, const T a, const T b, const T c)\
 {
     _n_bins = nbins;

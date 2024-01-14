@@ -52,11 +52,11 @@ public:
         tiny_gl_text_renderer::FillString(string, _texture_data, 4,
             _texture_w, _texture_h, 0, 0, _color.GetData(), 4);
     }
-    __forceinline void UpdatePosition(const int x, const int y) { _x = x; _y = y; }
-    __forceinline void UpdatePositionX(const int x) { _x = x; }
-    __forceinline void UpdatePositionY(const int y) { _y = y; }
-    __forceinline void UpdateRotation(const float angle) { _angle = angle; }
-    const Mat3f GetMatrix() const {
+    void UpdatePosition(const int x, const int y) noexcept { _x = x; _y = y; }
+    void UpdatePositionX(const int x) noexcept { _x = x; }
+    void UpdatePositionY(const int y) noexcept { _y = y; }
+    void UpdateRotation(const float angle) noexcept { _angle = angle; }
+    const Mat3f GetMatrix() const noexcept {
         constexpr double deg_to_rad = 3.14159265358979323846 / 180.0;
         const float angle_rad = _angle * (float)deg_to_rad;
         const float sintheta = std::sin(angle_rad);
@@ -64,16 +64,17 @@ public:
         return Mat3f(
             _scaling * costheta, -_scaling * sintheta, 0.0f,
             _scaling * sintheta,  _scaling * costheta, 0.0f,
-            (float)_x, (float)_y, 1.0f);
+            static_cast<float>(_x), static_cast<float>(_y), 1.0f
+        );
     }
-    __forceinline const std::string& GetString() const { return _string; }
-    __forceinline const int& GetTexX() const { return _x; }
-    __forceinline const int& GetTexY() const { return _y; }
-    __forceinline const float& GetScaling() const { return _scaling; }
-    __forceinline const float& GetAngle() const { return _angle; }
-    __forceinline const size_t& GetTexW() const { return _texture_w; }
-    __forceinline const size_t& GetTexH() const { return _texture_h; }
-    __forceinline const float* const GetTexData() const { return _texture_data; }
+    const std::string& GetString() const noexcept { return _string; }
+    const int& GetTexX() const noexcept { return _x; }
+    const int& GetTexY() const noexcept { return _y; }
+    const float& GetScaling() const noexcept { return _scaling; }
+    const float& GetAngle() const noexcept { return _angle; }
+    const size_t& GetTexW() const noexcept { return _texture_w; }
+    const size_t& GetTexH() const noexcept { return _texture_h; }
+    const float* const GetTexData() const noexcept { return _texture_data; }
 private:
     std::string _string;
     int _x;

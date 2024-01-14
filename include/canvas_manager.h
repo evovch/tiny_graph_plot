@@ -21,8 +21,8 @@ public:
     CanvasManager& operator=(CanvasManager&& other) = delete;
 public:
 	Canvas<T>& CreateCanvas(const char* name,
-		const unsigned int w = 800, const unsigned int h = 600,
-		const unsigned int x = 50, const unsigned int y = 50);
+		const unsigned int w = 800u, const unsigned int h = 600u,
+		const unsigned int x = 50u, const unsigned int y = 50u);
 	void WaitForTheWindowsToClose();
 private:
 	std::vector<Canvas<T>*> canvases_;
