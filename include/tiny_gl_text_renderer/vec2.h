@@ -1,3 +1,7 @@
+#include "vec.h"
+
+#if 0
+
 #pragma once
 
 #include <array>
@@ -50,3 +54,5 @@ using Vec2f = Vec2<float>;
 using Vec2d = Vec2<double>;
 
 } // end of namespace tiny_gl_text_renderer
+
+#endif
