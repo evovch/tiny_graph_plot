@@ -28,6 +28,10 @@ private:
             delete[] this->_points;
         }
     }
+    Histogram1d(const Histogram1d& other) = delete;
+    Histogram1d(Histogram1d&& other) = delete;
+    Histogram1d& operator=(const Histogram1d& other) = delete;
+    Histogram1d& operator=(Histogram1d&& other) = delete;
 public:
     void Init(const unsigned int nbins, const T xmin, const T xmax) {
         _n_bins = nbins;

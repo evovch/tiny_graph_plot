@@ -17,8 +17,8 @@ class Label
 {
 public:
     explicit Label(const char* string, const int x, const int y,
-        const color_t& color, const float scaling, const float angle = 0.0f) :
-        _string(string), _x(x), _y(y), _color(color),
+        const color_t& color, const float scaling, const float angle = 0.0f)
+    :   _string(string), _x(x), _y(y), _color(color),
         _scaling(scaling), _angle(angle), _texture_data(nullptr) {
         const size_t newSize = GetRequiredTextureSize(string,
             _texture_w, _texture_h) * 4 * sizeof(float);
@@ -27,18 +27,21 @@ public:
         tiny_gl_text_renderer::FillString(string, _texture_data, 4,
             _texture_w, _texture_h, 0, 0, &color_[0], 4);
     }
+    ~Label(void) {
+        if (_texture_data != nullptr) free(_texture_data);
+    }
     Label(const Label& other) = delete;
-    Label(Label&& other) noexcept :
-        _string(std::move(other._string)), _x(other._x), _y(other._y),
+    Label(Label&& other) noexcept
+    :   _string(std::move(other._string)), _x(other._x), _y(other._y),
         _color(std::move(other._color)), _scaling(other._scaling),
         _angle(other._angle), _texture_w(other._texture_w),
         _texture_h(other._texture_h),
         _texture_data(std::exchange(other._texture_data, nullptr)),
         _tex_id(other._tex_id)
     {}
-    ~Label(void) {
-        if (_texture_data != nullptr) free(_texture_data);
-    }
+    Label& operator=(const Label& other) = delete;
+    Label& operator=(Label&& other) = delete;
+public:
     void UpdateString(const char* string) {
         std::string new_string(string);
         if (_string == new_string) return;

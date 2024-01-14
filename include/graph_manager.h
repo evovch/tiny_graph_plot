@@ -23,6 +23,11 @@ public:
 			delete h;
 		}
 	}
+    GraphManager(const GraphManager& other) = delete;
+    GraphManager(GraphManager&& other) = delete;
+    GraphManager& operator=(const GraphManager& other) = delete;
+    GraphManager& operator=(GraphManager&& other) = delete;
+public:
 	Graph<T>& CreateGraph() {
 		Graph<T>* new_gr = new Graph<T>();
 		_graphs.push_back(new_gr);

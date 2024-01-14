@@ -11,9 +11,9 @@ public:
         const unsigned int n_w, const unsigned int n_tr)
     :   _n_v(n_v), _n_m(n_m), _n_w(n_w), _n_tr(n_tr) {}
     ~SizeInfo() = default;
-    SizeInfo(const SizeInfo& other) = default;
+    SizeInfo(const SizeInfo& other) = delete;
     SizeInfo(SizeInfo&& other) = default;
-    SizeInfo& operator=(const SizeInfo& other) = default;
+    SizeInfo& operator=(const SizeInfo& other) = delete;
     SizeInfo& operator=(SizeInfo&& other) = default;
 public:
     SizeInfo& operator+=(const SizeInfo& rhs) {

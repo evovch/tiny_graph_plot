@@ -38,6 +38,10 @@ class Canvas : public UserWindow
 private:
     explicit Canvas(GLFWwindow* window, const unsigned int w, const unsigned int h);
     virtual ~Canvas() override;
+    Canvas(const Canvas& other) = delete;
+    Canvas(Canvas&& other) = delete;
+    Canvas& operator=(const Canvas& other) = delete;
+    Canvas& operator=(Canvas&& other) = delete;
 public:
     void AddGraph(const Graph<T>& p_graph);
     void AddHistogram(const Histogram1d<T, unsigned long>& p_histo);

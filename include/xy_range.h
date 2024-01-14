@@ -16,13 +16,14 @@ class XYrange
                || std::is_same<T, double>::value, "");
 public:
     explicit XYrange() = default;
-    explicit XYrange(const T x_min, const T dx,
-                     const T y_min, const T dy)
+    explicit XYrange(const T x_min, const T dx, const T y_min, const T dy)
     :   _x_min(x_min), _dx(dx), _y_min(y_min), _dy(dy) {}
-    XYrange(const XYrange& other)
-    :   _x_min(other._x_min), _dx(other._dx),
-        _y_min(other._y_min), _dy(other._dy) {}
     ~XYrange() = default;
+    XYrange(const XYrange& other) = default;
+    XYrange(XYrange&& other) = default;
+    XYrange& operator=(const XYrange& other) = default;
+    XYrange& operator=(XYrange&& other) = default;
+public:
     template<typename U>
     __forceinline XYrange& operator=(const XYrange<U>& rhs) {
         _x_min = static_cast<T>(rhs.lowx());

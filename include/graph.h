@@ -29,6 +29,10 @@ private:
             free(this->_points);
         }
     }
+    Graph(const Graph& other) = delete;
+    Graph(Graph&& other) = delete;
+    Graph& operator=(const Graph& other) = delete;
+    Graph& operator=(Graph&& other) = delete;
 public:
     /**
         Note that when setting the data of the graph by calling this method

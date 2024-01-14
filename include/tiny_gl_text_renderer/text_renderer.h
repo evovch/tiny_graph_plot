@@ -16,6 +16,10 @@ class TextRenderer
 public:
     TextRenderer();
     ~TextRenderer();
+    TextRenderer(const TextRenderer& other) = delete;
+    TextRenderer(TextRenderer&& other) = delete;
+    TextRenderer& operator=(const TextRenderer& other) = delete;
+    TextRenderer& operator=(TextRenderer&& other) = delete;
 public:
     void SetCanvasSize(int w, int h) { _w = w; _h = h; }
     void UpdateScreenToClipMatrix();

@@ -21,6 +21,10 @@ protected:
         _xy_range(0.0, 1.0, 0.0, 1.0) {
     }
     virtual ~Drawable() {}
+    Drawable(const Drawable& other) = delete;
+    Drawable(Drawable&& other) = delete;
+    Drawable& operator=(const Drawable& other) = delete;
+    Drawable& operator=(Drawable&& other) = delete;
 public:
     const Vec2<T>& GetPoint(const size_t idx) const { return _points[idx]; }
     const SizeInfo& GetSizeInfo() const { return _size_info; }

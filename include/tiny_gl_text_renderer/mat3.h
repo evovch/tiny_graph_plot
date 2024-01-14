@@ -30,6 +30,11 @@ public:
                m20, m21, m22 } {}
 
     ~Mat3() = default;
+    Mat3(const Mat3& other) = delete;
+    Mat3(Mat3&& other) = delete;
+    Mat3& operator=(const Mat3& other) = delete;
+    Mat3& operator=(Mat3&& other) = delete;
+public:
     void Reset() {
         data_[0*3+0] = T(1.0); data_[0*3+1] = T(0.0); data_[0*3+2] = T(0.0);
         data_[1*3+0] = T(0.0); data_[1*3+1] = T(1.0); data_[1*3+2] = T(0.0);

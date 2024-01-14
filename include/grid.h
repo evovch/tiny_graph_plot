@@ -25,6 +25,10 @@ public:
         if (_wires_fine != nullptr)   { delete[] _wires_fine; }
         if (_wires_coarse != nullptr) { delete[] _wires_coarse; }
     }
+    Grid(const Grid& other) = delete;
+    Grid(Grid&& other) = delete;
+    Grid& operator=(const Grid& other) = delete;
+    Grid& operator=(Grid&& other) = delete;
 public:
     int CalculateStep(XYrange<T> visrange, const T vw, const T vh) {
         const T dx = std::fabs(visrange.dx());
