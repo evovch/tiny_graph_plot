@@ -182,15 +182,15 @@ private:
     void UpdateMatricesPanZoom();
     // Transformation matrices are stored using single precision floats,
     // thus performing transformations in double precision make no sense.
-    __forceinline Vec4f TransformToVisrange(const double xs, const double ys,
+    Vec4f TransformToVisrange(const double xs, const double ys,
         Vec4f* const o_in_clip_space = nullptr,
         Vec4f* const o_in_viewport_space = nullptr) const;
-    __forceinline Vec4f TransformToVisrange(const Vec4f& in_screen_space,
+    Vec4f TransformToVisrange(const Vec4f& in_screen_space,
         Vec4f* const o_in_clip_space = nullptr,
         Vec4f* const o_in_viewport_space = nullptr) const;
-    //__forceinline Vec4d TransformToVisrangeHP(const double xs, const double ys,
+    //Vec4d TransformToVisrangeHP(const double xs, const double ys,
     //    Vec4d* const o_in_clip_space = nullptr) const;
-    //__forceinline Vec4d TransformToVisrangeHP(const Vec4d& in_screen_space,
+    //Vec4d TransformToVisrangeHP(const Vec4d& in_screen_space,
     //    Vec4d* const o_in_clip_space = nullptr) const;
 private:
     // Direct matrices
@@ -239,45 +239,45 @@ public: // visual parameters
     void SetXaxisTitle(const char* title) { _x_axis_title = std::string(title); }
     void SetYaxisTitle(const char* title, const bool rotated = false) {
         _y_axis_title = std::string(title); _y_axis_title_rotated = rotated; }
-    void EnableHgrid()    { _enable_hgrid   = true; }
-    void EnableVgrid()    { _enable_vgrid   = true; }
-    void EnableAxes()     { _enable_axes    = true; }
-    void EnableVref()     { _enable_vref    = true; }
-    void EnableFrame()    { _enable_frame   = true; }
-    void EnableCursor()   { _enable_cursor  = true; }
-    void EnableCircles()  { _enable_circles = true; }
-    void DisableHgrid()   { _enable_hgrid   = false; }
-    void DisableVgrid()   { _enable_vgrid   = false; }
-    void DisableAxes()    { _enable_axes    = false; }
-    void DisableVref()    { _enable_vref    = false; }
-    void DisableFrame()   { _enable_frame   = false; }
-    void DisableCursor()  { _enable_cursor  = false; }
-    void DisableCircles() { _enable_circles = false; }
+    void EnableHgrid()    noexcept { _enable_hgrid   = true; }
+    void EnableVgrid()    noexcept { _enable_vgrid   = true; }
+    void EnableAxes()     noexcept { _enable_axes    = true; }
+    void EnableVref()     noexcept { _enable_vref    = true; }
+    void EnableFrame()    noexcept { _enable_frame   = true; }
+    void EnableCursor()   noexcept { _enable_cursor  = true; }
+    void EnableCircles()  noexcept { _enable_circles = true; }
+    void DisableHgrid()   noexcept { _enable_hgrid   = false; }
+    void DisableVgrid()   noexcept { _enable_vgrid   = false; }
+    void DisableAxes()    noexcept { _enable_axes    = false; }
+    void DisableVref()    noexcept { _enable_vref    = false; }
+    void DisableFrame()   noexcept { _enable_frame   = false; }
+    void DisableCursor()  noexcept { _enable_cursor  = false; }
+    void DisableCircles() noexcept { _enable_circles = false; }
     // Color settings ------------------------------------------------------------
     void SetDarkColorScheme();
     void SetBrightColorScheme();
     void SetBackgroundColor(const color_t& color);
     void SetInFrameBackgroundColor(const color_t& color);
-    void SetHGridFineColor  (const color_t& color) { _grid.SetHGridFineColor(color); }
-    void SetVGridFineColor  (const color_t& color) { _grid.SetVGridFineColor(color); }
-    void SetHGridCoarseColor(const color_t& color) { _grid.SetHGridCoarseColor(color); }
-    void SetVGridCoarseColor(const color_t& color) { _grid.SetVGridCoarseColor(color); }
-    void SetAxesColor       (const color_t& color) { _axes_line_color  = color; }
-    void SetVrefColor       (const color_t& color) { _vref_line_color  = color; }
-    void SetFrameColor      (const color_t& color) { _frame_line_color = color; }
-    void SetCursorColor     (const color_t& color) { _cursor_color     = color; }
-    void SetTextColor       (const color_t& color) { _gen_text_color   = color; }
+    void SetHGridFineColor  (const color_t& color) noexcept { _grid.SetHGridFineColor(color); }
+    void SetVGridFineColor  (const color_t& color) noexcept { _grid.SetVGridFineColor(color); }
+    void SetHGridCoarseColor(const color_t& color) noexcept { _grid.SetHGridCoarseColor(color); }
+    void SetVGridCoarseColor(const color_t& color) noexcept { _grid.SetVGridCoarseColor(color); }
+    void SetAxesColor       (const color_t& color) noexcept { _axes_line_color  = color; }
+    void SetVrefColor       (const color_t& color) noexcept { _vref_line_color  = color; }
+    void SetFrameColor      (const color_t& color) noexcept { _frame_line_color = color; }
+    void SetCursorColor     (const color_t& color) noexcept { _cursor_color     = color; }
+    void SetTextColor       (const color_t& color) noexcept { _gen_text_color   = color; }
     // ---------------------------------------------------------------------------
-    void SetHGridFineLineWidth  (const float width) { _grid.SetHGridFineLineWidth(width); }
-    void SetVGridFineLineWidth  (const float width) { _grid.SetVGridFineLineWidth(width); }
-    void SetHGridCoarseLineWidth(const float width) { _grid.SetHGridCoarseLineWidth(width); }
-    void SetVGridCoarseLineWidth(const float width) { _grid.SetVGridCoarseLineWidth(width); }
-    void SetAxesLineWidth       (const float width) { _axes_line_width   = width; }
-    void SetVrefLineWidth       (const float width) { _vref_line_width   = width; }
-    void SetFrameLineWidth      (const float width) { _frame_line_width  = width; }
-    void SetCursorLineWidth     (const float width) { _cursor_line_width = width; }
-    void SetFontSize(const float size) { _font_size = size; }
-    void SetCircleRadius(const unsigned int r) { _circle_r = r; }
+    void SetHGridFineLineWidth  (const float width) noexcept { _grid.SetHGridFineLineWidth(width); }
+    void SetVGridFineLineWidth  (const float width) noexcept { _grid.SetVGridFineLineWidth(width); }
+    void SetHGridCoarseLineWidth(const float width) noexcept { _grid.SetHGridCoarseLineWidth(width); }
+    void SetVGridCoarseLineWidth(const float width) noexcept { _grid.SetVGridCoarseLineWidth(width); }
+    void SetAxesLineWidth       (const float width) noexcept { _axes_line_width   = width; }
+    void SetVrefLineWidth       (const float width) noexcept { _vref_line_width   = width; }
+    void SetFrameLineWidth      (const float width) noexcept { _frame_line_width  = width; }
+    void SetCursorLineWidth     (const float width) noexcept { _cursor_line_width = width; }
+    void SetFontSize(const float size) noexcept { _font_size = size; }
+    void SetCircleRadius(const unsigned int r) noexcept { _circle_r = r; }
     void SetMarginXleft(const unsigned int w_in_pix) {
         _margin_xl_pix = w_in_pix; this->UpdateSizeLimits(); }
     void SetMarginXright(const unsigned int w_in_pix) {
@@ -326,3 +326,5 @@ private: // visual parameters
 };
 
 } // end of namespace tiny_graph_plot
+
+#include "canvas_inline.h"
