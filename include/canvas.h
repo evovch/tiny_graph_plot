@@ -210,20 +210,20 @@ private:
     //Mat4d _clip_to_visrange_hp;
     //Mat4d _screen_to_visrange_hp;
     // ===========================================================================
-public:
-    T _ref_x;
+private:
+    T ref_x_;
     // ===========================================================================
 public:
     void UpdateSizeLimits();
     // ===========================================================================
     //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 public:
-    tiny_gl_text_renderer::TextRenderer& GetTextRenderer() {
-        return _text_rend;
+    tiny_gl_text_renderer::TextRenderer& GetTextRenderer() noexcept {
+        return text_rend_;
     }
     void FinalizeTextRenderer();
 private:
-    tiny_gl_text_renderer::TextRenderer _text_rend;
+    tiny_gl_text_renderer::TextRenderer text_rend_;
     //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     static constexpr unsigned int _n_x_axis_value_labels_max = 20u;
     static constexpr unsigned int _n_y_axis_value_labels_max = 20u;
@@ -236,23 +236,23 @@ private:
     size_t _labels_start_idx = 44u;
     // ===========================================================================
 public: // visual parameters
-    void SetXaxisTitle(const char* title) { _x_axis_title = std::string(title); }
+    void SetXaxisTitle(const char* title) { x_axis_title_ = std::string(title); }
     void SetYaxisTitle(const char* title, const bool rotated = false) {
-        _y_axis_title = std::string(title); _y_axis_title_rotated = rotated; }
-    void EnableHgrid()    noexcept { _enable_hgrid   = true; }
-    void EnableVgrid()    noexcept { _enable_vgrid   = true; }
-    void EnableAxes()     noexcept { _enable_axes    = true; }
-    void EnableVref()     noexcept { _enable_vref    = true; }
-    void EnableFrame()    noexcept { _enable_frame   = true; }
-    void EnableCursor()   noexcept { _enable_cursor  = true; }
-    void EnableCircles()  noexcept { _enable_circles = true; }
-    void DisableHgrid()   noexcept { _enable_hgrid   = false; }
-    void DisableVgrid()   noexcept { _enable_vgrid   = false; }
-    void DisableAxes()    noexcept { _enable_axes    = false; }
-    void DisableVref()    noexcept { _enable_vref    = false; }
-    void DisableFrame()   noexcept { _enable_frame   = false; }
-    void DisableCursor()  noexcept { _enable_cursor  = false; }
-    void DisableCircles() noexcept { _enable_circles = false; }
+        y_axis_title_ = std::string(title); y_axis_title_rotated_ = rotated; }
+    void EnableHgrid()    noexcept { enable_hgrid_   = true; }
+    void EnableVgrid()    noexcept { enable_vgrid_   = true; }
+    void EnableAxes()     noexcept { enable_axes_    = true; }
+    void EnableVref()     noexcept { enable_vref_    = true; }
+    void EnableFrame()    noexcept { enable_frame_   = true; }
+    void EnableCursor()   noexcept { enable_cursor_  = true; }
+    void EnableCircles()  noexcept { enable_circles_ = true; }
+    void DisableHgrid()   noexcept { enable_hgrid_   = false; }
+    void DisableVgrid()   noexcept { enable_vgrid_   = false; }
+    void DisableAxes()    noexcept { enable_axes_    = false; }
+    void DisableVref()    noexcept { enable_vref_    = false; }
+    void DisableFrame()   noexcept { enable_frame_   = false; }
+    void DisableCursor()  noexcept { enable_cursor_  = false; }
+    void DisableCircles() noexcept { enable_circles_ = false; }
     // Color settings ------------------------------------------------------------
     void SetDarkColorScheme();
     void SetBrightColorScheme();
@@ -262,64 +262,64 @@ public: // visual parameters
     void SetVGridFineColor  (const color_t& color) noexcept { _grid.SetVGridFineColor(color); }
     void SetHGridCoarseColor(const color_t& color) noexcept { _grid.SetHGridCoarseColor(color); }
     void SetVGridCoarseColor(const color_t& color) noexcept { _grid.SetVGridCoarseColor(color); }
-    void SetAxesColor       (const color_t& color) noexcept { _axes_line_color  = color; }
-    void SetVrefColor       (const color_t& color) noexcept { _vref_line_color  = color; }
-    void SetFrameColor      (const color_t& color) noexcept { _frame_line_color = color; }
-    void SetCursorColor     (const color_t& color) noexcept { _cursor_color     = color; }
-    void SetTextColor       (const color_t& color) noexcept { _gen_text_color   = color; }
+    void SetAxesColor       (const color_t& color) noexcept { axes_line_color_  = color; }
+    void SetVrefColor       (const color_t& color) noexcept { vref_line_color_  = color; }
+    void SetFrameColor      (const color_t& color) noexcept { frame_line_color_ = color; }
+    void SetCursorColor     (const color_t& color) noexcept { cursor_color_     = color; }
+    void SetTextColor       (const color_t& color) noexcept { gen_text_color_   = color; }
     // ---------------------------------------------------------------------------
     void SetHGridFineLineWidth  (const float width) noexcept { _grid.SetHGridFineLineWidth(width); }
     void SetVGridFineLineWidth  (const float width) noexcept { _grid.SetVGridFineLineWidth(width); }
     void SetHGridCoarseLineWidth(const float width) noexcept { _grid.SetHGridCoarseLineWidth(width); }
     void SetVGridCoarseLineWidth(const float width) noexcept { _grid.SetVGridCoarseLineWidth(width); }
-    void SetAxesLineWidth       (const float width) noexcept { _axes_line_width   = width; }
-    void SetVrefLineWidth       (const float width) noexcept { _vref_line_width   = width; }
-    void SetFrameLineWidth      (const float width) noexcept { _frame_line_width  = width; }
-    void SetCursorLineWidth     (const float width) noexcept { _cursor_line_width = width; }
-    void SetFontSize(const float size) noexcept { _font_size = size; }
-    void SetCircleRadius(const unsigned int r) noexcept { _circle_r = r; }
+    void SetAxesLineWidth       (const float width) noexcept { axes_line_width_   = width; }
+    void SetVrefLineWidth       (const float width) noexcept { vref_line_width_   = width; }
+    void SetFrameLineWidth      (const float width) noexcept { frame_line_width_  = width; }
+    void SetCursorLineWidth     (const float width) noexcept { cursor_line_width_ = width; }
+    void SetFontSize(const float size) noexcept { font_size_ = size; }
+    void SetCircleRadius(const unsigned int r) noexcept { circle_r_ = r; }
     void SetMarginXleft(const unsigned int w_in_pix) {
-        _margin_xl_pix = w_in_pix; this->UpdateSizeLimits(); }
+        margin_xl_pix_ = w_in_pix; this->UpdateSizeLimits(); }
     void SetMarginXright(const unsigned int w_in_pix) {
-        _margin_xr_pix = w_in_pix; this->UpdateSizeLimits(); }
+        margin_xr_pix_ = w_in_pix; this->UpdateSizeLimits(); }
     void SetMarginYbottom(const unsigned int h_in_pix) {
-        _margin_yb_pix = h_in_pix; this->UpdateSizeLimits(); }
+        margin_yb_pix_ = h_in_pix; this->UpdateSizeLimits(); }
     void SetMarginYtop(const unsigned int h_in_pix) {
-        _margin_yt_pix = h_in_pix; this->UpdateSizeLimits(); }
+        margin_yt_pix_ = h_in_pix; this->UpdateSizeLimits(); }
     void SetAllMargins(const unsigned int xl_in_pix, const unsigned int xr_in_pix,
         const unsigned int yb_in_pix, const unsigned int yt_in_pix) {
-        _margin_xl_pix = xl_in_pix; _margin_xr_pix = xr_in_pix;
-        _margin_yb_pix = yb_in_pix; _margin_yt_pix = yt_in_pix;
+        margin_xl_pix_ = xl_in_pix; margin_xr_pix_ = xr_in_pix;
+        margin_yb_pix_ = yb_in_pix; margin_yt_pix_ = yt_in_pix;
         this->UpdateSizeLimits();
     }
 private: // visual parameters
-    std::string _x_axis_title = "x axis";
-    std::string _y_axis_title = "y axis";
-    bool _y_axis_title_rotated = true;
-    bool _enable_hgrid   = true;
-    bool _enable_vgrid   = true;
-    bool _enable_axes    = true;
-    bool _enable_vref    = true;
-    bool _enable_frame   = true;
-    bool _enable_cursor  = true;
-    bool _enable_circles = true;
-    color_t _background_color = tiny_gl_text_renderer::colors::gray1;
-    color_t _in_frame_bg_color = tiny_gl_text_renderer::colors::gray05;
-    color_t _axes_line_color  = tiny_gl_text_renderer::colors::gray75;
-    color_t _vref_line_color  = tiny_gl_text_renderer::colors::olive;
-    color_t _frame_line_color = tiny_gl_text_renderer::colors::gray5;
-    color_t _cursor_color     = tiny_gl_text_renderer::colors::white;
-    color_t _gen_text_color   = tiny_gl_text_renderer::colors::white;
-    float _axes_line_width   = 3.0f;
-    float _vref_line_width   = 3.0f;
-    float _frame_line_width  = 3.0f;
-    float _cursor_line_width = 1.0f;
-    float _font_size = 1.0f;
-    unsigned int _circle_r = 10u;
-    unsigned int _margin_xl_pix = 280u;
-    unsigned int _margin_xr_pix = 22u;
-    unsigned int _margin_yb_pix = 34u;
-    unsigned int _margin_yt_pix = 22u;
+    std::string x_axis_title_ = "x axis";
+    std::string y_axis_title_ = "y axis";
+    bool y_axis_title_rotated_ = true;
+    bool enable_hgrid_   = true;
+    bool enable_vgrid_   = true;
+    bool enable_axes_    = true;
+    bool enable_vref_    = true;
+    bool enable_frame_   = true;
+    bool enable_cursor_  = true;
+    bool enable_circles_ = true;
+    color_t background_color_ = tiny_gl_text_renderer::colors::gray1;
+    color_t in_frame_bg_color_ = tiny_gl_text_renderer::colors::gray05;
+    color_t axes_line_color_  = tiny_gl_text_renderer::colors::gray75;
+    color_t vref_line_color_  = tiny_gl_text_renderer::colors::olive;
+    color_t frame_line_color_ = tiny_gl_text_renderer::colors::gray5;
+    color_t cursor_color_     = tiny_gl_text_renderer::colors::white;
+    color_t gen_text_color_   = tiny_gl_text_renderer::colors::white;
+    float axes_line_width_   = 3.0f;
+    float vref_line_width_   = 3.0f;
+    float frame_line_width_  = 3.0f;
+    float cursor_line_width_ = 1.0f;
+    float font_size_ = 1.0f;
+    unsigned int circle_r_ = 10u;
+    unsigned int margin_xl_pix_ = 280u;
+    unsigned int margin_xr_pix_ = 22u;
+    unsigned int margin_yb_pix_ = 34u;
+    unsigned int margin_yt_pix_ = 22u;
     static constexpr int _h_offset = 2;
     static constexpr int _v_offset = 2;
     // ===========================================================================

@@ -42,7 +42,7 @@ TextRenderer::~TextRenderer()
     glDeleteBuffers(1, &_iboID);
     glDeleteProgram(_progID);
     for (const Label& label : _labels) {
-        glDeleteTextures(1, &label._tex_id);
+        glDeleteTextures(1, &label.tex_id_);
     }
 }
 
@@ -84,7 +84,7 @@ void TextRenderer::Draw() const
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, _iboID);
         size_t i_label = 0;
         for (const Label& label : _labels) {
-            glBindTexture(GL_TEXTURE_2D, label._tex_id);
+            glBindTexture(GL_TEXTURE_2D, label.tex_id_);
             glDrawElements(GL_QUADS, 4, GL_UNSIGNED_INT,
                 (GLvoid*)(i_label * sizeof(quad_t)));
             i_label++;
@@ -102,7 +102,7 @@ void TextRenderer::DrawSingle(const size_t i_label) const
     {
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, _iboID);
         const Label& label = _labels.at(i_label);
-        glBindTexture(GL_TEXTURE_2D, label._tex_id);
+        glBindTexture(GL_TEXTURE_2D, label.tex_id_);
         glDrawElements(GL_QUADS, 4, GL_UNSIGNED_INT, (GLvoid*)(i_label * sizeof(quad_t)));
     }
     glBindVertexArray(0);
@@ -114,8 +114,8 @@ size_t TextRenderer::AddLabel(const char* string, const int x, const int y,
 {
     //printf("TextRenderer::AddLabel\n");
     _labels.emplace_back(string, x, y, color, scaling, angle);
-    glGenTextures(1, &_labels.back()._tex_id);
-    glBindTexture(GL_TEXTURE_2D, _labels.back()._tex_id);
+    glGenTextures(1, &_labels.back().tex_id_);
+    glBindTexture(GL_TEXTURE_2D, _labels.back().tex_id_);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
     _labels_counter++;
@@ -288,7 +288,7 @@ void TextRenderer::SendToGPUtextureSingle(const size_t i_label) const
     const size_t& tex_w = label.GetTexW();
     const size_t& tex_h = label.GetTexH();
     const float* const tex_data = label.GetTexData();
-    glBindTexture(GL_TEXTURE_2D, label._tex_id);
+    glBindTexture(GL_TEXTURE_2D, label.tex_id_);
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, (GLsizei)tex_w, (GLsizei)tex_h, 0,
         GL_RGBA, GL_FLOAT, tex_data);
 }

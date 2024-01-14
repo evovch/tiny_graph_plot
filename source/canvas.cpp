@@ -131,7 +131,7 @@ void Canvas<T>::Show(void)
 
     this->SendFrameVerticesToGPU();
 
-    glProgramUniform1f(_progID_c, _circle_r_unif_c, (float)_circle_r);
+    glProgramUniform1f(_progID_c, _circle_r_unif_c, (float)circle_r_);
 
     SizeInfo total_size; // Zeroed on construction
     _total_xy_range = _graphs.at(0)->GetXYrange();
@@ -183,8 +183,8 @@ void Canvas<T>::Show(void)
 
     // +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-    const int ch_width = (int)(_font_size * (float)tiny_gl_text_renderer::CHAR_WIDTH);
-    const int line_height = (int)(_font_size * (float)tiny_gl_text_renderer::CHAR_HEIGHT);
+    const int ch_width = (int)(font_size_ * (float)tiny_gl_text_renderer::CHAR_WIDTH);
+    const int line_height = (int)(font_size_ * (float)tiny_gl_text_renderer::CHAR_HEIGHT);
     const size_t BUFSIZE = 32;
     char buf[BUFSIZE];
 
@@ -193,33 +193,33 @@ void Canvas<T>::Show(void)
 
     // Axis titles
     // X axis
-    snprintf(&buf[0], BUFSIZE, "%s", _x_axis_title.c_str());
-    const int line_len_x = (int)_x_axis_title.size();
-    _x_axis_title_label_idx = _text_rend.AddLabel(buf,
-        _window_w - _margin_xr_pix - line_len_x * ch_width,
-        _window_h - _margin_yb_pix + line_height, _gen_text_color, _font_size);
+    snprintf(&buf[0], BUFSIZE, "%s", x_axis_title_.c_str());
+    const int line_len_x = (int)x_axis_title_.size();
+    _x_axis_title_label_idx = text_rend_.AddLabel(buf,
+        _window_w - margin_xr_pix_ - line_len_x * ch_width,
+        _window_h - margin_yb_pix_ + line_height, gen_text_color_, font_size_);
     i_label++;
     // Y axis
-    snprintf(&buf[0], BUFSIZE, "%s", _y_axis_title.c_str());
-    const int line_len_y = (int)_y_axis_title.size();
-    const int lbl_pos_x = (_y_axis_title_rotated ?
-        _margin_xl_pix - line_height - line_height :
-        _margin_xl_pix - line_height - line_len_y * ch_width);
-    const int lbl_pos_y = (_y_axis_title_rotated ?
-        _margin_yt_pix + line_len_y * ch_width :
-        _margin_yt_pix);
-    _y_axis_title_label_idx = _text_rend.AddLabel(buf, lbl_pos_x, lbl_pos_y,
-        _gen_text_color, _font_size, (_y_axis_title_rotated ? 90.0f : 0.0f));
+    snprintf(&buf[0], BUFSIZE, "%s", y_axis_title_.c_str());
+    const int line_len_y = (int)y_axis_title_.size();
+    const int lbl_pos_x = (y_axis_title_rotated_ ?
+        margin_xl_pix_ - line_height - line_height :
+        margin_xl_pix_ - line_height - line_len_y * ch_width);
+    const int lbl_pos_y = (y_axis_title_rotated_ ?
+        margin_yt_pix_ + line_len_y * ch_width :
+        margin_yt_pix_);
+    _y_axis_title_label_idx = text_rend_.AddLabel(buf, lbl_pos_x, lbl_pos_y,
+        gen_text_color_, font_size_, (y_axis_title_rotated_ ? 90.0f : 0.0f));
     i_label++;
 
     // Hint
     //const char test_line[] =
     //"\'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz";
-    //_hint_label_idx = _text_rend.AddLabel(
-    //    "_y_axis_title_label_idx = _text_rend.AddLabel(buf, lbl_pos_x, lbl_pos_y,",
+    //_hint_label_idx = text_rend_.AddLabel(
+    //    "_y_axis_title_label_idx = text_rend_.AddLabel(buf, lbl_pos_x, lbl_pos_y,",
     //    //"Ctrl+left click to set the reference.\nPress 'F' to fit all in.",
     //    _h_offset, _window_h - 2 * line_height,
-    //    tiny_gl_text_renderer::colors::silver, _font_size);
+    //    tiny_gl_text_renderer::colors::silver, font_size_);
     //i_label++;
 
     // Grid parameters
@@ -228,48 +228,48 @@ void Canvas<T>::Show(void)
         _grid.GetFineXstep(), _grid.GetFineYstep(),
         _grid.GetCoarseXstep(), _grid.GetCoarseYstep());
     const int grid_line_len = (int)strlen(buf2);
-    _grid_params_label_idx = _text_rend.AddLabel(buf2,
-        _window_w - _margin_xr_pix - grid_line_len * ch_width, _v_offset,
-        //_window_h - _margin_yt_pix + line_height,
-        _gen_text_color, _font_size);
+    _grid_params_label_idx = text_rend_.AddLabel(buf2,
+        _window_w - margin_xr_pix_ - grid_line_len * ch_width, _v_offset,
+        //_window_h - margin_yt_pix_ + line_height,
+        gen_text_color_, font_size_);
     i_label++;
 
     // X axis values labels
-    _x_axis_values_lables_start_idx = _text_rend.AddLabel(" ",
-        _margin_xl_pix, _window_h - _margin_yb_pix,
-        _gen_text_color, _font_size);
+    _x_axis_values_lables_start_idx = text_rend_.AddLabel(" ",
+        margin_xl_pix_, _window_h - margin_yb_pix_,
+        gen_text_color_, font_size_);
     i_label++;
     for (unsigned int i = 1; i < _n_x_axis_value_labels_max; i++) {
-        _text_rend.AddLabel("",
-            _margin_xl_pix, _window_h - _margin_yb_pix,
-            _gen_text_color, _font_size);
+        text_rend_.AddLabel("",
+            margin_xl_pix_, _window_h - margin_yb_pix_,
+            gen_text_color_, font_size_);
         i_label++;
     }
 
     // Y axis values labels
-    _y_axis_values_lables_start_idx = _text_rend.AddLabel("",
-        _margin_xl_pix - line_height, _margin_yt_pix,
-        _gen_text_color, _font_size, 90.0f);
+    _y_axis_values_lables_start_idx = text_rend_.AddLabel("",
+        margin_xl_pix_ - line_height, margin_yt_pix_,
+        gen_text_color_, font_size_, 90.0f);
     i_label++;
     for (unsigned int i = 1; i < _n_y_axis_value_labels_max; i++) {
-        _text_rend.AddLabel("",
-            _margin_xl_pix - line_height, _margin_yt_pix,
-            _gen_text_color, _font_size, 90.0f);
+        text_rend_.AddLabel("",
+            margin_xl_pix_ - line_height, margin_yt_pix_,
+            gen_text_color_, font_size_, 90.0f);
         i_label++;
     }
 
     // Current values
 
     snprintf(&buf[0], BUFSIZE, "x =");
-    _labels_start_idx = _text_rend.AddLabel(buf, _h_offset, voffset, _gen_text_color, _font_size);
+    _labels_start_idx = text_rend_.AddLabel(buf, _h_offset, voffset, gen_text_color_, font_size_);
     i_label++; voffset += line_height;
     snprintf(&buf[0], BUFSIZE, "y =");
-    _text_rend.AddLabel(buf, _h_offset, voffset, _gen_text_color, _font_size);
+    text_rend_.AddLabel(buf, _h_offset, voffset, gen_text_color_, font_size_);
     i_label++; voffset += line_height;
     int i_gr = 0;
     for (const auto* const gr : _graphs) {
         snprintf(&buf[0], BUFSIZE, "y%d=", i_gr);
-        _text_rend.AddLabel(buf, _h_offset, voffset, gr->GetColor(), _font_size);
+        text_rend_.AddLabel(buf, _h_offset, voffset, gr->GetColor(), font_size_);
         i_label++; voffset += line_height;
         i_gr++;
     }
@@ -278,15 +278,15 @@ void Canvas<T>::Show(void)
 
     voffset += 2 * line_height;
 
-    _ref_x = static_cast<T>(_total_xy_range.lowx());
-    snprintf(&buf[0], BUFSIZE, "rx =% 0.4f", _ref_x);
-    _text_rend.AddLabel(buf, _h_offset, voffset, _gen_text_color, _font_size);
+    ref_x_ = static_cast<T>(_total_xy_range.lowx());
+    snprintf(&buf[0], BUFSIZE, "rx =% 0.4f", ref_x_);
+    text_rend_.AddLabel(buf, _h_offset, voffset, gen_text_color_, font_size_);
     i_label++; voffset += line_height;
     i_gr = 0;
     for (const auto* const gr : _graphs) {
-        const T ref_y = gr->Evaluate(_ref_x);
+        const T ref_y = gr->Evaluate(ref_x_);
         snprintf(&buf[0], BUFSIZE, "ry%d=% 0.4f", i_gr, ref_y);
-        _text_rend.AddLabel(buf, _h_offset, voffset, gr->GetColor(), _font_size);
+        text_rend_.AddLabel(buf, _h_offset, voffset, gr->GetColor(), font_size_);
         i_label++; voffset += line_height;
         i_gr++;
     }
@@ -296,12 +296,12 @@ void Canvas<T>::Show(void)
     voffset += 2 * line_height;
 
     snprintf(&buf[0], BUFSIZE, "dx =");
-    _text_rend.AddLabel(buf, _h_offset, voffset, _gen_text_color, _font_size);
+    text_rend_.AddLabel(buf, _h_offset, voffset, gen_text_color_, font_size_);
     i_label++; voffset += line_height;
     i_gr = 0;
     for (const auto* const gr : _graphs) {
         snprintf(&buf[0], BUFSIZE, "dy%d=", i_gr);
-        _text_rend.AddLabel(buf, _h_offset, voffset, gr->GetColor(), _font_size);
+        text_rend_.AddLabel(buf, _h_offset, voffset, gr->GetColor(), font_size_);
         i_label++; voffset += line_height;
         i_gr++;
     }
@@ -315,17 +315,17 @@ void Canvas<T>::Show(void)
             const Graph<T>* const gri = _graphs.at(i);
             const Graph<T>* const grj = _graphs.at(j);
             snprintf(&buf[0], BUFSIZE, "y%d", j);
-            _text_rend.AddLabel(buf, _h_offset, voffset, grj->GetColor(), _font_size);
+            text_rend_.AddLabel(buf, _h_offset, voffset, grj->GetColor(), font_size_);
             i_label++;
-            _text_rend.AddLabel("-", _h_offset + 3*ch_width, voffset, _gen_text_color, _font_size);
+            text_rend_.AddLabel("-", _h_offset + 3*ch_width, voffset, gen_text_color_, font_size_);
             i_label++;
             snprintf(&buf[0], BUFSIZE, "y%d", i);
-            _text_rend.AddLabel(buf, _h_offset + 5*ch_width, voffset, gri->GetColor(), _font_size);
+            text_rend_.AddLabel(buf, _h_offset + 5*ch_width, voffset, gri->GetColor(), font_size_);
             i_label++;
-            _text_rend.AddLabel("=", _h_offset + 8*ch_width, voffset, _gen_text_color, _font_size);
+            text_rend_.AddLabel("=", _h_offset + 8*ch_width, voffset, gen_text_color_, font_size_);
             i_label++;
             voffset += line_height;
-            _text_rend.AddLabel("", _h_offset, voffset, _gen_text_color, _font_size);
+            text_rend_.AddLabel("", _h_offset, voffset, gen_text_color_, font_size_);
             voffset += line_height;
         }
     }
@@ -371,7 +371,7 @@ void Canvas<T>::Draw(void) /*const*/
     this->SwitchToFullWindow();
     this->UpdateTexAxesValues();
     //++++++++++++++++
-    _text_rend.Draw();
+    text_rend_.Draw();
     //++++++++++++++++
 }
 
@@ -567,8 +567,8 @@ void Canvas<T>::Init(void)
 
     // Initialize different OpenGL parameters
 
-    glClearColor(_background_color[0], _background_color[1],
-                 _background_color[2], _background_color[3]);
+    glClearColor(background_color_[0], background_color_[1],
+                 background_color_[2], background_color_[3]);
     glEnable(GL_PROGRAM_POINT_SIZE);
     //glEnable(GL_STENCIL_TEST);
     glEnable(GL_BLEND);
@@ -577,9 +577,9 @@ void Canvas<T>::Init(void)
     // This has to be done after the program has been compiled and the uniform
     // variable located
     glProgramUniform4fv(_progID_onscr_q, _fr_bg_unif_onscr_q, 1,
-        _in_frame_bg_color.GetData());
+        in_frame_bg_color_.GetData());
     // In principle, can be omitted
-    //glProgramUniform1f(_progID_c, _circle_r_unif_c, (float)_circle_r);
+    //glProgramUniform1f(_progID_c, _circle_r_unif_c, (float)circle_r_);
 }
 
 template<typename T>
@@ -612,25 +612,25 @@ void Canvas<T>::Reshape(int p_width, int p_height)
     this->SendGridToGPU();
 
     //++++++++++++++++++++++++++++++++++++
-    _text_rend.Reshape(p_width, p_height);
+    text_rend_.Reshape(p_width, p_height);
     //++++++++++++++++++++++++++++++++++++
 
-    const int ch_width = (int)(_font_size * (float)tiny_gl_text_renderer::CHAR_WIDTH);
-    const int line_height = (int)(_font_size * (float)tiny_gl_text_renderer::CHAR_HEIGHT);
+    const int ch_width = (int)(font_size_ * (float)tiny_gl_text_renderer::CHAR_WIDTH);
+    const int line_height = (int)(font_size_ * (float)tiny_gl_text_renderer::CHAR_HEIGHT);
 
-    const int line_len_x = (int)_x_axis_title.size();
-    _text_rend.UpdatePosition(
-        _window_w - _margin_xr_pix - line_len_x * ch_width,
-        _window_h - _margin_yb_pix + line_height,
+    const int line_len_x = (int)x_axis_title_.size();
+    text_rend_.UpdatePosition(
+        _window_w - margin_xr_pix_ - line_len_x * ch_width,
+        _window_h - margin_yb_pix_ + line_height,
         _x_axis_title_label_idx);
-    //_text_rend.UpdatePosition(10, _window_h - 2 * line_height, _hint_label_idx);
+    //text_rend_.UpdatePosition(10, _window_h - 2 * line_height, _hint_label_idx);
 
     for (unsigned int i = 0; i < _n_x_axis_value_labels_max; i++) {
-        _text_rend.UpdatePositionY(_window_h - _margin_yb_pix,
+        text_rend_.UpdatePositionY(_window_h - margin_yb_pix_,
             _x_axis_values_lables_start_idx + (size_t)i);
     }
     for (unsigned int i = 0; i < _n_y_axis_value_labels_max; i++) {
-        _text_rend.UpdatePositionX(_margin_xl_pix - line_height,
+        text_rend_.UpdatePositionX(margin_xl_pix_ - line_height,
             _y_axis_values_lables_start_idx + (size_t)i);
     }
 
@@ -658,9 +658,9 @@ template<typename T>
 //inline? //__forceinline?
 void Canvas<T>::SwitchToFrame(void) const
 {
-    glViewport(_margin_xl_pix, _margin_yb_pix,
-        _window_w - (_margin_xl_pix + _margin_xr_pix),
-        _window_h - (_margin_yb_pix + _margin_yt_pix));
+    glViewport(margin_xl_pix_, margin_yb_pix_,
+        _window_w - (margin_xl_pix_ + margin_xr_pix_),
+        _window_h - (margin_yb_pix_ + margin_yt_pix_));
 }
 
 // ===============================================================================
@@ -834,8 +834,8 @@ int Canvas<T>::SendGridToGPU(void)
     glfwMakeContextCurrent(_window);
 #endif
 
-    const float vw = (float)(_window_w - (_margin_xl_pix + _margin_xr_pix));
-    const float vh = (float)(_window_h - (_margin_yb_pix + _margin_yt_pix));
+    const float vw = (float)(_window_w - (margin_xl_pix_ + margin_xr_pix_));
+    const float vh = (float)(_window_h - (margin_yb_pix_ + margin_yt_pix_));
     if (_grid.CalculateStep(_visible_range, vw, vh) == 1) {
         // The range is degenerate
         //TODO decide what to do
@@ -898,7 +898,7 @@ void Canvas<T>::DrawGrid(void) const
     glfwMakeContextCurrent(_window);
 #endif
 
-    if (!_enable_hgrid && !_enable_vgrid) {
+    if (!enable_hgrid_ && !enable_vgrid_) {
         return;
     }
 
@@ -915,7 +915,7 @@ void Canvas<T>::DrawGrid(void) const
 
         glUseProgram(_progID_w);
         glBindVertexArray(_vaoID_grid);
-        if (_enable_vgrid) {
+        if (enable_vgrid_) {
             // Fine grid
             glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, _iboID_grid_w);
             glEnable(GL_LINE_STIPPLE);
@@ -928,7 +928,7 @@ void Canvas<T>::DrawGrid(void) const
             glLineWidth(_grid.GetVGridCoarseLineWidth());
             glDrawElements(GL_LINES, 2 * n_wires_coarse_x, GL_UNSIGNED_INT, NULL);
         }
-        if (_enable_hgrid) {
+        if (enable_hgrid_) {
             // Fine grid
             glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, _iboID_grid_w);
             glEnable(GL_LINE_STIPPLE);
@@ -960,7 +960,7 @@ void Canvas<T>::DrawAxes(void) const
     glfwMakeContextCurrent(_window);
 #endif
 
-    if (!_enable_axes) {
+    if (!enable_axes_) {
         return;
     }
 
@@ -976,10 +976,10 @@ void Canvas<T>::DrawAxes(void) const
             0.0f, static_cast<float>(_total_xy_range.lowy()), 0.0f, 1.0f);
         vertices[3].coords_ = point_t(
             0.0f, static_cast<float>(_total_xy_range.highy()), 0.0f, 1.0f);
-        vertices[0].color_ = _axes_line_color;
-        vertices[1].color_ = _axes_line_color;
-        vertices[2].color_ = _axes_line_color;
-        vertices[3].color_ = _axes_line_color;
+        vertices[0].color_ = axes_line_color_;
+        vertices[1].color_ = axes_line_color_;
+        vertices[2].color_ = axes_line_color_;
+        vertices[3].color_ = axes_line_color_;
 
         glBindVertexArray(_vaoID_axes);
         glBindBuffer(GL_ARRAY_BUFFER, _vboID_axes);
@@ -993,7 +993,7 @@ void Canvas<T>::DrawAxes(void) const
         glUseProgram(_progID_w);
         glBindVertexArray(_vaoID_axes);
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, _iboID_axes_w);
-        glLineWidth(_axes_line_width);
+        glLineWidth(axes_line_width_);
         glDrawElements(GL_LINES, 2 * n_wires, GL_UNSIGNED_INT, NULL);
         glBindVertexArray(0);
         glUseProgram(0);
@@ -1012,7 +1012,7 @@ void Canvas<T>::DrawVref(void) const
     glfwMakeContextCurrent(_window);
 #endif
 
-    if (!_enable_vref) {
+    if (!enable_vref_) {
         return;
     }
 
@@ -1020,12 +1020,12 @@ void Canvas<T>::DrawVref(void) const
     {
         const unsigned int n_vert = 2;
         vertex_colored_t vertices[n_vert];
-        vertices[0].coords_ = point_t(static_cast<float>(_ref_x),
+        vertices[0].coords_ = point_t(static_cast<float>(ref_x_),
             static_cast<float>(_total_xy_range.lowy()), 0.0f, 1.0f);
-        vertices[1].coords_ = point_t(static_cast<float>(_ref_x),
+        vertices[1].coords_ = point_t(static_cast<float>(ref_x_),
             static_cast<float>(_total_xy_range.highy()), 0.0f, 1.0f);
-        vertices[0].color_ = _vref_line_color;
-        vertices[1].color_ = _vref_line_color;
+        vertices[0].color_ = vref_line_color_;
+        vertices[1].color_ = vref_line_color_;
 
         glBindVertexArray(_vaoID_vref);
         glBindBuffer(GL_ARRAY_BUFFER, _vboID_vref);
@@ -1039,7 +1039,7 @@ void Canvas<T>::DrawVref(void) const
         glUseProgram(_progID_w);
         glBindVertexArray(_vaoID_vref);
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, _iboID_vref_w);
-        glLineWidth(_vref_line_width);
+        glLineWidth(vref_line_width_);
         glDrawElements(GL_LINES, 2 * n_wires, GL_UNSIGNED_INT, NULL);
         glBindVertexArray(0);
         glUseProgram(0);
@@ -1062,18 +1062,18 @@ void Canvas<T>::SendFrameVerticesToGPU(void) const
     {
         const unsigned int n_vert = 4;
         vertex_colored_t vertices[n_vert];
-        const float blx_ = (float)_margin_xl_pix;
-        const float bly_ = (float)_margin_yb_pix;
-        const float trx_ = (float)_window_w - (float)_margin_xr_pix;
-        const float try_ = (float)_window_h - (float)_margin_yt_pix;
+        const float blx_ = (float)margin_xl_pix_;
+        const float bly_ = (float)margin_yb_pix_;
+        const float trx_ = (float)_window_w - (float)margin_xr_pix_;
+        const float try_ = (float)_window_h - (float)margin_yt_pix_;
         vertices[0].coords_ = point_t(blx_, bly_, 0.0f, 1.0f);
         vertices[1].coords_ = point_t(trx_, bly_, 0.0f, 1.0f);
         vertices[2].coords_ = point_t(trx_, try_, 0.0f, 1.0f);
         vertices[3].coords_ = point_t(blx_, try_, 0.0f, 1.0f);
-        vertices[0].color_ = _frame_line_color;
-        vertices[1].color_ = _frame_line_color;
-        vertices[2].color_ = _frame_line_color;
-        vertices[3].color_ = _frame_line_color;
+        vertices[0].color_ = frame_line_color_;
+        vertices[1].color_ = frame_line_color_;
+        vertices[2].color_ = frame_line_color_;
+        vertices[3].color_ = frame_line_color_;
 
         glBindVertexArray(_vaoID_frame);
         glBindBuffer(GL_ARRAY_BUFFER, _vboID_frame);
@@ -1095,7 +1095,7 @@ void Canvas<T>::FillInFrame(void) const
 
     // In principle, filling of the in frame space need not necessarily be
     // controlled by this flag, it could be another flag.
-    if (!_enable_frame) {
+    if (!enable_frame_) {
         return;
     }
 
@@ -1123,7 +1123,7 @@ void Canvas<T>::DrawFrame(void) const
     glfwMakeContextCurrent(_window);
 #endif
 
-    if (!_enable_frame) {
+    if (!enable_frame_) {
         return;
     }
 
@@ -1249,7 +1249,7 @@ void Canvas<T>::DrawCursor(const double xs, const double ys) const
     glfwMakeContextCurrent(_window);
 #endif
 
-    if (!_enable_cursor) {
+    if (!enable_cursor_) {
         return;
     }
 
@@ -1259,18 +1259,18 @@ void Canvas<T>::DrawCursor(const double xs, const double ys) const
     {
         const unsigned int n_vert = 4;
         vertex_colored_t vertices[n_vert];
-        const float blx_ = (float)_margin_xl_pix;
-        const float bly_ = (float)_margin_yb_pix;
-        const float trx_ = (float)_window_w - (float)_margin_xr_pix;
-        const float try_ = (float)_window_h - (float)_margin_yt_pix;
+        const float blx_ = (float)margin_xl_pix_;
+        const float bly_ = (float)margin_yb_pix_;
+        const float trx_ = (float)_window_w - (float)margin_xr_pix_;
+        const float try_ = (float)_window_h - (float)margin_yt_pix_;
         vertices[0].coords_ = point_t((float)xs, bly_, 0.0f, 1.0f);
         vertices[1].coords_ = point_t((float)xs, try_, 0.0f, 1.0f);
         vertices[2].coords_ = point_t(blx_, (float)ys, 0.0f, 1.0f);
         vertices[3].coords_ = point_t(trx_, (float)ys, 0.0f, 1.0f);
-        vertices[0].color_ = _cursor_color;
-        vertices[1].color_ = _cursor_color;
-        vertices[2].color_ = _cursor_color;
-        vertices[3].color_ = _cursor_color;
+        vertices[0].color_ = cursor_color_;
+        vertices[1].color_ = cursor_color_;
+        vertices[2].color_ = cursor_color_;
+        vertices[3].color_ = cursor_color_;
 
         glBindVertexArray(_vaoID_cursor);
         glBindBuffer(GL_ARRAY_BUFFER, _vboID_cursor);
@@ -1286,7 +1286,7 @@ void Canvas<T>::DrawCursor(const double xs, const double ys) const
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, _iboID_cursor_onscr_w);
         glEnable(GL_LINE_STIPPLE);
         glLineStipple(1, 0x00FF);
-        glLineWidth(_cursor_line_width);
+        glLineWidth(cursor_line_width_);
         glDrawElements(GL_LINES, 2 * n_wires, GL_UNSIGNED_INT, NULL);
         glDisable(GL_LINE_STIPPLE);
         glBindVertexArray(0);
@@ -1366,7 +1366,7 @@ void Canvas<T>::DrawCircles(const double xs, const double ys) const
     glfwMakeContextCurrent(_window);
 #endif
 
-    if (!_enable_circles) {
+    if (!enable_circles_) {
         return;
     }
 
@@ -1439,7 +1439,7 @@ void Canvas<T>::UpdateTexTextCur(const double xs, const double ys)
     const Vec4f pr = this->TransformToVisrange(xs, ys);
     const T x = static_cast<T>(pr.x());
     const T y = static_cast<T>(pr.y());
-    const T& x0 = _ref_x;
+    const T& x0 = ref_x_;
 
     const size_t BUFSIZE = 32;
     char buf[BUFSIZE];
@@ -1448,13 +1448,13 @@ void Canvas<T>::UpdateTexTextCur(const double xs, const double ys)
     int i_lab2 = (int)_labels_start_idx + 1 + 2 * (int)(_graphs.size() + 1);
 
     snprintf(&buf[0], BUFSIZE, "x =% 0.4f", x);
-    _text_rend.UpdateLabel(buf, i_lab1);
+    text_rend_.UpdateLabel(buf, i_lab1);
     i_lab1++;
     snprintf(&buf[0], BUFSIZE, "y =% 0.4f", y);
-    _text_rend.UpdateLabel(buf, i_lab1);
+    text_rend_.UpdateLabel(buf, i_lab1);
     i_lab1++;
     snprintf(&buf[0], BUFSIZE, "dx =% 0.4f", x - x0);
-    _text_rend.UpdateLabel(buf, i_lab2);
+    text_rend_.UpdateLabel(buf, i_lab2);
     i_lab2++;
 
     int i_gr = 0;
@@ -1462,9 +1462,9 @@ void Canvas<T>::UpdateTexTextCur(const double xs, const double ys)
         const T y0 = gr->Evaluate(x0);
         const T yi = gr->Evaluate(x);
         snprintf(&buf[0], BUFSIZE, "y%d=% 0.4f", i_gr, yi);
-        _text_rend.UpdateLabel(buf, i_lab1);
+        text_rend_.UpdateLabel(buf, i_lab1);
         snprintf(&buf[0], BUFSIZE, "dy%d=% 0.4f", i_gr, yi - y0);
-        _text_rend.UpdateLabel(buf, i_lab2);
+        text_rend_.UpdateLabel(buf, i_lab2);
         i_lab1++; i_lab2++;
         i_gr++;
     }
@@ -1481,7 +1481,7 @@ void Canvas<T>::UpdateTexTextCur(const double xs, const double ys)
             const T yj = grj->Evaluate(x);
             const T dy = yj - yi;
             snprintf(&buf[0], BUFSIZE, "% 0.4f", dy);
-            _text_rend.UpdateLabel(buf, i_lab3);
+            text_rend_.UpdateLabel(buf, i_lab3);
             i_lab3 += 5;
         }
     }
@@ -1501,21 +1501,21 @@ void Canvas<T>::UpdateTexTextRef(const double xs, const double ys)
 
     if (!_total_xy_range.IncludesX(pr.x())) return;
 
-    _ref_x = pr.x();
+    ref_x_ = pr.x();
 
     const size_t BUFSIZE = 32;
     char buf[BUFSIZE];
 
     int i_lab = (int)_labels_start_idx + 1 + (int)(_graphs.size() + 1);
-    snprintf(&buf[0], BUFSIZE, "rx =% 0.4f", _ref_x);
-    _text_rend.UpdateLabel(buf, i_lab);
+    snprintf(&buf[0], BUFSIZE, "rx =% 0.4f", ref_x_);
+    text_rend_.UpdateLabel(buf, i_lab);
     i_lab++;
 
     int i_gr = 0;
     for (const auto* const gr : _graphs) {
-        const T y0 = gr->Evaluate(_ref_x);
+        const T y0 = gr->Evaluate(ref_x_);
         snprintf(&buf[0], BUFSIZE, "ry%d=% 0.4f", i_gr, y0);
-        _text_rend.UpdateLabel(buf, i_lab);
+        text_rend_.UpdateLabel(buf, i_lab);
         i_lab++;
         i_gr++;
     }
@@ -1531,16 +1531,16 @@ void Canvas<T>::UpdateTexTextGridSize(void)
     glfwMakeContextCurrent(_window);
 #endif
 
-    const int ch_width = (int)(_font_size * (float)tiny_gl_text_renderer::CHAR_WIDTH);
-    //const int line_height = (int)(_font_size * (float)tiny_gl_text_renderer::CHAR_HEIGHT);
+    const int ch_width = (int)(font_size_ * (float)tiny_gl_text_renderer::CHAR_WIDTH);
+    //const int line_height = (int)(font_size_ * (float)tiny_gl_text_renderer::CHAR_HEIGHT);
 
     char buf2[128];
     snprintf(&buf2[0], 128, "(%g;%g) (%g;%g)",
         _grid.GetFineXstep(), _grid.GetFineYstep(),
         _grid.GetCoarseXstep(), _grid.GetCoarseYstep());
     const int grid_line_len = (int)strlen(buf2);
-    _text_rend.UpdateLabel(buf2, _grid_params_label_idx);
-    _text_rend.UpdatePosition(_window_w - _margin_xr_pix -
+    text_rend_.UpdateLabel(buf2, _grid_params_label_idx);
+    text_rend_.UpdatePosition(_window_w - margin_xr_pix_ -
         grid_line_len * ch_width, _v_offset, _grid_params_label_idx);
 }
 
@@ -1562,8 +1562,8 @@ void Canvas<T>::UpdateTexAxesValues(void)
     const unsigned int nx = std::min(_n_x_axis_value_labels_max, nx_);
     const unsigned int ny = std::min(_n_y_axis_value_labels_max, ny_);
 
-    const int ch_width = (int)(_font_size * (float)tiny_gl_text_renderer::CHAR_WIDTH);
-    //const int line_height = (int)(_font_size * (float)tiny_gl_text_renderer::CHAR_HEIGHT);
+    const int ch_width = (int)(font_size_ * (float)tiny_gl_text_renderer::CHAR_WIDTH);
+    //const int line_height = (int)(font_size_ * (float)tiny_gl_text_renderer::CHAR_HEIGHT);
     constexpr size_t BUFSIZE = 32;
     char buf[BUFSIZE];
 
@@ -1575,7 +1575,7 @@ void Canvas<T>::UpdateTexAxesValues(void)
 
         snprintf(buf, BUFSIZE, "%g", vertices[idx0].coords_.x());
         const int offset = -(ch_width * (int)strlen(buf)) / 2;
-        _text_rend.UpdateLabel(buf, _x_axis_values_lables_start_idx + (size_t)i);
+        text_rend_.UpdateLabel(buf, _x_axis_values_lables_start_idx + (size_t)i);
 
         const Vec4f vr(vertices[idx0].coords_.x(), 0.0f, 0.0f, 1.0f);
         const Vec4f vc = _visrange_to_clip * vr;
@@ -1583,11 +1583,11 @@ void Canvas<T>::UpdateTexAxesValues(void)
         const Vec4f vv = _clip_to_viewport * vc;
         const Vec4f vs = _viewport_to_screen * vv;
 
-        _text_rend.UpdatePositionX((int)(vs.x()) + offset,
+        text_rend_.UpdatePositionX((int)(vs.x()) + offset,
             _x_axis_values_lables_start_idx + (size_t)i);
     }
     for (unsigned int i = nx; i < _n_x_axis_value_labels_max; i++) {
-        _text_rend.UpdateLabel(" ", _x_axis_values_lables_start_idx + (size_t)i);
+        text_rend_.UpdateLabel(" ", _x_axis_values_lables_start_idx + (size_t)i);
     }
 
     // Y axis --------------------------------------------------------------------
@@ -1598,7 +1598,7 @@ void Canvas<T>::UpdateTexAxesValues(void)
 
         snprintf(buf, BUFSIZE, "%g", vertices[idx0].coords_.y());
         const int offset = (ch_width * (int)strlen(buf)) / 2;
-        _text_rend.UpdateLabel(buf, _y_axis_values_lables_start_idx + (size_t)i);
+        text_rend_.UpdateLabel(buf, _y_axis_values_lables_start_idx + (size_t)i);
 
         const Vec4f vr(0.0f, vertices[idx0].coords_.y(), 0.0f, 1.0f);
         const Vec4f vc = _visrange_to_clip * vr;
@@ -1606,11 +1606,11 @@ void Canvas<T>::UpdateTexAxesValues(void)
         const Vec4f vv = _clip_to_viewport * vc;
         const Vec4f vs = _viewport_to_screen * vv;
 
-        _text_rend.UpdatePositionY(_window_h - (int)(vs.y()) + offset,
+        text_rend_.UpdatePositionY(_window_h - (int)(vs.y()) + offset,
             _y_axis_values_lables_start_idx + (size_t)i);
     }
     for (unsigned int i = ny; i < _n_y_axis_value_labels_max; i++) {
-        _text_rend.UpdateLabel(" ", _y_axis_values_lables_start_idx + (size_t)i);
+        text_rend_.UpdateLabel(" ", _y_axis_values_lables_start_idx + (size_t)i);
     }
 }
 
@@ -1708,8 +1708,8 @@ template<typename T>
 void Canvas<T>::ZoomF(const double xs, const double ys)
 {
     (void)xs;
-    const float vw = (float)(_window_w - (_margin_xl_pix + _margin_xr_pix));
-    const float vh = (float)(_window_h - (_margin_yb_pix + _margin_yt_pix));
+    const float vw = (float)(_window_w - (margin_xl_pix_ + margin_xr_pix_));
+    const float vh = (float)(_window_h - (margin_yb_pix_ + margin_yt_pix_));
     const float asp_rat = vw / vh;
     //const float asp_rat_inv = vh / vw;
     this->Zoom(_xs_start + (ys - _ys_start) * asp_rat, ys);
@@ -1799,8 +1799,8 @@ void Canvas<T>::FixedAspRatCamera(void)
     // Everything in double here
 
     // Just to shorten the notation
-    const double vw = (double)(_window_w - (_margin_xl_pix + _margin_xr_pix));
-    const double vh = (double)(_window_h - (_margin_yb_pix + _margin_yt_pix));
+    const double vw = (double)(_window_w - (margin_xl_pix_ + margin_xr_pix_));
+    const double vh = (double)(_window_h - (margin_yb_pix_ + margin_yt_pix_));
     const double asp_rat_inv = vh / vw;
     const double asp_rat     = vw / vh;
 
@@ -1854,10 +1854,10 @@ bool Canvas<T>::PointerInFrame(const double xs, const double ys) const
     const int xs_i = (int)xs;
     const int ys_i = (int)ys;
     return (
-        (xs_i >= (int)_margin_xl_pix) &&
-        (xs_i <= ((int)_window_w - (int)_margin_xr_pix)) &&
-        (ys_i >= (int)_margin_yb_pix) &&
-        (ys_i <= ((int)_window_h - (int)_margin_yt_pix)));
+        (xs_i >= (int)margin_xl_pix_) &&
+        (xs_i <= ((int)_window_w - (int)margin_xr_pix_)) &&
+        (ys_i >= (int)margin_yb_pix_) &&
+        (ys_i <= ((int)_window_h - (int)margin_yt_pix_)));
 }
 
 template<typename T>
@@ -1866,10 +1866,10 @@ void Canvas<T>::ClampToFrame(const double xs, const double ys, double& o_xs, dou
 ////#ifdef SET_CONTEXT
 ////    glfwMakeContextCurrent(_window);
 ////#endif
-    const double left_boundary = (double)_margin_xl_pix;
-    const double right_boundary = (double)_window_w - (double)_margin_xr_pix;
-    const double bottom_boundary = (double)_margin_yb_pix;
-    const double top_boundary = (double)_window_h - (double)_margin_yt_pix;
+    const double left_boundary = (double)margin_xl_pix_;
+    const double right_boundary = (double)_window_w - (double)margin_xr_pix_;
+    const double bottom_boundary = (double)margin_yb_pix_;
+    const double top_boundary = (double)_window_h - (double)margin_yt_pix_;
     o_xs = std::fmin(std::fmax(left_boundary, xs), right_boundary);
     o_ys = std::fmin(std::fmax(bottom_boundary, ys), top_boundary);
 }
@@ -1910,8 +1910,8 @@ void Canvas<T>::UpdateMatricesReshape(void)
     glfwMakeContextCurrent(_window);
 #endif
 
-    const float ax = (float)_margin_xl_pix;
-    const float ay = (float)_margin_yb_pix;
+    const float ax = (float)margin_xl_pix_;
+    const float ay = (float)margin_yb_pix_;
 
     _screen_to_viewport.Set(
         1.0f, 0.0f, 0.0f, 0.0f,
@@ -1929,10 +1929,10 @@ void Canvas<T>::UpdateMatricesReshape(void)
     //    1.0, 0.0, 0.0, 0.0,
     //    0.0, 1.0, 0.0, 0.0,
     //    0.0, 0.0, 1.0, 0.0,
-    //    -(double)_margin_xl_pix, -(double)_margin_yb_pix, 0.0, 1.0);
+    //    -(double)margin_xl_pix_, -(double)margin_yb_pix_, 0.0, 1.0);
 
-    const double vw = (double)(_window_w - (_margin_xl_pix + _margin_xr_pix));
-    const double vh = (double)(_window_h - (_margin_yb_pix + _margin_yt_pix));
+    const double vw = (double)(_window_w - (margin_xl_pix_ + margin_xr_pix_));
+    const double vh = (double)(_window_h - (margin_yb_pix_ + margin_yt_pix_));
     // hvw - half viewport width, hwh - -"- height
     const float hvw = (float)(0.5 * vw);
     const float hvh = (float)(0.5 * vh);
@@ -2070,8 +2070,8 @@ void Canvas<T>::UpdateSizeLimits(void)
 #ifdef SET_CONTEXT
     glfwMakeContextCurrent(_window);
 #endif
-    const int min_w = _margin_xl_pix + MINFRAMEWIDTH + _margin_xr_pix;
-    const int min_h = _margin_yb_pix + MINFRAMEHEIGHT + _margin_yt_pix;
+    const int min_w = margin_xl_pix_ + MINFRAMEWIDTH + margin_xr_pix_;
+    const int min_h = margin_yb_pix_ + MINFRAMEHEIGHT + margin_yt_pix_;
     const int min_w2 = (MINWINWIDTH > min_w) ? MINWINWIDTH : min_w;
     const int min_h2 = (MINWINHEIGHT > min_h) ? MINWINHEIGHT : min_h;
     glfwSetWindowSizeLimits(_window, min_w2, min_h2,
@@ -2092,7 +2092,7 @@ void Canvas<T>::FinalizeTextRenderer(void)
 #endif
     int win_w; int win_h;
     glfwGetWindowSize(_window, &win_w, &win_h);
-    _text_rend.FirstReshape(win_w, win_h);
+    text_rend_.FirstReshape(win_w, win_h);
 }
 //+++++++++++++++++++++++++++++++++++++++++++++
 
@@ -2104,11 +2104,11 @@ void Canvas<T>::SetDarkColorScheme(void)
     _grid.SetDarkColorScheme();
     this->SetBackgroundColor(tiny_gl_text_renderer::colors::gray1);
     this->SetInFrameBackgroundColor(tiny_gl_text_renderer::colors::gray05);
-    _axes_line_color   = tiny_gl_text_renderer::colors::gray75;
-    _vref_line_color   = tiny_gl_text_renderer::colors::olive;
-    _frame_line_color  = tiny_gl_text_renderer::colors::gray5;
-    _cursor_color      = tiny_gl_text_renderer::colors::white;
-    _gen_text_color    = tiny_gl_text_renderer::colors::white;
+    axes_line_color_  = tiny_gl_text_renderer::colors::gray75;
+    vref_line_color_  = tiny_gl_text_renderer::colors::olive;
+    frame_line_color_ = tiny_gl_text_renderer::colors::gray5;
+    cursor_color_     = tiny_gl_text_renderer::colors::white;
+    gen_text_color_   = tiny_gl_text_renderer::colors::white;
 }
 
 template<typename T>
@@ -2117,11 +2117,11 @@ void Canvas<T>::SetBrightColorScheme(void)
     _grid.SetBrightColorScheme();
     this->SetBackgroundColor(tiny_gl_text_renderer::colors::gray9);
     this->SetInFrameBackgroundColor(tiny_gl_text_renderer::colors::gray95);
-    _axes_line_color   = tiny_gl_text_renderer::colors::gray25;
-    _vref_line_color   = tiny_gl_text_renderer::colors::olive;
-    _frame_line_color  = tiny_gl_text_renderer::colors::gray5;
-    _cursor_color      = tiny_gl_text_renderer::colors::black;
-    _gen_text_color    = tiny_gl_text_renderer::colors::black;
+    axes_line_color_  = tiny_gl_text_renderer::colors::gray25;
+    vref_line_color_  = tiny_gl_text_renderer::colors::olive;
+    frame_line_color_ = tiny_gl_text_renderer::colors::gray5;
+    cursor_color_     = tiny_gl_text_renderer::colors::black;
+    gen_text_color_   = tiny_gl_text_renderer::colors::black;
 }
 
 template<typename T>
@@ -2133,9 +2133,9 @@ void Canvas<T>::SetBackgroundColor(const color_t& color)
 #ifdef SET_CONTEXT
     glfwMakeContextCurrent(_window);
 #endif
-    _background_color = color;
-    glClearColor(_background_color[0], _background_color[1],
-                 _background_color[2], _background_color[3]);
+    background_color_ = color;
+    glClearColor(background_color_[0], background_color_[1],
+                 background_color_[2], background_color_[3]);
 }
 
 template<typename T>
@@ -2147,9 +2147,9 @@ void Canvas<T>::SetInFrameBackgroundColor(const color_t& color)
 #ifdef SET_CONTEXT
     glfwMakeContextCurrent(_window);
 #endif
-    _in_frame_bg_color = color;
+    in_frame_bg_color_ = color;
     glProgramUniform4fv(_progID_onscr_q, _fr_bg_unif_onscr_q, 1,
-        _in_frame_bg_color.GetData());
+        in_frame_bg_color_.GetData());
 }
 
 // ===============================================================================

@@ -36,7 +36,7 @@ public:
         _angle(other._angle), _texture_w(other._texture_w),
         _texture_h(other._texture_h),
         _texture_data(std::exchange(other._texture_data, nullptr)),
-        _tex_id(other._tex_id)
+        tex_id_(other.tex_id_)
     {}
     Label& operator=(const Label& other) = delete;
     Label& operator=(Label&& other) = delete;
@@ -86,7 +86,7 @@ private:
     size_t _texture_h;
     float* _texture_data;
 public:
-    GLuint _tex_id = 0; //TODO invent proper initialization
+    GLuint tex_id_ = 0; //TODO invent proper initialization
 };
 
 } // end of namespace tiny_gl_text_renderer
