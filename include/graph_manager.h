@@ -14,12 +14,12 @@ class GraphManager
     static_assert(std::is_same<T, float>::value
                || std::is_same<T, double>::value, "");
 public:
-	explicit GraphManager<T>() {}
+	explicit GraphManager<T>() = default;
 	~GraphManager<T>() {
-		for (Graph<T>* gr : _graphs) {
+		for (Graph<T>* gr : graphs_) {
 			delete gr;
 		}
-		for (Histogram1d<T, unsigned long>* h : _histograms) {
+		for (Histogram1d<T, unsigned long>* h : histograms_) {
 			delete h;
 		}
 	}
@@ -30,17 +30,17 @@ public:
 public:
 	Graph<T>& CreateGraph() {
 		Graph<T>* new_gr = new Graph<T>();
-		_graphs.push_back(new_gr);
+		graphs_.push_back(new_gr);
 		return *new_gr;
 	}
 	Histogram1d<T, unsigned long>& CreateHistogram1d() {
 		Histogram1d<T, unsigned long>* new_histo = new Histogram1d<T, unsigned long>();
-		_histograms.push_back(new_histo);
+		histograms_.push_back(new_histo);
 		return *new_histo;
 	}
 private:
-	std::vector<Graph<T>*> _graphs;
-	std::vector<Histogram1d<T, unsigned long>*> _histograms;
+	std::vector<Graph<T>*> graphs_;
+	std::vector<Histogram1d<T, unsigned long>*> histograms_;
 };
 
 template class GraphManager<float>;

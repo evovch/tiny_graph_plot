@@ -25,8 +25,8 @@ public:
 		const unsigned int x = 50, const unsigned int y = 50);
 	void WaitForTheWindowsToClose();
 private:
-	std::vector<Canvas<T>*> _canvases;
-	bool _glew_initialized = false;
+	std::vector<Canvas<T>*> canvases_;
+	bool glew_initialized_ = false;
 };
 
 extern CanvasManager<float> global_canvas_manager_float;

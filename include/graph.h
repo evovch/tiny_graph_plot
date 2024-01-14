@@ -19,11 +19,10 @@ class Graph : public Drawable<T>
                || std::is_same<T, double>::value, "");
     friend class GraphManager<T>;
 private:
-    explicit Graph() : Drawable<T>(),
+    explicit Graph()
+    :   Drawable<T>(),
         _n_p(0),
-        _shared_points(false)
-    {
-    }
+        _shared_points(false) {}
     virtual ~Graph() {
         if (this->_points != nullptr && !_shared_points) {
             free(this->_points);

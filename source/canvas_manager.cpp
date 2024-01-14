@@ -17,10 +17,10 @@ CanvasManager<T>::CanvasManager(void) {
 
 template<typename T>
 CanvasManager<T>::~CanvasManager(void) {
-    for (auto* canv : _canvases) {
+    for (auto* canv : canvases_) {
         delete canv;
     }
-    _canvases.clear();
+    canvases_.clear();
     glfwTerminate();
 }
 
@@ -38,22 +38,22 @@ Canvas<T>& CanvasManager<T>::CreateCanvas(const char* name,
     glfwSetWindowPos(window, x, y);
     glfwMakeContextCurrent(window);
 
-    if (!_glew_initialized) {
+    if (!glew_initialized_) {
         tiny_graph_plot::init_glew();
-        _glew_initialized = true;
+        glew_initialized_ = true;
     }
 
     glfwHideWindow(window);
 
     Canvas<T>* new_canv = new Canvas<T>(window, w, h);
-    _canvases.push_back(new_canv);
+    canvases_.push_back(new_canv);
     return *new_canv;
 }
 
 template<typename T>
 void CanvasManager<T>::WaitForTheWindowsToClose(void) {
-    if (_canvases.size() < 1) return;
-    GLFWwindow* const first_window = _canvases.at(0)->GetWindow();
+    if (canvases_.size() < 1) return;
+    GLFWwindow* const first_window = canvases_.at(0)->GetWindow();
     while (!glfwWindowShouldClose(first_window)) {
         glfwWaitEvents();
     }
