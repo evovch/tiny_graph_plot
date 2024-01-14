@@ -14,8 +14,8 @@ class Vec4
     static_assert(std::is_same<T, float>::value
                || std::is_same<T, double>::value, "");
 public:
-    Vec4() noexcept : data_{ T(0.0), T(0.0), T(0.0), T(0.0) } {}
-    Vec4(const T x, const T y, const T z, const T w) noexcept
+    explicit Vec4() noexcept : data_{ T(0.0), T(0.0), T(0.0), T(0.0) } {}
+    explicit Vec4(const T x, const T y, const T z, const T w) noexcept
     :   data_{ x, y, z, w } {}
     ~Vec4() = default;
     Vec4(const Vec4& other) = default;
