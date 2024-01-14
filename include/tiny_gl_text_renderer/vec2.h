@@ -5,10 +5,6 @@
 #include <cstdio>
 #include <type_traits>
 
-#if defined(__linux__)
-#define __forceinline inline
-#endif
-
 namespace tiny_gl_text_renderer
 {
 
@@ -18,7 +14,7 @@ class Vec2
     static_assert(std::is_same<T, float>::value
                || std::is_same<T, double>::value, "");
 public:
-    Vec2(void) : _data{ 0.0, 0.0 } {}
+    Vec2(void) : _data{ T(0.0), T(0.0) } {}
     Vec2(const T x, const T y)
     :   _data{ x, y } {}
     ~Vec2(void) = default;
@@ -27,12 +23,12 @@ public:
     Vec2& operator=(const Vec2& other) = default;
     Vec2& operator=(Vec2&& other) = default;
 public:
-    __forceinline const T* const GetData(void) const { return _data.data(); }
-    __forceinline const T operator[](const size_t i) const { //TODO return byref?
+    const T* GetData(void) const { return _data.data(); }
+    T operator[](const size_t i) const {
         assert(i < _data.size());
         return _data[i];
     }
-    __forceinline T& operator[](const size_t i) {
+    T& operator[](const size_t i) {
         assert(i < _data.size());
         return _data[i];
     }
@@ -41,8 +37,8 @@ public:
             _data[0], _data[1], suffix);
     }
 public:
-    __forceinline const T x(void) const { return _data[0]; }
-    __forceinline const T y(void) const { return _data[1]; }
+    T x(void) const { return _data[0]; }
+    T y(void) const { return _data[1]; }
 private:
     std::array<T, 2> _data;
 };

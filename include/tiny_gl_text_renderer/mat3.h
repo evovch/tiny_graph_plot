@@ -30,34 +30,38 @@ public:
                m20, m21, m22 } {}
 
     ~Mat3() = default;
-    __forceinline void Reset() {
-        _data[0 * 3 + 0] = T(1.0); _data[0 * 3 + 1] = T(0.0); _data[0 * 3 + 2] = T(0.0);
-        _data[1 * 3 + 0] = T(0.0); _data[1 * 3 + 1] = T(1.0); _data[1 * 3 + 2] = T(0.0);
-        _data[2 * 3 + 0] = T(0.0); _data[2 * 3 + 1] = T(0.0); _data[2 * 3 + 2] = T(1.0);
+    void Reset() {
+        _data[0*3+0] = T(1.0); _data[0*3+1] = T(0.0); _data[0*3+2] = T(0.0);
+        _data[1*3+0] = T(0.0); _data[1*3+1] = T(1.0); _data[1*3+2] = T(0.0);
+        _data[2*3+0] = T(0.0); _data[2*3+1] = T(0.0); _data[2*3+2] = T(1.0);
+
     }
-    __forceinline void Set(
+    void Set(
         const T m00, const T m01, const T m02,
         const T m10, const T m11, const T m12,
         const T m20, const T m21, const T m22) {
-        _data[0 * 3 + 0] = m00; _data[0 * 3 + 1] = m01; _data[0 * 3 + 2] = m02;
-        _data[1 * 3 + 0] = m10; _data[1 * 3 + 1] = m11; _data[1 * 3 + 2] = m12;
-        _data[2 * 3 + 0] = m20; _data[2 * 3 + 1] = m21; _data[2 * 3 + 2] = m22;
+
+        _data[0*3+0] = m00; _data[0*3+1] = m01; _data[0*3+2] = m02;
+        _data[1*3+0] = m10; _data[1*3+1] = m11; _data[1*3+2] = m12;
+        _data[2*3+0] = m20; _data[2*3+1] = m21; _data[2*3+2] = m22;
+
     }
-    __forceinline const T* const GetData() const { return _data.data(); }
-    __forceinline const T operator[](const size_t i) const { //TODO return byref?
+    const T* const GetData() const { return _data.data(); }
+    T operator[](const size_t i) const {
         assert(i < _data.size());
         return _data[i];
     }
-    __forceinline T& operator[](const size_t i) {
+    T& operator[](const size_t i) {
         assert(i < _data.size());
         return _data[i];
     }
-    __forceinline Vec3<T> operator*(const Vec3<T>& op2) const {
-        Vec3<T> ret;
-        ret[0] = _data[0 * 3 + 0] * op2[0] + _data[1 * 3 + 0] * op2[1] + _data[2 * 3 + 0] * op2[2];
-        ret[1] = _data[0 * 3 + 1] * op2[0] + _data[1 * 3 + 1] * op2[1] + _data[2 * 3 + 1] * op2[2];
-        ret[2] = _data[0 * 3 + 2] * op2[0] + _data[1 * 3 + 2] * op2[1] + _data[2 * 3 + 2] * op2[2];
-        return ret;
+    Vec3<T> operator*(const Vec3<T>& v) const {
+        return Vec3<T>(
+            _data[0*3+0] * v[0] + _data[1*3+0] * v[1] + _data[2*3+0] * v[2],
+            _data[0*3+1] * v[0] + _data[1*3+1] * v[1] + _data[2*3+1] * v[2],
+            _data[0*3+2] * v[0] + _data[1*3+2] * v[1] + _data[2*3+2] * v[2]
+        
+        );
     }
 private:
     std::array<T, 9> _data;
