@@ -23,9 +23,8 @@ public:
         const size_t newSize = GetRequiredTextureSize(string,
             _texture_w, _texture_h) * 4 * sizeof(float);
         _texture_data = (float*)malloc(newSize);
-        const float color_[4] = { color.r(), color.g(), color.b(), color.a() };
         tiny_gl_text_renderer::FillString(string, _texture_data, 4,
-            _texture_w, _texture_h, 0, 0, &color_[0], 4);
+            _texture_w, _texture_h, 0, 0, color.GetData(), 4);
     }
     ~Label(void) {
         if (_texture_data != nullptr) free(_texture_data);
@@ -50,9 +49,8 @@ public:
             _texture_w, _texture_h) * 4 * sizeof(float);
         _texture_data = (float*)realloc(_texture_data, newSize);
         if (_texture_data == nullptr) return; //ERROR
-        const float color_[4] = { _color.r(), _color.g(), _color.b(), _color.a() };
         tiny_gl_text_renderer::FillString(string, _texture_data, 4,
-            _texture_w, _texture_h, 0, 0, &color_[0], 4);
+            _texture_w, _texture_h, 0, 0, _color.GetData(), 4);
     }
     __forceinline void UpdatePosition(const int x, const int y) { _x = x; _y = y; }
     __forceinline void UpdatePositionX(const int x) { _x = x; }

@@ -560,8 +560,8 @@ void Canvas<T>::Init(void) {
 
     // Initialize different OpenGL parameters
 
-    glClearColor(_background_color.r(), _background_color.g(),
-                 _background_color.b(), _background_color.a());
+    glClearColor(_background_color[0], _background_color[1],
+                 _background_color[2], _background_color[3]);
     glEnable(GL_PROGRAM_POINT_SIZE);
     //glEnable(GL_STENCIL_TEST);
     glEnable(GL_BLEND);
@@ -2120,8 +2120,8 @@ void Canvas<T>::SetBackgroundColor(const color_t& color) {
     glfwMakeContextCurrent(_window);
 #endif
     _background_color = color;
-    glClearColor(_background_color.r(), _background_color.g(),
-                 _background_color.b(), _background_color.a());
+    glClearColor(_background_color[0], _background_color[1],
+                 _background_color[2], _background_color[3]);
 }
 
 template<typename T>

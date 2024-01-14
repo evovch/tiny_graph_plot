@@ -39,7 +39,6 @@ public:
 public:
     T x(void) const { return data_[0]; }
     T y(void) const { return data_[1]; }
-    T w(void) const { return data_[2]; }
 private:
     std::array<T, 3> data_;
 };

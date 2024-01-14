@@ -39,12 +39,6 @@ public:
 public:
     T x(void) const { return data_[0]; }
     T y(void) const { return data_[1]; }
-    T z(void) const { return data_[2]; }
-    T w(void) const { return data_[3]; }
-    T r(void) const { return data_[0]; }
-    T g(void) const { return data_[1]; }
-    T b(void) const { return data_[2]; }
-    T a(void) const { return data_[3]; }
 private:
     std::array<T, 4> data_;
 };
