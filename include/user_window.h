@@ -20,11 +20,11 @@ class UserWindow
 {
 protected:
     UserWindow(GLFWwindow* window, const unsigned int w, const unsigned int h);
-    virtual ~UserWindow(void) {}
+    virtual ~UserWindow() {}
 private:
-    void SetCallbacks(void) const;
+    void SetCallbacks() const;
 public:
-    GLFWwindow* const GetWindow(void) const { return _window; }
+    GLFWwindow* const GetWindow() const { return _window; }
     void framebuffer_size_event(int width, int height);
     void window_pos_event(int xpos, int ypos);
     void window_iconify_event(int iconified);
@@ -44,18 +44,18 @@ protected:
     virtual void ZoomY     (const double xs,  const double ys) = 0;
     virtual void ZoomTo    (const double xs0, const double ys0,
                             const double xs1, const double ys1) = 0;
-    virtual void ResetCamera(void) = 0;
-    virtual void SetPrevViewport(void) = 0;
-    virtual void FixedAspRatCamera(void) = 0;
-    virtual void ExportSnapshot(void) = 0;
+    virtual void ResetCamera() = 0;
+    virtual void SetPrevViewport() = 0;
+    virtual void FixedAspRatCamera() = 0;
+    virtual void ExportSnapshot() = 0;
     virtual bool PointerInFrame(const double xs, const double ys) const = 0;
     virtual void ClampToFrame(const double xs, const double ys,
                               double& o_xs, double& o_ys) const = 0;
-    virtual void SaveStartState(void) = 0;
+    virtual void SaveStartState() = 0;
     virtual void ToggleGraphVisibility(const int iGraph) const = 0;
-    virtual void Clear(void) const = 0;
+    virtual void Clear() const = 0;
     virtual void Reshape(int p_width, int p_height) = 0;
-    virtual void Draw(void) /*const*/ = 0;
+    virtual void Draw() /*const*/ = 0;
     virtual void DrawCursor(const double xs, const double ys) const = 0;
     virtual void DrawSelRectangle(const double xs0, const double ys0,
                                   const double xs1, const double ys1) const = 0;

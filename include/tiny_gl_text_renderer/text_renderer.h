@@ -14,14 +14,14 @@ typedef unsigned int GLuint;
 class TextRenderer
 {
 public:
-    TextRenderer(void);
-    ~TextRenderer(void);
+    TextRenderer();
+    ~TextRenderer();
 public:
     void SetCanvasSize(int w, int h) { _w = w; _h = h; }
-    void UpdateScreenToClipMatrix(void);
+    void UpdateScreenToClipMatrix();
     void FirstReshape(int w, int h);
     void Reshape(int w, int h);
-    void Draw(void) const;
+    void Draw() const;
     void DrawSingle(const size_t i_label) const;
     size_t AddLabel(const char* string, const int x, const int y,
         const color_t& color, const float scaling = 1.0f,
@@ -32,10 +32,10 @@ public:
     void UpdatePositionX(const int x, const size_t i_label);
     void UpdatePositionY(const int y, const size_t i_label);
     void UpdateRotation(const float angle, const size_t i_label);
-    void AllocateVerticesAndQuadsMemory(void);
-    void RecalculateVertices(void);
+    void AllocateVerticesAndQuadsMemory();
+    void RecalculateVertices();
     void RecalculateVerticesSingle(const size_t i_label);
-    void SendToGPU(void) const;
+    void SendToGPU() const;
     void SendToGPUverticesSingle(const size_t i_label) const;
     void SendToGPUtextureSingle(const size_t i_label) const;
 private:

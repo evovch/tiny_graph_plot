@@ -54,7 +54,7 @@ public:
     __forceinline void UpdatePositionX(const int x) { _x = x; }
     __forceinline void UpdatePositionY(const int y) { _y = y; }
     __forceinline void UpdateRotation(const float angle) { _angle = angle; }
-    const Mat3f GetMatrix(void) const {
+    const Mat3f GetMatrix() const {
         constexpr double deg_to_rad = 3.14159265358979323846 / 180.0;
         const float angle_rad = _angle * (float)deg_to_rad;
         const float sintheta = std::sin(angle_rad);
@@ -64,14 +64,14 @@ public:
             _scaling * sintheta,  _scaling * costheta, 0.0f,
             (float)_x, (float)_y, 1.0f);
     }
-    __forceinline const std::string& GetString(void) const { return _string; }
-    __forceinline const int& GetTexX(void) const { return _x; }
-    __forceinline const int& GetTexY(void) const { return _y; }
-    __forceinline const float& GetScaling(void) const { return _scaling; }
-    __forceinline const float& GetAngle(void) const { return _angle; }
-    __forceinline const size_t& GetTexW(void) const { return _texture_w; }
-    __forceinline const size_t& GetTexH(void) const { return _texture_h; }
-    __forceinline const float* const GetTexData(void) const { return _texture_data; }
+    __forceinline const std::string& GetString() const { return _string; }
+    __forceinline const int& GetTexX() const { return _x; }
+    __forceinline const int& GetTexY() const { return _y; }
+    __forceinline const float& GetScaling() const { return _scaling; }
+    __forceinline const float& GetAngle() const { return _angle; }
+    __forceinline const size_t& GetTexW() const { return _texture_w; }
+    __forceinline const size_t& GetTexH() const { return _texture_h; }
+    __forceinline const float* const GetTexData() const { return _texture_data; }
 private:
     std::string _string;
     int _x;

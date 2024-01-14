@@ -15,13 +15,13 @@ class Histogram1d : public Drawable<T>
 {
     friend class GraphManager<T>;
 private:
-    Histogram1d(void) : Drawable<T>(),
+    Histogram1d() : Drawable<T>(),
         _n_bins(0),
         _x_min(0.0),
         _x_max(0.0)
     {
     }
-    virtual ~Histogram1d(void) {
+    virtual ~Histogram1d() {
         if (this->_points != nullptr) {
             delete[] this->_points;
         }
@@ -50,7 +50,7 @@ public:
         this->_points[iBin*3+1] = Vec2<T>(x,                      y);
         this->_points[iBin*3+2] = Vec2<T>(x + T(0.5) * bin_width, y);
     }
-    //std::vector<VALUETYPE>& GetBinsToModify(void) { return _bins; }
+    //std::vector<VALUETYPE>& GetBinsToModify() { return _bins; }
     void GenGauss(const unsigned int nbins, const T xmin, const T xmax,
         const T a, const T b, const T c) {
         _n_bins = nbins;

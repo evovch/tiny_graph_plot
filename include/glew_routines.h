@@ -8,7 +8,7 @@
 namespace tiny_graph_plot
 {
 
-void init_glew(void) {
+void init_glew() {
     GLenum err = glewInit();
     if (GLEW_OK != err) {
         fprintf(stderr, "GLEW: error: failed to initialize: %s\nAborting.\n",

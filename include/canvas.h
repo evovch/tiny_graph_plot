@@ -35,28 +35,28 @@ class Canvas : public UserWindow
     friend class CanvasManager<T>;
 private:
     Canvas(GLFWwindow* window, const unsigned int w, const unsigned int h);
-    virtual ~Canvas(void) override;
+    virtual ~Canvas() override;
 public:
     void AddGraph(const Graph<T>& p_graph);
     void AddHistogram(const Histogram1d<T, unsigned long>& p_histo);
-    void Show(void);
-    virtual void Draw(void) /*const*/ override;
+    void Show();
+    virtual void Draw() /*const*/ override;
 private:
-    void Init(void);
-    virtual void Clear(void) const override;
+    void Init();
+    virtual void Clear() const override;
     virtual void Reshape(int p_width, int p_height) override;
     void PrintCursorValues(const double xs, const double ys) const;
-    __forceinline void SwitchToFullWindow(void) const;
-    __forceinline void SwitchToFrame(void) const;
-    void AllocateBuffersForFixedSizedData(void) const;
-    void SendFixedIndicesToGPU(void) const;
-    int SendGridToGPU(void);
-    void DrawGrid(void) const;
-    void DrawAxes(void) const;
-    void DrawVref(void) const;
-    void SendFrameVerticesToGPU(void) const;
-    void FillInFrame(void) const;
-    void DrawFrame(void) const;
+    __forceinline void SwitchToFullWindow() const;
+    __forceinline void SwitchToFrame() const;
+    void AllocateBuffersForFixedSizedData() const;
+    void SendFixedIndicesToGPU() const;
+    int SendGridToGPU();
+    void DrawGrid() const;
+    void DrawAxes() const;
+    void DrawVref() const;
+    void SendFrameVerticesToGPU() const;
+    void FillInFrame() const;
+    void DrawFrame() const;
     void SendDrawableToGPU(const Drawable<T>* const p_graph, const SizeInfo& p_offset) const;
     void DrawDrawable     (const Drawable<T>* const p_graph, const SizeInfo& p_offset) const;
     virtual void DrawCursor(const double xs, const double ys) const override;
@@ -65,8 +65,8 @@ private:
     virtual void DrawCircles(const double xs, const double ys) const override;
     virtual void UpdateTexTextCur(const double xs, const double ys) override;
     virtual void UpdateTexTextRef(const double xs, const double ys) override;
-    void UpdateTexTextGridSize(void);
-    void UpdateTexAxesValues(void);
+    void UpdateTexTextGridSize();
+    void UpdateTexAxesValues();
 private:
     // VAOs, VBOs, IBOs
     GLuint _vaoID_grid;     //!< 1. Grid
@@ -162,18 +162,18 @@ private:
     virtual void ZoomY     (const double xs,  const double ys) override;
     virtual void ZoomTo    (const double xs0, const double ys0,
                             const double xs1, const double ys1) override;
-    virtual void ResetCamera(void) override;
-    virtual void SetPrevViewport(void) override;
-    virtual void FixedAspRatCamera(void) override;
-    virtual void ExportSnapshot(void) override;
+    virtual void ResetCamera() override;
+    virtual void SetPrevViewport() override;
+    virtual void FixedAspRatCamera() override;
+    virtual void ExportSnapshot() override;
     virtual bool PointerInFrame(const double xs, const double ys) const override;
     virtual void ClampToFrame(const double xs, const double ys,
                               double& o_xs, double& o_ys) const override;
-    virtual void SaveStartState(void) override;
+    virtual void SaveStartState() override;
     virtual void ToggleGraphVisibility(const int iGraph) const override;
     void ExportPNG(const char* const dir, const char* const filename) const;
-    void UpdateMatricesReshape(void);
-    void UpdateMatricesPanZoom(void);
+    void UpdateMatricesReshape();
+    void UpdateMatricesPanZoom();
     // Transformation matrices are stored using single precision floats,
     // thus performing transformations in double precision make no sense.
     __forceinline Vec4f TransformToVisrange(const double xs, const double ys,
@@ -208,14 +208,14 @@ public:
     T _ref_x;
     // ===========================================================================
 public:
-    void UpdateSizeLimits(void);
+    void UpdateSizeLimits();
     // ===========================================================================
     //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 public:
-    tiny_gl_text_renderer::TextRenderer& GetTextRenderer(void) {
+    tiny_gl_text_renderer::TextRenderer& GetTextRenderer() {
         return _text_rend;
     }
-    void FinalizeTextRenderer(void);
+    void FinalizeTextRenderer();
 private:
     tiny_gl_text_renderer::TextRenderer _text_rend;
     //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -233,23 +233,23 @@ public: // visual parameters
     void SetXaxisTitle(const char* title) { _x_axis_title = std::string(title); }
     void SetYaxisTitle(const char* title, const bool rotated = false) {
         _y_axis_title = std::string(title); _y_axis_title_rotated = rotated; }
-    void EnableHgrid(void)    { _enable_hgrid   = true; }
-    void EnableVgrid(void)    { _enable_vgrid   = true; }
-    void EnableAxes(void)     { _enable_axes    = true; }
-    void EnableVref(void)     { _enable_vref    = true; }
-    void EnableFrame(void)    { _enable_frame   = true; }
-    void EnableCursor(void)   { _enable_cursor  = true; }
-    void EnableCircles(void)  { _enable_circles = true; }
-    void DisableHgrid(void)   { _enable_hgrid   = false; }
-    void DisableVgrid(void)   { _enable_vgrid   = false; }
-    void DisableAxes(void)    { _enable_axes    = false; }
-    void DisableVref(void)    { _enable_vref    = false; }
-    void DisableFrame(void)   { _enable_frame   = false; }
-    void DisableCursor(void)  { _enable_cursor  = false; }
-    void DisableCircles(void) { _enable_circles = false; }
+    void EnableHgrid()    { _enable_hgrid   = true; }
+    void EnableVgrid()    { _enable_vgrid   = true; }
+    void EnableAxes()     { _enable_axes    = true; }
+    void EnableVref()     { _enable_vref    = true; }
+    void EnableFrame()    { _enable_frame   = true; }
+    void EnableCursor()   { _enable_cursor  = true; }
+    void EnableCircles()  { _enable_circles = true; }
+    void DisableHgrid()   { _enable_hgrid   = false; }
+    void DisableVgrid()   { _enable_vgrid   = false; }
+    void DisableAxes()    { _enable_axes    = false; }
+    void DisableVref()    { _enable_vref    = false; }
+    void DisableFrame()   { _enable_frame   = false; }
+    void DisableCursor()  { _enable_cursor  = false; }
+    void DisableCircles() { _enable_circles = false; }
     // Color settings ------------------------------------------------------------
-    void SetDarkColorScheme(void);
-    void SetBrightColorScheme(void);
+    void SetDarkColorScheme();
+    void SetBrightColorScheme();
     void SetBackgroundColor(const color_t& color);
     void SetInFrameBackgroundColor(const color_t& color);
     void SetHGridFineColor  (const color_t& color) { _grid.SetHGridFineColor(color); }

@@ -17,12 +17,12 @@ class Graph : public Drawable<T>
 {
     friend class GraphManager<T>;
 private:
-    Graph(void) : Drawable<T>(),
+    Graph() : Drawable<T>(),
         _n_p(0),
         _shared_points(false)
     {
     }
-    virtual ~Graph(void) {
+    virtual ~Graph() {
         if (this->_points != nullptr && !_shared_points) {
             free(this->_points);
         }
@@ -65,7 +65,7 @@ public:
         return y;
     }
 private:
-    void CalculateRanges(void) const {
+    void CalculateRanges() const {
         unsigned int start_i = 0;
         bool start_i_found = false;
         for (start_i = 0; start_i < _n_p; start_i++) {

@@ -17,13 +17,13 @@ template<typename T>
 class Grid
 {
 public:
-    Grid(void)
+    Grid()
     :   _fine_step_x(static_cast<T>(0.2)),
         _fine_step_y(static_cast<T>(0.2)),
         _coarse_step_x(static_cast<T>(1.0)),
         _coarse_step_y(static_cast<T>(1.0))
     {}
-    ~Grid(void) {
+    ~Grid() {
         if (_vertices != nullptr)     { delete[] _vertices; }
         if (_wires_fine != nullptr)   { delete[] _wires_fine; }
         if (_wires_coarse != nullptr) { delete[] _wires_coarse; }

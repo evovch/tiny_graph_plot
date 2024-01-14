@@ -12,8 +12,8 @@ template<typename T>
 class GraphManager
 {
 public:
-	GraphManager<T>(void) {}
-	~GraphManager<T>(void) {
+	GraphManager<T>() {}
+	~GraphManager<T>() {
 		for (Graph<T>* gr : _graphs) {
 			delete gr;
 		}
@@ -21,12 +21,12 @@ public:
 			delete h;
 		}
 	}
-	Graph<T>& CreateGraph(void) {
+	Graph<T>& CreateGraph() {
 		Graph<T>* new_gr = new Graph<T>();
 		_graphs.push_back(new_gr);
 		return *new_gr;
 	}
-	Histogram1d<T, unsigned long>& CreateHistogram1d(void) {
+	Histogram1d<T, unsigned long>& CreateHistogram1d() {
 		Histogram1d<T, unsigned long>* new_histo = new Histogram1d<T, unsigned long>();
 		_histograms.push_back(new_histo);
 		return *new_histo;
