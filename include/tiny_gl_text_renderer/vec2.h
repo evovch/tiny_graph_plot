@@ -1,6 +1,7 @@
 #pragma once
 
 #include <cstdio>
+#include <type_traits>
 
 #if defined(__linux__)
 #define __forceinline inline
@@ -12,6 +13,8 @@ namespace tiny_gl_text_renderer
 template<typename T>
 class Vec2
 {
+    static_assert(std::is_same<T, float>::value
+               || std::is_same<T, double>::value, "");
 public:
     Vec2(void) : _data{ 0.0, 0.0 } {}
     Vec2(const T x, const T y) :
@@ -53,7 +56,7 @@ private:
 template class Vec2<float>;
 template class Vec2<double>;
 
-typedef Vec2<float> Vec2f;
-typedef Vec2<double> Vec2d;
+using Vec2f = Vec2<float>;
+using Vec2d = Vec2<double>;
 
 } // end of namespace tiny_gl_text_renderer

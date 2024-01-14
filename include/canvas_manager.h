@@ -10,6 +10,8 @@ namespace tiny_graph_plot
 template<typename T>
 class CanvasManager
 {
+    static_assert(std::is_same<T, float>::value
+               || std::is_same<T, double>::value, "");
 public:
 	CanvasManager();
 	~CanvasManager();

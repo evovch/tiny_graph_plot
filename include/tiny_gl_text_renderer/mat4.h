@@ -1,5 +1,7 @@
 #pragma once
 
+#include <type_traits>
+
 #include "vec4.h"
 
 namespace tiny_gl_text_renderer
@@ -8,6 +10,8 @@ namespace tiny_gl_text_renderer
 template<typename T>
 class Mat4
 {
+    static_assert(std::is_same<T, float>::value
+               || std::is_same<T, double>::value, "");
 public:
     Mat4(void) : _data{1.0, 0.0, 0.0, 0.0,
                        0.0, 1.0, 0.0, 0.0,
@@ -82,7 +86,7 @@ private:
 template class Mat4<float>;
 template class Mat4<double>;
 
-typedef Mat4<float> Mat4f;
-typedef Mat4<double> Mat4d;
+using Mat4f = Mat4<float>;
+using Mat4d = Mat4<double>;
 
 } // end of namespace tiny_gl_text_renderer

@@ -16,13 +16,10 @@ using tiny_gl_text_renderer::wire_t;
 template<typename T>
 class Grid
 {
+    static_assert(std::is_same<T, float>::value
+               || std::is_same<T, double>::value, "");
 public:
-    Grid()
-    :   _fine_step_x(static_cast<T>(0.2)),
-        _fine_step_y(static_cast<T>(0.2)),
-        _coarse_step_x(static_cast<T>(1.0)),
-        _coarse_step_y(static_cast<T>(1.0))
-    {}
+    explicit Grid() = default;
     ~Grid() {
         if (_vertices != nullptr)     { delete[] _vertices; }
         if (_wires_fine != nullptr)   { delete[] _wires_fine; }
@@ -245,22 +242,22 @@ public:
     const T& GetCoarseXstep() const { return _coarse_step_x; }
     const T& GetCoarseYstep() const { return _coarse_step_y; }
 private:
-    const unsigned int _coarse_grid_factor = 5;
-    const unsigned int _cell_size_in_pix_min = 20;
-    const unsigned int _cell_size_in_pix_max = 200;
-    const unsigned int _axis_value_step_in_pix_min = 100;
-    const unsigned int _axis_value_step_in_pix_max = 500;
-    T _fine_step_x;
-    T _fine_step_y;
-    T _coarse_step_x; //!< _fine_step_x * _coarse_grid_factor
-    T _coarse_step_y; //!< _fine_step_y * _coarse_grid_factor
-    unsigned int _n_vertices = 0;
-    unsigned int _n_wires_fine_x = 0; //!< Number of vertical wires of the fine grid along X direction
-    unsigned int _n_wires_fine_y = 0; //!< Number of horizontal wires of the fine grid along Y direction
-    unsigned int _n_wires_coarse_x = 0; //!< Number of vertical wires of the coarse grid along X direction
-    unsigned int _n_wires_coarse_y = 0; //!< Number of horizontal wires of the coarse grid along Y direction
-    unsigned int _n_wires_fine = 0;   //!< _n_wires_fine_x + _n_wires_fine_y
-    unsigned int _n_wires_coarse = 0; //!< _n_wires_coarse_x + _n_wires_coarse_y
+    static constexpr unsigned int _coarse_grid_factor = 5u;
+    static constexpr unsigned int _cell_size_in_pix_min = 20u;
+    static constexpr unsigned int _cell_size_in_pix_max = 200u;
+    static constexpr unsigned int _axis_value_step_in_pix_min = 100u;
+    static constexpr unsigned int _axis_value_step_in_pix_max = 500u;
+    T _fine_step_x = T(0.2);
+    T _fine_step_y = T(0.2);
+    T _coarse_step_x = T(1.0); //!< _fine_step_x * _coarse_grid_factor
+    T _coarse_step_y = T(1.0); //!< _fine_step_y * _coarse_grid_factor
+    unsigned int _n_vertices = 0u;
+    unsigned int _n_wires_fine_x = 0u; //!< Number of vertical wires of the fine grid along X direction
+    unsigned int _n_wires_fine_y = 0u; //!< Number of horizontal wires of the fine grid along Y direction
+    unsigned int _n_wires_coarse_x = 0u; //!< Number of vertical wires of the coarse grid along X direction
+    unsigned int _n_wires_coarse_y = 0u; //!< Number of horizontal wires of the coarse grid along Y direction
+    unsigned int _n_wires_fine = 0u;   //!< _n_wires_fine_x + _n_wires_fine_y
+    unsigned int _n_wires_coarse = 0u; //!< _n_wires_coarse_x + _n_wires_coarse_y
     vertex_colored_t* _vertices = nullptr;
     wire_t* _wires_fine = nullptr;
     wire_t* _wires_coarse = nullptr;

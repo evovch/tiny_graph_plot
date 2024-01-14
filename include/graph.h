@@ -15,6 +15,8 @@ template<typename T> class GraphManager;
 template<typename T>
 class Graph : public Drawable<T>
 {
+    static_assert(std::is_same<T, float>::value
+               || std::is_same<T, double>::value, "");
     friend class GraphManager<T>;
 private:
     Graph() : Drawable<T>(),
@@ -106,7 +108,7 @@ private:
 template class Graph<float>;
 template class Graph<double>;
 
-typedef Graph<float> GraphF;
-typedef Graph<double> GraphD;
+using GraphF = Graph<float>;
+using GraphD = Graph<double>;
 
 } // end of namespace tiny_graph_plot

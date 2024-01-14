@@ -1,6 +1,7 @@
 #pragma once
 
 #include <cstdio>
+#include <type_traits>
 
 namespace tiny_gl_text_renderer
 {
@@ -8,6 +9,8 @@ namespace tiny_gl_text_renderer
 template<typename T>
 class Vec4
 {
+    static_assert(std::is_same<T, float>::value
+               || std::is_same<T, double>::value, "");
 public:
     Vec4(void) : _data{ 0.0, 0.0, 0.0, 0.0 } {}
     Vec4(const T x, const T y, const T z, const T w) :
@@ -59,7 +62,7 @@ private:
 template class Vec4<float>;
 template class Vec4<double>;
 
-typedef Vec4<float> Vec4f;
-typedef Vec4<double> Vec4d;
+using Vec4f = Vec4<float>;
+using Vec4d = Vec4<double>;
 
 } // end of namespace tiny_gl_text_renderer

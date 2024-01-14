@@ -8,9 +8,9 @@
 namespace tiny_gl_text_renderer
 {
 
-typedef Vec4f point_t;
-typedef Vec4f color_t;
-typedef Vec2f tex_coords_t;
+using point_t = Vec4f;
+using color_t = Vec4f;
+using tex_coords_t = Vec2f;
 
 class vertex_colored_t
 {

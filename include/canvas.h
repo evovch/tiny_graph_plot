@@ -32,6 +32,8 @@ class SizeInfo;
 template<typename T>
 class Canvas : public UserWindow
 {
+    static_assert(std::is_same<T, float>::value
+               || std::is_same<T, double>::value, "");
     friend class CanvasManager<T>;
 private:
     Canvas(GLFWwindow* window, const unsigned int w, const unsigned int h);
@@ -219,15 +221,15 @@ public:
 private:
     tiny_gl_text_renderer::TextRenderer _text_rend;
     //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-    const unsigned int _n_x_axis_value_labels_max = 20;
-    const unsigned int _n_y_axis_value_labels_max = 20;
-    size_t _x_axis_title_label_idx = 0;
-    size_t _y_axis_title_label_idx = 1;
-    size_t _grid_params_label_idx = 2;
-    //size_t _hint_label_idx = 3;
-    size_t _x_axis_values_lables_start_idx = 4;
-    size_t _y_axis_values_lables_start_idx = 24;
-    size_t _labels_start_idx = 44;
+    static constexpr unsigned int _n_x_axis_value_labels_max = 20u;
+    static constexpr unsigned int _n_y_axis_value_labels_max = 20u;
+    size_t _x_axis_title_label_idx = 0u;
+    size_t _y_axis_title_label_idx = 1u;
+    size_t _grid_params_label_idx = 2u;
+    //size_t _hint_label_idx = 3u;
+    size_t _x_axis_values_lables_start_idx = 4u;
+    size_t _y_axis_values_lables_start_idx = 24u;
+    size_t _labels_start_idx = 44u;
     // ===========================================================================
 public: // visual parameters
     void SetXaxisTitle(const char* title) { _x_axis_title = std::string(title); }
@@ -309,13 +311,13 @@ private: // visual parameters
     float _frame_line_width  = 3.0f;
     float _cursor_line_width = 1.0f;
     float _font_size = 1.0f;
-    unsigned int _circle_r = 10;
-    unsigned int _margin_xl_pix = 280;
-    unsigned int _margin_xr_pix = 22;
-    unsigned int _margin_yb_pix = 34;
-    unsigned int _margin_yt_pix = 22;
-    const int _h_offset = 2;
-    const int _v_offset = 2;
+    unsigned int _circle_r = 10u;
+    unsigned int _margin_xl_pix = 280u;
+    unsigned int _margin_xr_pix = 22u;
+    unsigned int _margin_yb_pix = 34u;
+    unsigned int _margin_yt_pix = 22u;
+    static constexpr int _h_offset = 2;
+    static constexpr int _v_offset = 2;
     // ===========================================================================
 };
 

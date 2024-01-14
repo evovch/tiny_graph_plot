@@ -11,6 +11,8 @@ namespace tiny_graph_plot
 template<typename T>
 class GraphManager
 {
+    static_assert(std::is_same<T, float>::value
+               || std::is_same<T, double>::value, "");
 public:
 	GraphManager<T>() {}
 	~GraphManager<T>() {

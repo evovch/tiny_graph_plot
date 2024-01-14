@@ -12,16 +12,17 @@ using tiny_gl_text_renderer::Vec2;
 template<typename T>
 class XYrange
 {
+    static_assert(std::is_same<T, float>::value
+               || std::is_same<T, double>::value, "");
 public:
-    explicit XYrange(void) :
-        _x_min(0.0), _dx(1.0), _y_min(0.0), _dy(1.0) {}
+    explicit XYrange() = default;
     explicit XYrange(const T x_min, const T dx,
-                     const T y_min, const T dy) :
-        _x_min(x_min), _dx(dx), _y_min(y_min), _dy(dy) {}
-    XYrange(const XYrange& other) :
-        _x_min(other._x_min), _dx(other._dx),
+                     const T y_min, const T dy)
+    :   _x_min(x_min), _dx(dx), _y_min(y_min), _dy(dy) {}
+    XYrange(const XYrange& other)
+    :   _x_min(other._x_min), _dx(other._dx),
         _y_min(other._y_min), _dy(other._dy) {}
-    ~XYrange(void) {}
+    ~XYrange() = default;
     template<typename U>
     __forceinline XYrange& operator=(const XYrange<U>& rhs) {
         _x_min = static_cast<T>(rhs.lowx());
@@ -52,7 +53,7 @@ public:
     __forceinline bool IncludesX(const T x) const {
         return (x >= _x_min) && (x <= _x_min + _dx);
     }
-    __forceinline void FixDegenerateCases(void) {
+    __forceinline void FixDegenerateCases() {
         if (_dx <= 1.0e-8) { // abs?
             _x_min -= static_cast<T>(0.5);
             _dx     = static_cast<T>(1.0);
@@ -74,21 +75,21 @@ public:
     __forceinline void SetYrange2(const T y_min, const T dy) { _y_min = y_min; _dy = dy; }
     __forceinline void MoveX(const T shift) { _x_min += shift; }
     __forceinline void MoveY(const T shift) { _y_min += shift; }
-    __forceinline const T& lowx(void) const { return _x_min; }
-    __forceinline const T highx(void) const { return _x_min + _dx; }
-    __forceinline const T& lowy(void) const { return _y_min; }
-    __forceinline const T highy(void) const { return _y_min + _dy; }
-    __forceinline const T& dx(void)   const { return _dx; }
-    __forceinline const T& dy(void)   const { return _dy; }
-    __forceinline T xm(void) const { return _x_min + static_cast<T>(0.5) * _dx; }
-    __forceinline T ym(void) const { return _y_min + static_cast<T>(0.5) * _dy; }
-    __forceinline T twoxm(void) const { return static_cast<T>(2.0) * _x_min + _dx; }
-    __forceinline T twoym(void) const { return static_cast<T>(2.0) * _y_min + _dy; }
+    __forceinline const T& lowx() const { return _x_min; }
+    __forceinline const T highx() const { return _x_min + _dx; }
+    __forceinline const T& lowy() const { return _y_min; }
+    __forceinline const T highy() const { return _y_min + _dy; }
+    __forceinline const T& dx()   const { return _dx; }
+    __forceinline const T& dy()   const { return _dy; }
+    __forceinline T xm() const { return _x_min + T(0.5) * _dx; }
+    __forceinline T ym() const { return _y_min + T(0.5) * _dy; }
+    __forceinline T twoxm() const { return T(2.0) * _x_min + _dx; }
+    __forceinline T twoym() const { return T(2.0) * _y_min + _dy; }
 private:
-    T _x_min;
-    T _dx;
-    T _y_min;
-    T _dy;
+    T _x_min = T(0.0);
+    T _dx = T(1.0);
+    T _y_min = T(0.0);
+    T _dy = T(1.0);
 };
 
 template class XYrange<float>;

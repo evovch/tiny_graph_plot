@@ -13,6 +13,8 @@ template<typename T> class GraphManager;
 template<typename T, typename VALUETYPE>
 class Histogram1d : public Drawable<T>
 {
+    static_assert(std::is_same<T, float>::value
+               || std::is_same<T, double>::value, "");
     friend class GraphManager<T>;
 private:
     Histogram1d() : Drawable<T>(),
@@ -92,7 +94,7 @@ private:
 template class Histogram1d<float, unsigned long>;
 template class Histogram1d<double, unsigned long>;
 
-typedef Histogram1d<float, unsigned long> Histogram1dF;
-typedef Histogram1d<double, unsigned long> Histogram1dD;
+using Histogram1dF = Histogram1d<float, unsigned long>;
+using Histogram1dD = Histogram1d<double, unsigned long>;
 
 } // end of namespace tiny_graph_plot

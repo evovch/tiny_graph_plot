@@ -12,6 +12,8 @@ using tiny_gl_text_renderer::color_t;
 template<typename T>
 class Drawable
 {
+    static_assert(std::is_same<T, float>::value
+               || std::is_same<T, double>::value, "");
 protected:
     Drawable()
     :   _points(nullptr),
