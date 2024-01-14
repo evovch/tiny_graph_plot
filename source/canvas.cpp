@@ -648,14 +648,14 @@ void Canvas<T>::PrintCursorValues(const double xs, const double ys) const
 }
 
 template<typename T>
-/*__forceinline*/
+//inline? //__forceinline?
 void Canvas<T>::SwitchToFullWindow(void) const
 {
     glViewport(0, 0, _window_w, _window_h);
 }
 
 template<typename T>
-/*__forceinline*/
+//inline? //__forceinline?
 void Canvas<T>::SwitchToFrame(void) const
 {
     glViewport(_margin_xl_pix, _margin_yb_pix,

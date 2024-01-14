@@ -52,8 +52,8 @@ private:
     virtual void Clear() const override;
     virtual void Reshape(int p_width, int p_height) override;
     void PrintCursorValues(const double xs, const double ys) const;
-    __forceinline void SwitchToFullWindow() const;
-    __forceinline void SwitchToFrame() const;
+    void SwitchToFullWindow() const; //inline? //__forceinline?
+    void SwitchToFrame() const; //inline? //__forceinline?
     void AllocateBuffersForFixedSizedData() const;
     void SendFixedIndicesToGPU() const;
     int SendGridToGPU();
