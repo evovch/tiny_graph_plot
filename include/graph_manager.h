@@ -14,7 +14,7 @@ class GraphManager
     static_assert(std::is_same<T, float>::value
                || std::is_same<T, double>::value, "");
 public:
-	GraphManager<T>() {}
+	explicit GraphManager<T>() {}
 	~GraphManager<T>() {
 		for (Graph<T>* gr : _graphs) {
 			delete gr;

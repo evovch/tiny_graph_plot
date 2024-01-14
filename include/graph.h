@@ -19,7 +19,7 @@ class Graph : public Drawable<T>
                || std::is_same<T, double>::value, "");
     friend class GraphManager<T>;
 private:
-    Graph() : Drawable<T>(),
+    explicit Graph() : Drawable<T>(),
         _n_p(0),
         _shared_points(false)
     {

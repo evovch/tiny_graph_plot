@@ -36,7 +36,7 @@ class Canvas : public UserWindow
                || std::is_same<T, double>::value, "");
     friend class CanvasManager<T>;
 private:
-    Canvas(GLFWwindow* window, const unsigned int w, const unsigned int h);
+    explicit Canvas(GLFWwindow* window, const unsigned int w, const unsigned int h);
     virtual ~Canvas() override;
 public:
     void AddGraph(const Graph<T>& p_graph);

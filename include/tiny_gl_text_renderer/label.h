@@ -15,7 +15,7 @@ typedef unsigned int GLuint;
 class Label
 {
 public:
-    Label(const char* string, const int x, const int y,
+    explicit Label(const char* string, const int x, const int y,
         const color_t& color, const float scaling, const float angle = 0.0f) :
         _string(string), _x(x), _y(y), _color(color),
         _scaling(scaling), _angle(angle), _texture_data(nullptr) {

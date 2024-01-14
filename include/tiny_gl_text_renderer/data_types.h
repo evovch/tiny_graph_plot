@@ -15,8 +15,8 @@ using tex_coords_t = Vec2f;
 class vertex_colored_t
 {
 public:
-    vertex_colored_t(void) {}
-    vertex_colored_t(
+    explicit vertex_colored_t() {}
+    explicit vertex_colored_t(
         const float x, const float y, const float z, const float w,
         const float r, const float g, const float b, const float a) :
         _coords(x, y, z, w),
@@ -27,7 +27,7 @@ public:
     vertex_colored_t(vertex_colored_t&& other) noexcept :
         _coords(std::move(other._coords)),
         _color(std::move(other._color)) {}
-    ~vertex_colored_t(void) {}
+    ~vertex_colored_t() = default;
     __forceinline vertex_colored_t& operator=(const vertex_colored_t& rhs) {
         _coords = rhs._coords;
         _color = rhs._color;
@@ -41,8 +41,8 @@ public:
 class vertex_textured_t
 {
 public:
-    vertex_textured_t(void) {}
-    vertex_textured_t(
+    explicit vertex_textured_t() {}
+    explicit vertex_textured_t(
         const float x, const float y, const float z,
         const float w, const float u, const float v) :
         _coords(x, y, z, w),
@@ -53,7 +53,7 @@ public:
     vertex_textured_t(vertex_textured_t&& other) noexcept :
         _coords(std::move(other._coords)),
         _tex_coords(std::move(other._tex_coords)) {}
-    ~vertex_textured_t(void) {}
+    ~vertex_textured_t() = default;
     __forceinline vertex_textured_t& operator=(const vertex_textured_t& rhs) {
         _coords = rhs._coords;
         _tex_coords = rhs._tex_coords;
@@ -67,42 +67,41 @@ public:
 class marker_t
 {
 public:
-    marker_t(void) : v0(0) {}
+    explicit marker_t() = default;
     marker_t(const unsigned int p0, const unsigned int p1) : v0(p0) {}
     marker_t(const marker_t& other) : v0(other.v0) {}
     marker_t(marker_t&& other) noexcept : v0(other.v0) {}
-    ~marker_t(void) {}
+    ~marker_t() = default;
     __forceinline marker_t& operator=(const marker_t& rhs) {
         v0 = rhs.v0;
         return *this;
     }
 public:
-    unsigned int v0;
+    unsigned int v0 = 0u;
 };
 
 class wire_t
 {
 public:
-    wire_t(void) : v0(0), v1(0) {}
+    explicit wire_t() = default;
     wire_t(const unsigned int p0, const unsigned int p1) : v0(p0), v1(p1) {}
     wire_t(const wire_t& other) : v0(other.v0), v1(other.v1) {}
     wire_t(wire_t&& other) noexcept : v0(other.v0), v1(other.v1) {}
-    ~wire_t(void) {}
+    ~wire_t() = default;
     __forceinline wire_t& operator=(const wire_t& rhs) {
         v0 = rhs.v0;
         v1 = rhs.v1;
         return *this;
     }
 public:
-    unsigned int v0;
-    unsigned int v1;
+    unsigned int v0 = 0u;
+    unsigned int v1 = 0u;
 };
 
 class triangle_t
 {
 public:
-    triangle_t(void) :
-        v0(0), v1(0), v2(0) {}
+    explicit triangle_t() = default;
     triangle_t(const unsigned int p0, const unsigned int p1,
         const unsigned int p2) :
         v0(p0), v1(p1), v2(p2) {}
@@ -110,7 +109,7 @@ public:
         v0(other.v0), v1(other.v1), v2(other.v2) {}
     triangle_t(triangle_t&& other) noexcept :
         v0(other.v0), v1(other.v1), v2(other.v2) {}
-    ~triangle_t(void) {}
+    ~triangle_t() = default;
     __forceinline triangle_t& operator=(const triangle_t& rhs) {
         v0 = rhs.v0;
         v1 = rhs.v1;
@@ -118,16 +117,15 @@ public:
         return *this;
     }
 public:
-    unsigned int v0;
-    unsigned int v1;
-    unsigned int v2;
+    unsigned int v0 = 0u;
+    unsigned int v1 = 0u;
+    unsigned int v2 = 0u;
 };
 
 class quad_t
 {
 public:
-    quad_t(void) :
-        v0(0), v1(0), v2(0), v3(0) {}
+    explicit quad_t() = default;
     quad_t(const unsigned int p0, const unsigned int p1,
         const unsigned int p2, const unsigned int p3) :
         v0(p0), v1(p1), v2(p2), v3(p3) {}
@@ -136,7 +134,7 @@ public:
     quad_t(quad_t&& other) noexcept :
         v0(other.v0), v1(other.v1),
         v2(other.v2), v3(other.v3) {}
-    ~quad_t(void) {}
+    ~quad_t() = default;
     __forceinline quad_t& operator=(const quad_t& rhs) {
         v0 = rhs.v0;
         v1 = rhs.v1;
@@ -145,10 +143,10 @@ public:
         return *this;
     }
 public:
-    unsigned int v0;
-    unsigned int v1;
-    unsigned int v2;
-    unsigned int v3;
+    unsigned int v0 = 0u;
+    unsigned int v1 = 0u;
+    unsigned int v2 = 0u;
+    unsigned int v3 = 0u;
 };
 
 } // end of namespace tiny_gl_text_renderer

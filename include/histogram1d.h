@@ -17,7 +17,7 @@ class Histogram1d : public Drawable<T>
                || std::is_same<T, double>::value, "");
     friend class GraphManager<T>;
 private:
-    Histogram1d() : Drawable<T>(),
+    explicit Histogram1d() : Drawable<T>(),
         _n_bins(0),
         _x_min(0.0),
         _x_max(0.0)

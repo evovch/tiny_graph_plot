@@ -15,7 +15,7 @@ class Drawable
     static_assert(std::is_same<T, float>::value
                || std::is_same<T, double>::value, "");
 protected:
-    Drawable()
+    explicit Drawable()
     :   _points(nullptr),
         _size_info(0, 0, 0, 0),
         _xy_range(0.0, 1.0, 0.0, 1.0) {

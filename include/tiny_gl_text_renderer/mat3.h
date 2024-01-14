@@ -13,20 +13,25 @@ class Mat3
     static_assert(std::is_same<T, float>::value
                || std::is_same<T, double>::value, "");
 public:
-    Mat3(void) : _data{1.0, 0.0, 0.0,
-                       0.0, 1.0, 0.0,
-                       0.0, 0.0, 1.0}
-    {}
-    Mat3(const T m00, const T m01, const T m02,
-         const T m10, const T m11, const T m12,
-         const T m20, const T m21, const T m22) :
-        _data{m00, m01, m02, m10, m11, m12, m20, m21, m22}
-    {}
-    ~Mat3(void) {}
-    __forceinline void Reset(void) {
-        _data[0 * 3 + 0] = 1.0; _data[0 * 3 + 1] = 0.0; _data[0 * 3 + 2] = 0.0;
-        _data[1 * 3 + 0] = 0.0; _data[1 * 3 + 1] = 1.0; _data[1 * 3 + 2] = 0.0;
-        _data[2 * 3 + 0] = 0.0; _data[2 * 3 + 1] = 0.0; _data[2 * 3 + 2] = 1.0;
+    explicit Mat3()
+    :   _data{ T(1.0), T(0.0), T(0.0),
+               T(0.0), T(1.0), T(0.0),
+               T(0.0), T(0.0), T(1.0) } {}
+
+    explicit Mat3(
+        const T m00, const T m01, const T m02,
+        const T m10, const T m11, const T m12,
+        const T m20, const T m21, const T m22)
+
+    :   _data{ m00, m01, m02,
+               m10, m11, m12,
+               m20, m21, m22 } {}
+
+    ~Mat3() = default;
+    __forceinline void Reset() {
+        _data[0 * 3 + 0] = T(1.0); _data[0 * 3 + 1] = T(0.0); _data[0 * 3 + 2] = T(0.0);
+        _data[1 * 3 + 0] = T(0.0); _data[1 * 3 + 1] = T(1.0); _data[1 * 3 + 2] = T(0.0);
+        _data[2 * 3 + 0] = T(0.0); _data[2 * 3 + 1] = T(0.0); _data[2 * 3 + 2] = T(1.0);
     }
     __forceinline void Set(
         const T m00, const T m01, const T m02,
@@ -36,7 +41,7 @@ public:
         _data[1 * 3 + 0] = m10; _data[1 * 3 + 1] = m11; _data[1 * 3 + 2] = m12;
         _data[2 * 3 + 0] = m20; _data[2 * 3 + 1] = m21; _data[2 * 3 + 2] = m22;
     }
-    __forceinline const T* const GetData(void) const { return _data; }
+    __forceinline const T* const GetData() const { return _data; }
     __forceinline const T operator[](const size_t idx) const { //TODO return byref?
         return _data[idx];
     }

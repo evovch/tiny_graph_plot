@@ -13,7 +13,7 @@ class CanvasManager
     static_assert(std::is_same<T, float>::value
                || std::is_same<T, double>::value, "");
 public:
-	CanvasManager();
+	explicit CanvasManager();
 	~CanvasManager();
 	Canvas<T>& CreateCanvas(const char* name,
 		const unsigned int w = 800, const unsigned int h = 600,

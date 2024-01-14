@@ -19,7 +19,7 @@ enum class action_t
 class UserWindow
 {
 protected:
-    UserWindow(GLFWwindow* window, const unsigned int w, const unsigned int h);
+    explicit UserWindow(GLFWwindow* window, const unsigned int w, const unsigned int h);
     virtual ~UserWindow() {}
 private:
     void SetCallbacks() const;
