@@ -225,9 +225,9 @@ void TextRenderer::SendToGPU(void) const {
         glBufferData(GL_ARRAY_BUFFER, _labels_counter * 4 * sizeof(v_str_t),
             vertices, GL_STATIC_DRAW);
         glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, sizeof(v_str_t),
-            (void*)offsetof(v_str_t, _coords));
+            (void*)offsetof(v_str_t, coords_));
         glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(v_str_t),
-            (void*)offsetof(v_str_t, _tex_coords));
+            (void*)offsetof(v_str_t, tex_coords_));
         glEnableVertexAttribArray(0);
         glEnableVertexAttribArray(1);
     }

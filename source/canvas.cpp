@@ -148,9 +148,9 @@ void Canvas<T>::Show(void) {
         glBufferData(GL_ARRAY_BUFFER, n_vert * sizeof(vertex_colored_t),
             NULL, GL_STATIC_DRAW);
         glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, sizeof(vertex_colored_t),
-            (void*)offsetof(vertex_colored_t, _coords));
+            (void*)offsetof(vertex_colored_t, coords_));
         glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, sizeof(vertex_colored_t),
-            (void*)offsetof(vertex_colored_t, _color));
+            (void*)offsetof(vertex_colored_t, color_));
         glEnableVertexAttribArray(0);
         glEnableVertexAttribArray(1);
         glBindVertexArray(0);
@@ -670,9 +670,9 @@ void Canvas<T>::AllocateBuffersForFixedSizedData(void) const {
         glBufferData(GL_ARRAY_BUFFER, n_vert * sizeof(vertex_colored_t),
             NULL, GL_STATIC_DRAW);
         glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, sizeof(vertex_colored_t),
-            (void*)offsetof(vertex_colored_t, _coords));
+            (void*)offsetof(vertex_colored_t, coords_));
         glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, sizeof(vertex_colored_t),
-            (void*)offsetof(vertex_colored_t, _color));
+            (void*)offsetof(vertex_colored_t, color_));
         glEnableVertexAttribArray(0);
         glEnableVertexAttribArray(1);
         glBindVertexArray(0);
@@ -686,9 +686,9 @@ void Canvas<T>::AllocateBuffersForFixedSizedData(void) const {
         glBufferData(GL_ARRAY_BUFFER, n_vert * sizeof(vertex_colored_t),
             NULL, GL_STATIC_DRAW);
         glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, sizeof(vertex_colored_t),
-            (void*)offsetof(vertex_colored_t, _coords));
+            (void*)offsetof(vertex_colored_t, coords_));
         glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, sizeof(vertex_colored_t),
-            (void*)offsetof(vertex_colored_t, _color));
+            (void*)offsetof(vertex_colored_t, color_));
         glEnableVertexAttribArray(0);
         glEnableVertexAttribArray(1);
         glBindVertexArray(0);
@@ -702,9 +702,9 @@ void Canvas<T>::AllocateBuffersForFixedSizedData(void) const {
         glBufferData(GL_ARRAY_BUFFER, n_vert * sizeof(vertex_colored_t),
             NULL, GL_STATIC_DRAW);
         glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, sizeof(vertex_colored_t),
-            (void*)offsetof(vertex_colored_t, _coords));
+            (void*)offsetof(vertex_colored_t, coords_));
         glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, sizeof(vertex_colored_t),
-            (void*)offsetof(vertex_colored_t, _color));
+            (void*)offsetof(vertex_colored_t, color_));
         glEnableVertexAttribArray(0);
         glEnableVertexAttribArray(1);
         glBindVertexArray(0);
@@ -718,9 +718,9 @@ void Canvas<T>::AllocateBuffersForFixedSizedData(void) const {
         glBufferData(GL_ARRAY_BUFFER, n_vert * sizeof(vertex_colored_t),
             NULL, GL_STATIC_DRAW);
         glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, sizeof(vertex_colored_t),
-            (void*)offsetof(vertex_colored_t, _coords));
+            (void*)offsetof(vertex_colored_t, coords_));
         glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, sizeof(vertex_colored_t),
-            (void*)offsetof(vertex_colored_t, _color));
+            (void*)offsetof(vertex_colored_t, color_));
         glEnableVertexAttribArray(0);
         glEnableVertexAttribArray(1);
         glBindVertexArray(0);
@@ -734,9 +734,9 @@ void Canvas<T>::AllocateBuffersForFixedSizedData(void) const {
         glBufferData(GL_ARRAY_BUFFER, n_vert * sizeof(vertex_colored_t),
             NULL, GL_STATIC_DRAW);
         glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, sizeof(vertex_colored_t),
-            (void*)offsetof(vertex_colored_t, _coords));
+            (void*)offsetof(vertex_colored_t, coords_));
         glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, sizeof(vertex_colored_t),
-            (void*)offsetof(vertex_colored_t, _color));
+            (void*)offsetof(vertex_colored_t, color_));
         glEnableVertexAttribArray(0);
         glEnableVertexAttribArray(1);
         glBindVertexArray(0);
@@ -841,9 +841,9 @@ int Canvas<T>::SendGridToGPU(void) {
         glBufferData(GL_ARRAY_BUFFER, n_vertices * sizeof(vertex_colored_t),
             vertices, GL_STATIC_DRAW);
         glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, sizeof(vertex_colored_t),
-            (void*)offsetof(vertex_colored_t, _coords));
+            (void*)offsetof(vertex_colored_t, coords_));
         glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, sizeof(vertex_colored_t),
-            (void*)offsetof(vertex_colored_t, _color));
+            (void*)offsetof(vertex_colored_t, color_));
         glEnableVertexAttribArray(0);
         glEnableVertexAttribArray(1);
         glBindVertexArray(0);
@@ -949,18 +949,18 @@ void Canvas<T>::DrawAxes(void) const {
     {
         const unsigned int n_vert = 4;
         vertex_colored_t vertices[n_vert];
-        vertices[0]._coords = point_t(
+        vertices[0].coords_ = point_t(
             static_cast<float>(_total_xy_range.lowx()), 0.0f, 0.0f, 1.0f);
-        vertices[1]._coords = point_t(
+        vertices[1].coords_ = point_t(
             static_cast<float>(_total_xy_range.highx()), 0.0f, 0.0f, 1.0f);
-        vertices[2]._coords = point_t(
+        vertices[2].coords_ = point_t(
             0.0f, static_cast<float>(_total_xy_range.lowy()), 0.0f, 1.0f);
-        vertices[3]._coords = point_t(
+        vertices[3].coords_ = point_t(
             0.0f, static_cast<float>(_total_xy_range.highy()), 0.0f, 1.0f);
-        vertices[0]._color = _axes_line_color;
-        vertices[1]._color = _axes_line_color;
-        vertices[2]._color = _axes_line_color;
-        vertices[3]._color = _axes_line_color;
+        vertices[0].color_ = _axes_line_color;
+        vertices[1].color_ = _axes_line_color;
+        vertices[2].color_ = _axes_line_color;
+        vertices[3].color_ = _axes_line_color;
 
         glBindVertexArray(_vaoID_axes);
         glBindBuffer(GL_ARRAY_BUFFER, _vboID_axes);
@@ -1000,12 +1000,12 @@ void Canvas<T>::DrawVref(void) const {
     {
         const unsigned int n_vert = 2;
         vertex_colored_t vertices[n_vert];
-        vertices[0]._coords = point_t(static_cast<float>(_ref_x),
+        vertices[0].coords_ = point_t(static_cast<float>(_ref_x),
             static_cast<float>(_total_xy_range.lowy()), 0.0f, 1.0f);
-        vertices[1]._coords = point_t(static_cast<float>(_ref_x),
+        vertices[1].coords_ = point_t(static_cast<float>(_ref_x),
             static_cast<float>(_total_xy_range.highy()), 0.0f, 1.0f);
-        vertices[0]._color = _vref_line_color;
-        vertices[1]._color = _vref_line_color;
+        vertices[0].color_ = _vref_line_color;
+        vertices[1].color_ = _vref_line_color;
 
         glBindVertexArray(_vaoID_vref);
         glBindBuffer(GL_ARRAY_BUFFER, _vboID_vref);
@@ -1045,14 +1045,14 @@ void Canvas<T>::SendFrameVerticesToGPU(void) const {
         const float bly_ = (float)_margin_yb_pix;
         const float trx_ = (float)_window_w - (float)_margin_xr_pix;
         const float try_ = (float)_window_h - (float)_margin_yt_pix;
-        vertices[0]._coords = point_t(blx_, bly_, 0.0f, 1.0f);
-        vertices[1]._coords = point_t(trx_, bly_, 0.0f, 1.0f);
-        vertices[2]._coords = point_t(trx_, try_, 0.0f, 1.0f);
-        vertices[3]._coords = point_t(blx_, try_, 0.0f, 1.0f);
-        vertices[0]._color = _frame_line_color;
-        vertices[1]._color = _frame_line_color;
-        vertices[2]._color = _frame_line_color;
-        vertices[3]._color = _frame_line_color;
+        vertices[0].coords_ = point_t(blx_, bly_, 0.0f, 1.0f);
+        vertices[1].coords_ = point_t(trx_, bly_, 0.0f, 1.0f);
+        vertices[2].coords_ = point_t(trx_, try_, 0.0f, 1.0f);
+        vertices[3].coords_ = point_t(blx_, try_, 0.0f, 1.0f);
+        vertices[0].color_ = _frame_line_color;
+        vertices[1].color_ = _frame_line_color;
+        vertices[2].color_ = _frame_line_color;
+        vertices[3].color_ = _frame_line_color;
 
         glBindVertexArray(_vaoID_frame);
         glBindBuffer(GL_ARRAY_BUFFER, _vboID_frame);
@@ -1137,11 +1137,11 @@ void Canvas<T>::SendDrawableToGPU(const Drawable<T>* const p_graph,
 
         for (unsigned int i = 0; i < cur_size._n_v; i++) {
             const Vec2<T>& cur_pt = p_graph->GetPoint(i);
-            vertices[i]._coords[0] = static_cast<float>(cur_pt.x());
-            vertices[i]._coords[1] = static_cast<float>(cur_pt.y());
-            vertices[i]._coords[2] = 0.0f;
-            vertices[i]._coords[3] = 1.0f;
-            vertices[i]._color = p_graph->GetColor();
+            vertices[i].coords_[0] = static_cast<float>(cur_pt.x());
+            vertices[i].coords_[1] = static_cast<float>(cur_pt.y());
+            vertices[i].coords_[2] = 0.0f;
+            vertices[i].coords_[3] = 1.0f;
+            vertices[i].color_ = p_graph->GetColor();
         }
 
         glBindVertexArray(_vaoID_graphs);
@@ -1239,14 +1239,14 @@ void Canvas<T>::DrawCursor(const double xs, const double ys) const {
         const float bly_ = (float)_margin_yb_pix;
         const float trx_ = (float)_window_w - (float)_margin_xr_pix;
         const float try_ = (float)_window_h - (float)_margin_yt_pix;
-        vertices[0]._coords = point_t((float)xs, bly_, 0.0f, 1.0f);
-        vertices[1]._coords = point_t((float)xs, try_, 0.0f, 1.0f);
-        vertices[2]._coords = point_t(blx_, (float)ys, 0.0f, 1.0f);
-        vertices[3]._coords = point_t(trx_, (float)ys, 0.0f, 1.0f);
-        vertices[0]._color = _cursor_color;
-        vertices[1]._color = _cursor_color;
-        vertices[2]._color = _cursor_color;
-        vertices[3]._color = _cursor_color;
+        vertices[0].coords_ = point_t((float)xs, bly_, 0.0f, 1.0f);
+        vertices[1].coords_ = point_t((float)xs, try_, 0.0f, 1.0f);
+        vertices[2].coords_ = point_t(blx_, (float)ys, 0.0f, 1.0f);
+        vertices[3].coords_ = point_t(trx_, (float)ys, 0.0f, 1.0f);
+        vertices[0].color_ = _cursor_color;
+        vertices[1].color_ = _cursor_color;
+        vertices[2].color_ = _cursor_color;
+        vertices[3].color_ = _cursor_color;
 
         glBindVertexArray(_vaoID_cursor);
         glBindBuffer(GL_ARRAY_BUFFER, _vboID_cursor);
@@ -1290,14 +1290,14 @@ void Canvas<T>::DrawSelRectangle(const double xs0, const double ys0,
         vertex_colored_t vertices[n_vert];
         const Vec4f p0r = this->TransformToVisrange(xs0, ys0);
         const Vec4f p1r = this->TransformToVisrange(xs1, ys1);
-        vertices[0]._coords = point_t(p0r.x(), p0r.y(), 0.0f, 1.0f);
-        vertices[1]._coords = point_t(p1r.x(), p0r.y(), 0.0f, 1.0f);
-        vertices[2]._coords = point_t(p1r.x(), p1r.y(), 0.0f, 1.0f);
-        vertices[3]._coords = point_t(p0r.x(), p1r.y(), 0.0f, 1.0f);
-        vertices[0]._color = tiny_gl_text_renderer::colors::sel_color;
-        vertices[1]._color = tiny_gl_text_renderer::colors::sel_color;
-        vertices[2]._color = tiny_gl_text_renderer::colors::sel_color;
-        vertices[3]._color = tiny_gl_text_renderer::colors::sel_color;
+        vertices[0].coords_ = point_t(p0r.x(), p0r.y(), 0.0f, 1.0f);
+        vertices[1].coords_ = point_t(p1r.x(), p0r.y(), 0.0f, 1.0f);
+        vertices[2].coords_ = point_t(p1r.x(), p1r.y(), 0.0f, 1.0f);
+        vertices[3].coords_ = point_t(p0r.x(), p1r.y(), 0.0f, 1.0f);
+        vertices[0].color_ = tiny_gl_text_renderer::colors::sel_color;
+        vertices[1].color_ = tiny_gl_text_renderer::colors::sel_color;
+        vertices[2].color_ = tiny_gl_text_renderer::colors::sel_color;
+        vertices[3].color_ = tiny_gl_text_renderer::colors::sel_color;
 
         glBindVertexArray(_vaoID_sel);
         glBindBuffer(GL_ARRAY_BUFFER, _vboID_sel);
@@ -1360,9 +1360,9 @@ void Canvas<T>::DrawCircles(const double xs, const double ys) const {
         for (const auto* const gr : _graphs) {
             if (!gr->GetVisible()) continue;
             const T y = gr->Evaluate(static_cast<T>(pr.x()));
-            vertices[i_gr]._coords = point_t(
+            vertices[i_gr].coords_ = point_t(
                 pr.x(), static_cast<float>(y), 0.0f, 1.0f);
-            vertices[i_gr]._color = gr->GetColor();
+            vertices[i_gr].color_ = gr->GetColor();
             markers[i_gr].v0 = i_gr;
             i_gr++;
             n_markers++;
@@ -1373,9 +1373,9 @@ void Canvas<T>::DrawCircles(const double xs, const double ys) const {
         glBufferData(GL_ARRAY_BUFFER, n_vert * sizeof(vertex_colored_t),
             vertices, GL_STATIC_DRAW);
         glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, sizeof(vertex_colored_t),
-            (void*)offsetof(vertex_colored_t, _coords));
+            (void*)offsetof(vertex_colored_t, coords_));
         glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, sizeof(vertex_colored_t),
-            (void*)offsetof(vertex_colored_t, _color));
+            (void*)offsetof(vertex_colored_t, color_));
         glEnableVertexAttribArray(0);
         glEnableVertexAttribArray(1);
         glBindVertexArray(0);
@@ -1543,11 +1543,11 @@ void Canvas<T>::UpdateTexAxesValues(void) {
         const unsigned int idx0 = wires[i].v0;
         //const unsigned int idx1 = wires[i].v1;
 
-        snprintf(buf, BUFSIZE, "%g", vertices[idx0]._coords.x());
+        snprintf(buf, BUFSIZE, "%g", vertices[idx0].coords_.x());
         const int offset = -(ch_width * (int)strlen(buf)) / 2;
         _text_rend.UpdateLabel(buf, _x_axis_values_lables_start_idx + (size_t)i);
 
-        const Vec4f vr(vertices[idx0]._coords.x(), 0.0f, 0.0f, 1.0f);
+        const Vec4f vr(vertices[idx0].coords_.x(), 0.0f, 0.0f, 1.0f);
         const Vec4f vc = _visrange_to_clip * vr;
         //const Vec4f vs = _clip_to_screen * vc;
         const Vec4f vv = _clip_to_viewport * vc;
@@ -1566,11 +1566,11 @@ void Canvas<T>::UpdateTexAxesValues(void) {
         const unsigned int idx0 = wires[nx_+i].v0;
         //const unsigned int idx1 = wires[nx_+i].v1;
 
-        snprintf(buf, BUFSIZE, "%g", vertices[idx0]._coords.y());
+        snprintf(buf, BUFSIZE, "%g", vertices[idx0].coords_.y());
         const int offset = (ch_width * (int)strlen(buf)) / 2;
         _text_rend.UpdateLabel(buf, _y_axis_values_lables_start_idx + (size_t)i);
 
-        const Vec4f vr(0.0f, vertices[idx0]._coords.y(), 0.0f, 1.0f);
+        const Vec4f vr(0.0f, vertices[idx0].coords_.y(), 0.0f, 1.0f);
         const Vec4f vc = _visrange_to_clip * vr;
         //const Vec4f vs = _clip_to_screen * vc;
         const Vec4f vv = _clip_to_viewport * vc;

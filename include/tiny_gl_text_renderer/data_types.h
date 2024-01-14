@@ -17,16 +17,16 @@ public:
     explicit vertex_colored_t(
         const float x, const float y, const float z, const float w,
         const float r, const float g, const float b, const float a)
-    :   _coords(x, y, z, w),
-        _color(r, g, b, a) {}
+    :   coords_(x, y, z, w),
+        color_(r, g, b, a) {}
     ~vertex_colored_t() = default;
     vertex_colored_t(const vertex_colored_t& other) = default;
     vertex_colored_t(vertex_colored_t&& other) = default;
     vertex_colored_t& operator=(const vertex_colored_t& other) = default;
     vertex_colored_t& operator=(vertex_colored_t&& other) = default;
 public:
-    point_t _coords;
-    color_t _color;
+    point_t coords_;
+    color_t color_;
 };
 
 class vertex_textured_t
@@ -36,16 +36,16 @@ public:
     explicit vertex_textured_t(
         const float x, const float y, const float z, const float w,
         const float u, const float v)
-    :   _coords(x, y, z, w),
-        _tex_coords(u, v) {}
+    :   coords_(x, y, z, w),
+        tex_coords_(u, v) {}
     ~vertex_textured_t() = default;
     vertex_textured_t(const vertex_textured_t& other) = default;
     vertex_textured_t(vertex_textured_t&& other) = default;
     vertex_textured_t& operator=(const vertex_textured_t& other) = default;
     vertex_textured_t& operator=(vertex_textured_t&& other) = default;
 public:
-    point_t _coords;
-    tex_coords_t _tex_coords;
+    point_t coords_;
+    tex_coords_t tex_coords_;
 };
 
 class marker_t

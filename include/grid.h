@@ -129,33 +129,33 @@ public:
 
             unsigned int vertex_offset = 0;
             for (unsigned int i = 0; i < n_grid_lines_x; i++) {
-                _vertices[vertex_offset + i * 2 + 0]._coords =
+                _vertices[vertex_offset + i * 2 + 0].coords_ =
                     point_t(
                         static_cast<float>(x_start + i * _fine_step_x),
                         static_cast<float>(totalrange.lowy()),
                         0.0f, 1.0f);
-                _vertices[vertex_offset + i * 2 + 1]._coords =
+                _vertices[vertex_offset + i * 2 + 1].coords_ =
                     point_t(
                         static_cast<float>(x_start + i * _fine_step_x),
                         static_cast<float>(totalrange.highy()),
                         0.0f, 1.0f);
-                _vertices[vertex_offset + i * 2 + 0]._color = _vgrid_fine_line_color;
-                _vertices[vertex_offset + i * 2 + 1]._color = _vgrid_fine_line_color;
+                _vertices[vertex_offset + i * 2 + 0].color_ = _vgrid_fine_line_color;
+                _vertices[vertex_offset + i * 2 + 1].color_ = _vgrid_fine_line_color;
             }
             vertex_offset = 2 * n_grid_lines_x;
             for (unsigned int i = 0; i < n_grid_lines_y; i++) {
-                _vertices[vertex_offset + i * 2 + 0]._coords =
+                _vertices[vertex_offset + i * 2 + 0].coords_ =
                     point_t(
                         static_cast<float>(totalrange.lowx()),
                         static_cast<float>(y_start + i * _fine_step_y),
                         0.0f, 1.0f);
-                _vertices[vertex_offset + i * 2 + 1]._coords =
+                _vertices[vertex_offset + i * 2 + 1].coords_ =
                     point_t(
                         static_cast<float>(totalrange.highx()),
                         static_cast<float>(y_start + i * _fine_step_y),
                         0.0f, 1.0f);
-                _vertices[vertex_offset + i * 2 + 0]._color = _hgrid_fine_line_color;
-                _vertices[vertex_offset + i * 2 + 1]._color = _hgrid_fine_line_color;
+                _vertices[vertex_offset + i * 2 + 0].color_ = _hgrid_fine_line_color;
+                _vertices[vertex_offset + i * 2 + 1].color_ = _hgrid_fine_line_color;
             }
         }
         // Wires fine ------------------------------------------------------------
