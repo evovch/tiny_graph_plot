@@ -24,7 +24,7 @@ protected:
 private:
     void SetCallbacks() const;
 public:
-    GLFWwindow* const GetWindow() const { return _window; }
+    GLFWwindow* GetWindow() const { return _window; }
     void framebuffer_size_event(int width, int height);
     void window_pos_event(int xpos, int ypos);
     void window_iconify_event(int iconified);

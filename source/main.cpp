@@ -15,6 +15,7 @@ float f7(const float x, const float p[3]) {
 
 int main(int argc, char** argv)
 {
+    (void)argc; (void)argv;
     // ===========================================================================
     // Use either this to work with single precision
     tiny_graph_plot::GraphManager<float>& graph_manager = global_graph_manager_float;

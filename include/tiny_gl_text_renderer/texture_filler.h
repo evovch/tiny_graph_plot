@@ -111,16 +111,16 @@ int FillString(
 static
 size_t GetRequiredTextureSize(const char* line, size_t& o_w, size_t& o_h)
 {
-    o_h = 0;
-    o_w = 0;
-    int cursor = 0;
+    o_h = 0u;
+    o_w = 0u;
+    size_t cursor = 0u;
     const size_t nch = strlen(line);
     for (size_t i = 0; i < nch; i++) {
         o_w = (cursor > o_w) ? cursor : o_w;
         cursor++;
         if (line[i] == '\n') {
             o_h++;
-            cursor = 0;
+            cursor = 0u;
         }
     }
     o_w++; //TODO check

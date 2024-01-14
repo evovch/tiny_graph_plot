@@ -22,7 +22,8 @@ UserWindow::UserWindow(GLFWwindow* window, const unsigned int w, const unsigned 
     this->SetCallbacks();
 }
 
-void UserWindow::SetCallbacks(void) const {
+void UserWindow::SetCallbacks(void) const
+{
 #ifdef DEBUG_WIN_ACTIONS
     printf("UserWindow::SetCallbacks\n");
 #endif
@@ -41,7 +42,8 @@ void UserWindow::SetCallbacks(void) const {
     glfwSetWindowFocusCallback(_window, glfw_callback_functions::window_focus_callback);
 }
 
-void UserWindow::framebuffer_size_event(int width, int height) {
+void UserWindow::framebuffer_size_event(int width, int height)
+{
 #ifdef DEBUG_WIN_ACTIONS
     printf("UserWindow::framebuffer_size_event: %d, %d\n", width, height);
 #endif
@@ -54,43 +56,56 @@ void UserWindow::framebuffer_size_event(int width, int height) {
     this->Reshape(width, height);
 }
 
-void UserWindow::window_pos_event(int xpos, int ypos) {
+void UserWindow::window_pos_event(int xpos, int ypos)
+{
 #ifdef DEBUG_WIN_ACTIONS
     printf("GLFW: window move: %d, %d\n", xpos, ypos);
+#else
+    (void)xpos; (void)ypos;
 #endif
 }
 
-void UserWindow::window_iconify_event(int iconified) {
+void UserWindow::window_iconify_event(int iconified)
+{
 #ifdef DEBUG_WIN_ACTIONS
     if (iconified) {
         printf("GLFW: window iconified\n");
     } else {
         printf("GLFW: window restored\n");
     }
+#else
+    (void)iconified;
 #endif
 }
 
-void UserWindow::window_maximize_event(int maximized) {
+void UserWindow::window_maximize_event(int maximized)
+{
 #ifdef DEBUG_WIN_ACTIONS
     if (maximized) {
         printf("GLFW: window maximized\n");
     } else {
         printf("GLFW: window restored\n");
     }
+#else
+    (void)maximized;
 #endif
 }
 
-void UserWindow::window_focus_event(int focused) {
+void UserWindow::window_focus_event(int focused)
+{
 #ifdef DEBUG_WIN_ACTIONS
     if (focused) {
         printf("GLFW: window gained focus\n");
     } else {
         printf("GLFW: window lost focus\n");
     }
+#else
+    (void)focused;
 #endif
 }
 
-void UserWindow::window_refresh_event() {
+void UserWindow::window_refresh_event()
+{
 #ifdef DEBUG_WIN_ACTIONS
     printf("UserWindow::window_refresh_event\n");
 #endif
@@ -102,13 +117,15 @@ void UserWindow::window_refresh_event() {
     glfwSwapBuffers(_window);
 }
 
-void UserWindow::key_event(int key, int scancode, int action, int mods) {
+void UserWindow::key_event(int key, int scancode, int action, int mods)
+{
 #ifdef SET_CONTEXT
     glfwMakeContextCurrent(_window);
 #endif
 #ifdef DEBUG_WIN_ACTIONS
     printf("UserWindow::key_event\n");
 #endif
+    (void)scancode; (void)mods;
     if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS) {
         glfwSetWindowShouldClose(_window, GLFW_TRUE);
     }
@@ -148,7 +165,8 @@ void UserWindow::key_event(int key, int scancode, int action, int mods) {
     }
 }
 
-void UserWindow::mouse_button_event(int button, int action, int mods) {
+void UserWindow::mouse_button_event(int button, int action, int mods)
+{
 #ifdef SET_CONTEXT
     glfwMakeContextCurrent(_window);
 #endif
@@ -212,7 +230,8 @@ void UserWindow::mouse_button_event(int button, int action, int mods) {
     }
 }
 
-void UserWindow::mouse_pos_event(double xs, double ys_inv) {
+void UserWindow::mouse_pos_event(double xs, double ys_inv)
+{
 #ifdef SET_CONTEXT
     glfwMakeContextCurrent(_window);
 #endif
@@ -223,8 +242,8 @@ void UserWindow::mouse_pos_event(double xs, double ys_inv) {
 
     _mouse_moved = true;
 
-    const int xs_i = (int)xs;
-    const int ys_i = (int)ys;
+    //const int xs_i = (int)xs;
+    //const int ys_i = (int)ys;
 
     switch (_cur_action) {
     case action_t::ACT_NO_ACT: {
@@ -264,12 +283,15 @@ void UserWindow::mouse_pos_event(double xs, double ys_inv) {
     this->window_refresh_event();
 }
 
-void UserWindow::scroll_event(double xoffset, double yoffset) {
+void UserWindow::scroll_event(double xoffset, double yoffset)
+{
 #ifdef SET_CONTEXT
     glfwMakeContextCurrent(_window);
 #endif
 #ifdef DEBUG_WIN_ACTIONS
     printf("UserWindow::scroll_event: % 0.6f\t% 0.6f\n", xoffset, yoffset);
+#else
+    (void)xoffset; (void)yoffset;
 #endif
 
 //TODO implement

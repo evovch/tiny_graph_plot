@@ -56,7 +56,7 @@ public:
     void UpdatePositionX(const int x) noexcept { _x = x; }
     void UpdatePositionY(const int y) noexcept { _y = y; }
     void UpdateRotation(const float angle) noexcept { _angle = angle; }
-    const Mat3f GetMatrix() const noexcept {
+    Mat3f GetMatrix() const noexcept {
         constexpr double deg_to_rad = 3.14159265358979323846 / 180.0;
         const float angle_rad = _angle * (float)deg_to_rad;
         const float sintheta = std::sin(angle_rad);
@@ -68,13 +68,13 @@ public:
         );
     }
     const std::string& GetString() const noexcept { return _string; }
-    const int& GetTexX() const noexcept { return _x; }
-    const int& GetTexY() const noexcept { return _y; }
-    const float& GetScaling() const noexcept { return _scaling; }
-    const float& GetAngle() const noexcept { return _angle; }
-    const size_t& GetTexW() const noexcept { return _texture_w; }
-    const size_t& GetTexH() const noexcept { return _texture_h; }
-    const float* const GetTexData() const noexcept { return _texture_data; }
+    int GetTexX() const noexcept { return _x; }
+    int GetTexY() const noexcept { return _y; }
+    float GetScaling() const noexcept { return _scaling; }
+    float GetAngle() const noexcept { return _angle; }
+    size_t GetTexW() const noexcept { return _texture_w; }
+    size_t GetTexH() const noexcept { return _texture_h; }
+    const float* GetTexData() const noexcept { return _texture_data; }
 private:
     std::string _string;
     int _x;

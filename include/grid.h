@@ -32,24 +32,24 @@ public:
 public:
     int CalculateStep(XYrange<T> visrange, const T vw, const T vh);
     int BuildGrid(XYrange<T> visrange, XYrange<T> totalrange);
-    const vertex_colored_t* const GetVerticesData(unsigned int& o_n) const {
+    const vertex_colored_t* GetVerticesData(unsigned int& o_n) const noexcept {
         o_n = _n_vertices;
         return vertices_;
     }
-    const wire_t* const GetWiresFineData(unsigned int& o_n_x, unsigned int& o_n_y) const {
+    const wire_t* GetWiresFineData(unsigned int& o_n_x, unsigned int& o_n_y) const noexcept {
         o_n_x = _n_wires_fine_x;
         o_n_y = _n_wires_fine_y;
         return wires_fine_;
     }
-    const wire_t* const GetWiresCoarseData(unsigned int& o_n_x, unsigned int& o_n_y) const {
+    const wire_t* GetWiresCoarseData(unsigned int& o_n_x, unsigned int& o_n_y) const noexcept {
         o_n_x = _n_wires_coarse_x;
         o_n_y = _n_wires_coarse_y;
         return wires_coarse_;
     }
-    const T& GetFineXstep() const   { return fine_step_x_; }
-    const T& GetFineYstep() const   { return fine_step_y_; }
-    const T& GetCoarseXstep() const { return coarse_step_x_; }
-    const T& GetCoarseYstep() const { return coarse_step_y_; }
+    T GetFineXstep() const   noexcept { return fine_step_x_; }
+    T GetFineYstep() const   noexcept { return fine_step_y_; }
+    T GetCoarseXstep() const noexcept { return coarse_step_x_; }
+    T GetCoarseYstep() const noexcept { return coarse_step_y_; }
 private:
     static constexpr unsigned int coarse_grid_factor_ = 5u;
     static constexpr unsigned int cell_size_in_pix_min_ = 20u;
@@ -71,34 +71,34 @@ private:
     wire_t* wires_fine_ = nullptr;
     wire_t* wires_coarse_ = nullptr;
 public: // visual parameters
-    void SetDarkColorScheme() {
+    void SetDarkColorScheme() noexcept {
         hgrid_fine_line_color_   = tiny_gl_text_renderer::colors::gray6;
         vgrid_fine_line_color_   = tiny_gl_text_renderer::colors::gray6;
         hgrid_coarse_line_color_ = tiny_gl_text_renderer::colors::gray5;
         vgrid_coarse_line_color_ = tiny_gl_text_renderer::colors::gray5;
     }
-    void SetBrightColorScheme() {
+    void SetBrightColorScheme() noexcept {
         hgrid_fine_line_color_   = tiny_gl_text_renderer::colors::gray3;
         vgrid_fine_line_color_   = tiny_gl_text_renderer::colors::gray3;
         hgrid_coarse_line_color_ = tiny_gl_text_renderer::colors::gray2;
         vgrid_coarse_line_color_ = tiny_gl_text_renderer::colors::gray2;
     }
-    void SetHGridFineColor(const color_t& color)    { hgrid_fine_line_color_ = color; }
-    void SetVGridFineColor(const color_t& color)    { vgrid_fine_line_color_ = color; }
-    void SetHGridCoarseColor(const color_t& color)  { hgrid_coarse_line_color_ = color; }
-    void SetVGridCoarseColor(const color_t& color)  { vgrid_coarse_line_color_ = color; }
-    void SetHGridFineLineWidth(const float width)   { hgrid_fine_line_width_ = width; }
-    void SetVGridFineLineWidth(const float width)   { vgrid_fine_line_width_ = width; }
-    void SetHGridCoarseLineWidth(const float width) { hgrid_coarse_line_width_ = width; }
-    void SetVGridCoarseLineWidth(const float width) { vgrid_coarse_line_width_ = width; }
-    const color_t& GetHGridFineColor()   const { return hgrid_fine_line_color_; }
-    const color_t& GetVGridFineColor()   const { return vgrid_fine_line_color_; }
-    const color_t& GetHGridCoarseColor() const { return hgrid_coarse_line_color_; }
-    const color_t& GetVGridCoarseColor() const { return vgrid_coarse_line_color_; }
-    float GetHGridFineLineWidth()   const { return hgrid_fine_line_width_; }
-    float GetVGridFineLineWidth()   const { return vgrid_fine_line_width_; }
-    float GetHGridCoarseLineWidth() const { return hgrid_coarse_line_width_; }
-    float GetVGridCoarseLineWidth() const { return vgrid_coarse_line_width_; }
+    void SetHGridFineColor(const color_t& color)    noexcept { hgrid_fine_line_color_ = color; }
+    void SetVGridFineColor(const color_t& color)    noexcept { vgrid_fine_line_color_ = color; }
+    void SetHGridCoarseColor(const color_t& color)  noexcept { hgrid_coarse_line_color_ = color; }
+    void SetVGridCoarseColor(const color_t& color)  noexcept { vgrid_coarse_line_color_ = color; }
+    void SetHGridFineLineWidth(const float width)   noexcept { hgrid_fine_line_width_ = width; }
+    void SetVGridFineLineWidth(const float width)   noexcept { vgrid_fine_line_width_ = width; }
+    void SetHGridCoarseLineWidth(const float width) noexcept { hgrid_coarse_line_width_ = width; }
+    void SetVGridCoarseLineWidth(const float width) noexcept { vgrid_coarse_line_width_ = width; }
+    color_t GetHGridFineColor()     const noexcept { return hgrid_fine_line_color_; }
+    color_t GetVGridFineColor()     const noexcept { return vgrid_fine_line_color_; }
+    color_t GetHGridCoarseColor()   const noexcept { return hgrid_coarse_line_color_; }
+    color_t GetVGridCoarseColor()   const noexcept { return vgrid_coarse_line_color_; }
+    float GetHGridFineLineWidth()   const noexcept { return hgrid_fine_line_width_; }
+    float GetVGridFineLineWidth()   const noexcept { return vgrid_fine_line_width_; }
+    float GetHGridCoarseLineWidth() const noexcept { return hgrid_coarse_line_width_; }
+    float GetVGridCoarseLineWidth() const noexcept { return vgrid_coarse_line_width_; }
 private: // visual parameters
     color_t hgrid_fine_line_color_   = tiny_gl_text_renderer::colors::gray6;
     color_t vgrid_fine_line_color_   = tiny_gl_text_renderer::colors::gray6;

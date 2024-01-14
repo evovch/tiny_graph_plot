@@ -51,7 +51,7 @@ public:
         data_[2*3+0] = m20; data_[2*3+1] = m21; data_[2*3+2] = m22;
 
     }
-    const T* const GetData() const noexcept { return data_.data(); }
+    const T* GetData() const noexcept { return data_.data(); }
     T operator[](const size_t i) const {
         assert(i < data_.size());
         return data_[i];

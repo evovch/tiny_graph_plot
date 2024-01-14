@@ -41,16 +41,16 @@ public: // visual parameters
     void SetColor(const color_t& color) noexcept  { color_ = color; }
     void SetMarkerSize(const float size) noexcept { marker_size_ = size; }
     void SetLineWidth(const float width) noexcept { line_width_ = width; }
-    const color_t& GetColor() const noexcept   { return color_; }
-    const float GetMarkerSize() const noexcept { return marker_size_; }
-    const float GetLineWidth() const noexcept  { return line_width_; }
+    color_t GetColor() const noexcept   { return color_; }
+    float GetMarkerSize() const noexcept { return marker_size_; }
+    float GetLineWidth() const noexcept  { return line_width_; }
 private: // visual parameters
     color_t color_ = tiny_gl_text_renderer::colors::blue;
     float marker_size_ = 5.0f;
     float line_width_ = 3.0f;
 public: // mutable visual parameters
     void SetVisible(const bool visible) const noexcept { visible_ = visible; }
-    const bool GetVisible() const noexcept { return visible_; }
+    bool GetVisible() const noexcept { return visible_; }
 private: // mutable visual parameters
     mutable bool visible_ = true;
 };

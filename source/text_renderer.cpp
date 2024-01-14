@@ -11,7 +11,8 @@ namespace tiny_gl_text_renderer
 /*static*/
 /*GLuint TextRenderer::_labels_counter = 0;*/
 
-TextRenderer::TextRenderer(void) {
+TextRenderer::TextRenderer()
+{
     //printf("TextRenderer::TextRenderer\n");
     glGenVertexArrays(1, &_vaoID);
     glGenBuffers(1, &_vboID);
@@ -33,7 +34,8 @@ TextRenderer::TextRenderer(void) {
     _s2c_unif = glGetUniformLocation(_progID, "screen2clip");
 }
 
-TextRenderer::~TextRenderer(void) {
+TextRenderer::~TextRenderer()
+{
     //printf("TextRenderer::~TextRenderer\n");
     glDeleteVertexArrays(1, &_vaoID);
     glDeleteBuffers(1, &_vboID);
@@ -44,7 +46,8 @@ TextRenderer::~TextRenderer(void) {
     }
 }
 
-void TextRenderer::UpdateScreenToClipMatrix(void) {
+void TextRenderer::UpdateScreenToClipMatrix()
+{
     _screen_to_clip.Set(
          2.0f / (float)_w, 0.0f,             0.0f, 0.0f,
          0.0f,             2.0f / (float)_h, 0.0f, 0.0f,
@@ -54,7 +57,8 @@ void TextRenderer::UpdateScreenToClipMatrix(void) {
         _screen_to_clip.GetData());
 }
 
-void TextRenderer::FirstReshape(int w, int h) {
+void TextRenderer::FirstReshape(int w, int h)
+{
     //printf("TextRenderer::FirstReshape\n");
     this->SetCanvasSize(w, h);
     this->AllocateVerticesAndQuadsMemory();
@@ -62,7 +66,8 @@ void TextRenderer::FirstReshape(int w, int h) {
     this->UpdateScreenToClipMatrix();
 }
 
-void TextRenderer::Reshape(int w, int h) {
+void TextRenderer::Reshape(int w, int h)
+{
     //printf("TextRenderer::Reshape\n");
     this->SetCanvasSize(w, h);
     this->RecalculateVertices();
@@ -70,7 +75,8 @@ void TextRenderer::Reshape(int w, int h) {
     this->UpdateScreenToClipMatrix();
 }
 
-void TextRenderer::Draw(void) const {
+void TextRenderer::Draw() const
+{
     //printf("TextRenderer::Draw\n");
     glUseProgram(_progID);
     glBindVertexArray(_vaoID);
@@ -88,7 +94,8 @@ void TextRenderer::Draw(void) const {
     glUseProgram(0);
 }
 
-void TextRenderer::DrawSingle(const size_t i_label) const {
+void TextRenderer::DrawSingle(const size_t i_label) const
+{
     //printf("TextRenderer::DrawSingle\n");
     glUseProgram(_progID);
     glBindVertexArray(_vaoID);
@@ -103,7 +110,8 @@ void TextRenderer::DrawSingle(const size_t i_label) const {
 }
 
 size_t TextRenderer::AddLabel(const char* string, const int x, const int y,
-    const color_t& color, const float scaling, const float angle) {
+    const color_t& color, const float scaling, const float angle)
+{
     //printf("TextRenderer::AddLabel\n");
     _labels.emplace_back(string, x, y, color, scaling, angle);
     glGenTextures(1, &_labels.back()._tex_id);
@@ -114,12 +122,14 @@ size_t TextRenderer::AddLabel(const char* string, const int x, const int y,
     return (size_t)(_labels_counter-1); // not nice but should work
 }
 
-const std::string& TextRenderer::GetLabelString(const size_t i_label) {
+const std::string& TextRenderer::GetLabelString(const size_t i_label)
+{
     Label& label = _labels.at(i_label);
     return label.GetString();
 }
 
-void TextRenderer::UpdateLabel(const char* string, const size_t i_label) {
+void TextRenderer::UpdateLabel(const char* string, const size_t i_label)
+{
     Label& label = _labels.at(i_label);
     label.UpdateString(string);
     this->RecalculateVerticesSingle(i_label);
@@ -127,38 +137,43 @@ void TextRenderer::UpdateLabel(const char* string, const size_t i_label) {
     this->SendToGPUtextureSingle(i_label);
 }
 
-void TextRenderer::UpdatePosition(const int x, const int y, const size_t i_label) {
+void TextRenderer::UpdatePosition(const int x, const int y, const size_t i_label)
+{
     Label& label = _labels.at(i_label);
     label.UpdatePosition(x, y);
     this->RecalculateVerticesSingle(i_label);
     this->SendToGPUverticesSingle(i_label);
 }
 
-void TextRenderer::UpdatePositionX(const int x, const size_t i_label) {
+void TextRenderer::UpdatePositionX(const int x, const size_t i_label)
+{
     Label& label = _labels.at(i_label);
     label.UpdatePositionX(x);
     this->RecalculateVerticesSingle(i_label);
     this->SendToGPUverticesSingle(i_label);
 }
 
-void TextRenderer::UpdatePositionY(const int y, const size_t i_label) {
+void TextRenderer::UpdatePositionY(const int y, const size_t i_label)
+{
     Label& label = _labels.at(i_label);
     label.UpdatePositionY(y);
     this->RecalculateVerticesSingle(i_label);
     this->SendToGPUverticesSingle(i_label);
 }
 
-void TextRenderer::UpdateRotation(const float angle, const size_t i_label) {
+void TextRenderer::UpdateRotation(const float angle, const size_t i_label)
+{
     Label& label = _labels.at(i_label);
     label.UpdateRotation(angle);
     this->RecalculateVerticesSingle(i_label);
     this->SendToGPUverticesSingle(i_label);
 }
 
-void TextRenderer::AllocateVerticesAndQuadsMemory(void) {
+void TextRenderer::AllocateVerticesAndQuadsMemory()
+{
     //printf("TextRenderer::AllocateVerticesAndQuadsMemory\n");
     _vertices.reserve(4 * _labels_counter);
-    using v_str_t = vertex_textured_t;
+    //using v_str_t = vertex_textured_t;
 
     size_t i_label = 0;
     for (const Label& label : _labels) {
@@ -174,24 +189,27 @@ void TextRenderer::AllocateVerticesAndQuadsMemory(void) {
         _vertices.emplace_back(v1c.x(), (float)_h - v1c.y(), 0.0f, 1.0f, 1.0f, 0.0f);
         _vertices.emplace_back(v2c.x(), (float)_h - v2c.y(), 0.0f, 1.0f, 1.0f, 1.0f);
         _vertices.emplace_back(v3c.x(), (float)_h - v3c.y(), 0.0f, 1.0f, 0.0f, 1.0f);
-        _quads.emplace_back((unsigned int)i_label * 4 + 0,
-                            (unsigned int)i_label * 4 + 1,
-                            (unsigned int)i_label * 4 + 2,
-                            (unsigned int)i_label * 4 + 3);
+        _quads.emplace_back((unsigned int)i_label * 4u + 0u,
+                            (unsigned int)i_label * 4u + 1u,
+                            (unsigned int)i_label * 4u + 2u,
+                            (unsigned int)i_label * 4u + 3u);
         i_label++;
     }
 }
 
-void TextRenderer::RecalculateVertices(void) {
+void TextRenderer::RecalculateVertices()
+{
     //printf("TextRenderer::RecalculateVertices\n");
     size_t i_label = 0;
     for (const Label& label : _labels) {
+        (void)label; // unused iterator variable.
         this->RecalculateVerticesSingle(i_label);
         i_label++;
     }
 }
 
-void TextRenderer::RecalculateVerticesSingle(const size_t i_label) {
+void TextRenderer::RecalculateVerticesSingle(const size_t i_label)
+{
     //printf("TextRenderer::RecalculateVerticesSingle\n");
     using v_str_t = vertex_textured_t;
     const Label& label = _labels.at(i_label);
@@ -214,7 +232,8 @@ void TextRenderer::RecalculateVerticesSingle(const size_t i_label) {
     va3 = v_str_t(v3c.x(), (float)_h - v3c.y(), 0.0f, 1.0f, 0.0f, 1.0f);
 }
 
-void TextRenderer::SendToGPU(void) const {
+void TextRenderer::SendToGPU() const
+{
     //printf("TextRenderer::SendToGPU\n");
     using v_str_t = vertex_textured_t;
     // Vertices
@@ -240,12 +259,14 @@ void TextRenderer::SendToGPU(void) const {
     // Textures
     size_t i_label = 0;
     for (const Label& label : _labels) {
+        (void)label; // unused iterator variable.
         this->SendToGPUtextureSingle(i_label);
         i_label++;
     }
 }
 
-void TextRenderer::SendToGPUverticesSingle(const size_t i_label) const {
+void TextRenderer::SendToGPUverticesSingle(const size_t i_label) const
+{
     //printf("TextRenderer::SendToGPUverticesSingle\n");
     using v_str_t = vertex_textured_t;
     // Vertices
@@ -259,7 +280,8 @@ void TextRenderer::SendToGPUverticesSingle(const size_t i_label) const {
     glBindVertexArray(0);
 }
 
-void TextRenderer::SendToGPUtextureSingle(const size_t i_label) const {
+void TextRenderer::SendToGPUtextureSingle(const size_t i_label) const
+{
     //printf("TextRenderer::SendToGPUtextureSingle\n");
     // Textures
     const Label& label = _labels.at(i_label);

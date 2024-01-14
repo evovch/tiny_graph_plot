@@ -29,7 +29,8 @@ using tiny_gl_text_renderer::quad_t;
 
 template<typename T>
 Canvas<T>::Canvas(GLFWwindow* window, const unsigned int w, const unsigned int h)
-:   UserWindow(window, w, h) {
+:   UserWindow(window, w, h)
+{
 #ifdef DEBUG_CALLS
     printf("Canvas::Canvas\n");
 #endif
@@ -41,7 +42,8 @@ Canvas<T>::Canvas(GLFWwindow* window, const unsigned int w, const unsigned int h
 }
 
 template<typename T>
-Canvas<T>::~Canvas(void) {
+Canvas<T>::~Canvas(void)
+{
 #ifdef DEBUG_CALLS
     printf("Canvas::~Canvas\n");
 #endif
@@ -104,17 +106,20 @@ Canvas<T>::~Canvas(void) {
 }
 
 template<typename T>
-void Canvas<T>::AddGraph(const Graph<T>& p_graph) {
+void Canvas<T>::AddGraph(const Graph<T>& p_graph)
+{
     _graphs.push_back(&p_graph);
 }
 
 template<typename T>
-void Canvas<T>::AddHistogram(const Histogram1d<T, unsigned long>& p_histo) {
+void Canvas<T>::AddHistogram(const Histogram1d<T, unsigned long>& p_histo)
+{
     _histograms.push_back(&p_histo);
 }
 
 template<typename T>
-void Canvas<T>::Show(void) {
+void Canvas<T>::Show(void)
+{
 #ifdef DEBUG_CALLS
     printf("Canvas::Show\n");
 #endif
@@ -333,7 +338,8 @@ void Canvas<T>::Show(void) {
 }
 
 template<typename T>
-void Canvas<T>::Draw(void) /*const*/ {
+void Canvas<T>::Draw(void) /*const*/
+{
 #ifdef DEBUG_CALLS
     printf("Canvas::Draw\n");
 #endif
@@ -370,7 +376,8 @@ void Canvas<T>::Draw(void) /*const*/ {
 }
 
 template<typename T>
-void Canvas<T>::Init(void) {
+void Canvas<T>::Init(void) 
+{
 #ifdef DEBUG_CALLS
     printf("Canvas::Init\n");
 #endif
@@ -576,7 +583,8 @@ void Canvas<T>::Init(void) {
 }
 
 template<typename T>
-void Canvas<T>::Clear(void) const {
+void Canvas<T>::Clear(void) const
+{
 #ifdef DEBUG_CALLS
     printf("Canvas::Clear\n");
 #endif
@@ -588,7 +596,8 @@ void Canvas<T>::Clear(void) const {
 }
 
 template<typename T>
-void Canvas<T>::Reshape(int p_width, int p_height) {
+void Canvas<T>::Reshape(int p_width, int p_height)
+{
 #ifdef DEBUG_CALLS
     printf("Canvas::Reshape\n");
 #endif
@@ -629,7 +638,8 @@ void Canvas<T>::Reshape(int p_width, int p_height) {
 }
 
 template<typename T>
-void Canvas<T>::PrintCursorValues(const double xs, const double ys) const {
+void Canvas<T>::PrintCursorValues(const double xs, const double ys) const
+{
     const Vec4f ps = Vec4f((float)xs, (float)ys, 0.0f, 1.0f);
     Vec4f pv;
     Vec4f pc;
@@ -639,13 +649,15 @@ void Canvas<T>::PrintCursorValues(const double xs, const double ys) const {
 
 template<typename T>
 /*__forceinline*/
-void Canvas<T>::SwitchToFullWindow(void) const {
+void Canvas<T>::SwitchToFullWindow(void) const
+{
     glViewport(0, 0, _window_w, _window_h);
 }
 
 template<typename T>
 /*__forceinline*/
-void Canvas<T>::SwitchToFrame(void) const {
+void Canvas<T>::SwitchToFrame(void) const
+{
     glViewport(_margin_xl_pix, _margin_yb_pix,
         _window_w - (_margin_xl_pix + _margin_xr_pix),
         _window_h - (_margin_yb_pix + _margin_yt_pix));
@@ -654,7 +666,8 @@ void Canvas<T>::SwitchToFrame(void) const {
 // ===============================================================================
 
 template<typename T>
-void Canvas<T>::AllocateBuffersForFixedSizedData(void) const {
+void Canvas<T>::AllocateBuffersForFixedSizedData(void) const
+{
 #ifdef DEBUG_CALLS
     printf("Canvas::AllocateBuffersForFixedSizedData\n");
 #endif
@@ -744,7 +757,8 @@ void Canvas<T>::AllocateBuffersForFixedSizedData(void) const {
 }
 
 template<typename T>
-void Canvas<T>::SendFixedIndicesToGPU(void) const {
+void Canvas<T>::SendFixedIndicesToGPU(void) const
+{
 #ifdef DEBUG_CALLS
     printf("Canvas::SendFixedIndicesToGPU\n");
 #endif
@@ -811,7 +825,8 @@ void Canvas<T>::SendFixedIndicesToGPU(void) const {
 // 1. Grid =======================================================================
 
 template<typename T>
-int Canvas<T>::SendGridToGPU(void) {
+int Canvas<T>::SendGridToGPU(void)
+{
 #ifdef DEBUG_CALLS
     printf("Canvas::SendGridToGPU\n");
 #endif
@@ -874,7 +889,8 @@ int Canvas<T>::SendGridToGPU(void) {
 }
 
 template<typename T>
-void Canvas<T>::DrawGrid(void) const {
+void Canvas<T>::DrawGrid(void) const
+{
 #ifdef DEBUG_CALLS
     printf("Canvas::DrawGrid\n");
 #endif
@@ -891,9 +907,11 @@ void Canvas<T>::DrawGrid(void) const {
         unsigned int n_wires_fine_x; unsigned int n_wires_fine_y;
         const wire_t* const wires_fine =
             _grid.GetWiresFineData(n_wires_fine_x, n_wires_fine_y);
+        (void)wires_fine; // unused returned value.
         unsigned int n_wires_coarse_x; unsigned int n_wires_coarse_y;
         const wire_t* const wires_coarse =
             _grid.GetWiresCoarseData(n_wires_coarse_x, n_wires_coarse_y);
+        (void)wires_coarse; // unused returned value.
 
         glUseProgram(_progID_w);
         glBindVertexArray(_vaoID_grid);
@@ -933,7 +951,8 @@ void Canvas<T>::DrawGrid(void) const {
 // 2. Axes =======================================================================
 
 template<typename T>
-void Canvas<T>::DrawAxes(void) const {
+void Canvas<T>::DrawAxes(void) const
+{
 #ifdef DEBUG_CALLS
     printf("Canvas::DrawAxes\n");
 #endif
@@ -984,7 +1003,8 @@ void Canvas<T>::DrawAxes(void) const {
 // 3. Vref =======================================================================
 
 template<typename T>
-void Canvas<T>::DrawVref(void) const {
+void Canvas<T>::DrawVref(void) const
+{
 #ifdef DEBUG_CALLS
     printf("Canvas::DrawVref\n");
 #endif
@@ -1029,7 +1049,8 @@ void Canvas<T>::DrawVref(void) const {
 // 4. Frame ======================================================================
 
 template<typename T>
-void Canvas<T>::SendFrameVerticesToGPU(void) const {
+void Canvas<T>::SendFrameVerticesToGPU(void) const
+{
 #ifdef DEBUG_CALLS
     printf("Canvas::SendFrameVerticesToGPU\n");
 #endif
@@ -1063,7 +1084,8 @@ void Canvas<T>::SendFrameVerticesToGPU(void) const {
 }
 
 template<typename T>
-void Canvas<T>::FillInFrame(void) const {
+void Canvas<T>::FillInFrame(void) const
+{
 #ifdef DEBUG_CALLS
     printf("Canvas::FillInFrame\n");
 #endif
@@ -1092,7 +1114,8 @@ void Canvas<T>::FillInFrame(void) const {
 }
 
 template<typename T>
-void Canvas<T>::DrawFrame(void) const {
+void Canvas<T>::DrawFrame(void) const
+{
 #ifdef DEBUG_CALLS
     printf("Canvas::DrawFrame\n");
 #endif
@@ -1120,8 +1143,8 @@ void Canvas<T>::DrawFrame(void) const {
 // 5. Graphs =====================================================================
 
 template<typename T>
-void Canvas<T>::SendDrawableToGPU(const Drawable<T>* const p_graph,
-    const SizeInfo& p_offset) const {
+void Canvas<T>::SendDrawableToGPU(const Drawable<T>* const p_graph, const SizeInfo& p_offset) const
+{
 #ifdef DEBUG_CALLS
     printf("Canvas::SendGraphToGPU\n");
 #endif
@@ -1179,8 +1202,8 @@ void Canvas<T>::SendDrawableToGPU(const Drawable<T>* const p_graph,
 }
 
 template<typename T>
-void Canvas<T>::DrawDrawable(const Drawable<T>* const p_graph,
-    const SizeInfo& p_offset) const {
+void Canvas<T>::DrawDrawable(const Drawable<T>* const p_graph, const SizeInfo& p_offset) const
+{
 #ifdef DEBUG_CALLS
     printf("Canvas::DrawGraph\n");
 #endif
@@ -1217,7 +1240,8 @@ void Canvas<T>::DrawDrawable(const Drawable<T>* const p_graph,
 // 6. Cursor =====================================================================
 
 template<typename T>
-void Canvas<T>::DrawCursor(const double xs, const double ys) const {
+void Canvas<T>::DrawCursor(const double xs, const double ys) const
+{
 #ifdef DEBUG_CALLS
     printf("Canvas::DrawCursor\n");
 #endif
@@ -1274,7 +1298,8 @@ void Canvas<T>::DrawCursor(const double xs, const double ys) const {
 
 template<typename T>
 void Canvas<T>::DrawSelRectangle(const double xs0, const double ys0,
-    const double xs1, const double ys1) const {
+    const double xs1, const double ys1) const
+{
 #ifdef DEBUG_CALLS
     printf("Canvas::DrawSelRectangle\n");
 #endif
@@ -1332,7 +1357,8 @@ void Canvas<T>::DrawSelRectangle(const double xs0, const double ys0,
 // 8. Circles ====================================================================
 
 template<typename T>
-void Canvas<T>::DrawCircles(const double xs, const double ys) const {
+void Canvas<T>::DrawCircles(const double xs, const double ys) const
+{
 #ifdef DEBUG_CALLS
     printf("Canvas::DrawCircles\n");
 #endif
@@ -1401,7 +1427,8 @@ void Canvas<T>::DrawCircles(const double xs, const double ys) const {
 // 9. Text =======================================================================
 
 template<typename T>
-void Canvas<T>::UpdateTexTextCur(const double xs, const double ys) {
+void Canvas<T>::UpdateTexTextCur(const double xs, const double ys)
+{
 #ifdef DEBUG_CALLS
     printf("Canvas::UpdateTexTextCur\n");
 #endif
@@ -1461,7 +1488,8 @@ void Canvas<T>::UpdateTexTextCur(const double xs, const double ys) {
 }
 
 template<typename T>
-void Canvas<T>::UpdateTexTextRef(const double xs, const double ys) {
+void Canvas<T>::UpdateTexTextRef(const double xs, const double ys)
+{
 #ifdef DEBUG_CALLS
     printf("Canvas::UpdateTexTextRef\n");
 #endif
@@ -1494,7 +1522,8 @@ void Canvas<T>::UpdateTexTextRef(const double xs, const double ys) {
 }
 
 template<typename T>
-void Canvas<T>::UpdateTexTextGridSize(void) {
+void Canvas<T>::UpdateTexTextGridSize(void)
+{
 #ifdef DEBUG_CALLS
     printf("Canvas::UpdateTUpdateTexTextGridSizeexTextRef\n");
 #endif
@@ -1503,7 +1532,7 @@ void Canvas<T>::UpdateTexTextGridSize(void) {
 #endif
 
     const int ch_width = (int)(_font_size * (float)tiny_gl_text_renderer::CHAR_WIDTH);
-    const int line_height = (int)(_font_size * (float)tiny_gl_text_renderer::CHAR_HEIGHT);
+    //const int line_height = (int)(_font_size * (float)tiny_gl_text_renderer::CHAR_HEIGHT);
 
     char buf2[128];
     snprintf(&buf2[0], 128, "(%g;%g) (%g;%g)",
@@ -1516,7 +1545,8 @@ void Canvas<T>::UpdateTexTextGridSize(void) {
 }
 
 template<typename T>
-void Canvas<T>::UpdateTexAxesValues(void) {
+void Canvas<T>::UpdateTexAxesValues(void)
+{
 #ifdef DEBUG_CALLS
     printf("Canvas::UpdateTexAxesValues\n");
 #endif
@@ -1533,8 +1563,8 @@ void Canvas<T>::UpdateTexAxesValues(void) {
     const unsigned int ny = std::min(_n_y_axis_value_labels_max, ny_);
 
     const int ch_width = (int)(_font_size * (float)tiny_gl_text_renderer::CHAR_WIDTH);
-    const int line_height = (int)(_font_size * (float)tiny_gl_text_renderer::CHAR_HEIGHT);
-    const size_t BUFSIZE = 32;
+    //const int line_height = (int)(_font_size * (float)tiny_gl_text_renderer::CHAR_HEIGHT);
+    constexpr size_t BUFSIZE = 32;
     char buf[BUFSIZE];
 
     // X axis --------------------------------------------------------------------
@@ -1587,7 +1617,8 @@ void Canvas<T>::UpdateTexAxesValues(void) {
 // ===============================================================================
 
 template<typename T>
-void Canvas<T>::CenterView(const double xs, const double ys) {
+void Canvas<T>::CenterView(const double xs, const double ys)
+{
 #ifdef DEBUG_CALLS
     printf("Canvas::Center: % 0.6f\t% 0.6f\n", xs, ys);
 #endif
@@ -1607,7 +1638,8 @@ void Canvas<T>::CenterView(const double xs, const double ys) {
 }
 
 template<typename T>
-void Canvas<T>::Pan(const double xs, const double ys) {
+void Canvas<T>::Pan(const double xs, const double ys)
+{
 #ifdef DEBUG_CALLS
     printf("Canvas::Pan: % 0.6f\t% 0.6f\n", xs, ys);
 #endif
@@ -1629,7 +1661,8 @@ void Canvas<T>::Pan(const double xs, const double ys) {
 }
 
 template<typename T>
-void Canvas<T>::Zoom(const double xs, const double ys) {
+void Canvas<T>::Zoom(const double xs, const double ys)
+{
 #ifdef DEBUG_CALLS
     printf("Canvas::Zoom: % 0.6f\t% 0.6f\n", xs, ys);
 #endif
@@ -1672,27 +1705,33 @@ void Canvas<T>::Zoom(const double xs, const double ys) {
 }
 
 template<typename T>
-void Canvas<T>::ZoomF(const double xs, const double ys) {
+void Canvas<T>::ZoomF(const double xs, const double ys)
+{
+    (void)xs;
     const float vw = (float)(_window_w - (_margin_xl_pix + _margin_xr_pix));
     const float vh = (float)(_window_h - (_margin_yb_pix + _margin_yt_pix));
     const float asp_rat = vw / vh;
-    const float asp_rat_inv = vh / vw;
+    //const float asp_rat_inv = vh / vw;
     this->Zoom(_xs_start + (ys - _ys_start) * asp_rat, ys);
 }
 
 template<typename T>
-void Canvas<T>::ZoomX(const double xs, const double ys) {
+void Canvas<T>::ZoomX(const double xs, const double ys)
+{
+    (void)ys;
     this->Zoom(xs, _ys_start);
 }
 
 template<typename T>
-void Canvas<T>::ZoomY(const double xs, const double ys) {
+void Canvas<T>::ZoomY(const double xs, const double ys)
+{
+    (void)xs;
     this->Zoom(_xs_start, ys);
 }
 
 template<typename T>
-void Canvas<T>::ZoomTo(const double xs0, const double ys0,
-    const double xs1, const double ys1) {
+void Canvas<T>::ZoomTo(const double xs0, const double ys0, const double xs1, const double ys1)
+{
 #ifdef DEBUG_CALLS
     printf("Canvas::ZoomTo: % 0.6f\t% 0.6f\t% 0.6f\t% 0.6f\n",
         xs0, ys0, xs1, ys1);
@@ -1716,7 +1755,8 @@ void Canvas<T>::ZoomTo(const double xs0, const double ys0,
 }
 
 template<typename T>
-void Canvas<T>::ResetCamera(void) {
+void Canvas<T>::ResetCamera(void)
+{
 #ifdef DEBUG_CALLS
     printf("Canvas::ResetCamera\n");
 #endif
@@ -1731,7 +1771,8 @@ void Canvas<T>::ResetCamera(void) {
 }
 
 template<typename T>
-void Canvas<T>::SetPrevViewport(void) {
+void Canvas<T>::SetPrevViewport(void)
+{
 #ifdef DEBUG_CALLS
     printf("Canvas::SetPrevViewport\n");
 #endif
@@ -1746,7 +1787,8 @@ void Canvas<T>::SetPrevViewport(void) {
 }
 
 template<typename T>
-void Canvas<T>::FixedAspRatCamera(void) {
+void Canvas<T>::FixedAspRatCamera(void)
+{
 #ifdef DEBUG_CALLS
     printf("Canvas::FixedAspRatCamera\n");
 #endif
@@ -1783,7 +1825,8 @@ void Canvas<T>::FixedAspRatCamera(void) {
 }
 
 template<typename T>
-void Canvas<T>::ExportSnapshot(void) {
+void Canvas<T>::ExportSnapshot(void)
+{
 #ifdef DEBUG_CALLS
     printf("Canvas::ExportSnapshot\n");
 #endif
@@ -1803,7 +1846,8 @@ void Canvas<T>::ExportSnapshot(void) {
 }
 
 template<typename T>
-bool Canvas<T>::PointerInFrame(const double xs, const double ys) const {
+bool Canvas<T>::PointerInFrame(const double xs, const double ys) const
+{
 ////#ifdef SET_CONTEXT
 ////    glfwMakeContextCurrent(_window);
 ////#endif
@@ -1817,8 +1861,8 @@ bool Canvas<T>::PointerInFrame(const double xs, const double ys) const {
 }
 
 template<typename T>
-void Canvas<T>::ClampToFrame(const double xs, const double ys,
-    double& o_xs, double& o_ys) const {
+void Canvas<T>::ClampToFrame(const double xs, const double ys, double& o_xs, double& o_ys) const
+{
 ////#ifdef SET_CONTEXT
 ////    glfwMakeContextCurrent(_window);
 ////#endif
@@ -1831,19 +1875,22 @@ void Canvas<T>::ClampToFrame(const double xs, const double ys,
 }
 
 template<typename T>
-void Canvas<T>::SaveStartState(void) {
+void Canvas<T>::SaveStartState(void)
+{
     _visible_range_start = _visible_range;
 }
 
 template<typename T>
-void Canvas<T>::ToggleGraphVisibility(const int iGraph) const {
-    if (iGraph >= _graphs.size()) return;
+void Canvas<T>::ToggleGraphVisibility(const int iGraph) const
+{
+    if (iGraph >= static_cast<int>(_graphs.size())) return;
     const bool curVisibility = _graphs.at(iGraph)->GetVisible();
     _graphs.at(iGraph)->SetVisible(!curVisibility);
 }
 
 template<typename T>
-void Canvas<T>::ExportPNG(const char* const dir, const char* const filename) const {
+void Canvas<T>::ExportPNG(const char* const dir, const char* const filename) const
+{
     unsigned char* const data = new unsigned char[_window_h * _window_w * 3];
     if (!data) return;
     glReadPixels(0, 0, _window_w, _window_h, GL_RGB, GL_UNSIGNED_BYTE, data);
@@ -1854,7 +1901,8 @@ void Canvas<T>::ExportPNG(const char* const dir, const char* const filename) con
 }
 
 template<typename T>
-void Canvas<T>::UpdateMatricesReshape(void) {
+void Canvas<T>::UpdateMatricesReshape(void)
+{
 #ifdef DEBUG_CALLS
     printf("Canvas::UpdateMatricesReshape\n");
 #endif
@@ -1963,7 +2011,8 @@ void Canvas<T>::UpdateMatricesReshape(void) {
 }
 
 template<typename T>
-void Canvas<T>::UpdateMatricesPanZoom(void) {
+void Canvas<T>::UpdateMatricesPanZoom(void)
+{
 #ifdef DEBUG_CALLS
     printf("Canvas::UpdateMatricesPanZoom\n");
 #endif
@@ -2014,13 +2063,15 @@ void Canvas<T>::UpdateMatricesPanZoom(void) {
 // thus performing transformations in double precision make no sense.
 template<typename T>
 Vec4f Canvas<T>::TransformToVisrange(const double xs, const double ys,
-    Vec4f* const o_in_clip_space, Vec4f* const o_in_viewport_space) const {
+    Vec4f* const o_in_clip_space, Vec4f* const o_in_viewport_space) const
+{
     const Vec4f ps((float)xs, (float)ys, 0.0f, 1.0f);
     return this->TransformToVisrange(ps, o_in_clip_space, o_in_viewport_space);
 }
 template<typename T>
 Vec4f Canvas<T>::TransformToVisrange(const Vec4f& in_screen_space,
-    Vec4f* const o_in_clip_space, Vec4f* const o_in_viewport_space) const {
+    Vec4f* const o_in_clip_space, Vec4f* const o_in_viewport_space) const
+{
     const Vec4f in_viewport_space = _screen_to_viewport * in_screen_space;
     const Vec4f in_clip_space = _viewport_to_clip * in_viewport_space;
     if (o_in_viewport_space != nullptr) {
@@ -2034,13 +2085,15 @@ Vec4f Canvas<T>::TransformToVisrange(const Vec4f& in_screen_space,
 
 //template<typename T>
 //Vec4d Canvas<T>::TransformToVisrangeHP(const double xs, const double ys,
-//    Vec4d* const o_in_clip_space) const {
+//    Vec4d* const o_in_clip_space) const
+//{
 //    const Vec4d ps(xs, ys, 0.0, 1.0);
 //    return this->TransformToVisrangeHP(ps, o_in_clip_space);
 //}
 //template<typename T>
 //Vec4d Canvas<T>::TransformToVisrangeHP(const Vec4d& in_screen_space,
-//    Vec4d* const o_in_clip_space) const {
+//    Vec4d* const o_in_clip_space) const
+//{
 //    //const Vec4d in_clip_space = _screen_to_clip_hp * in_screen_space;
 //    const Vec4d in_viewport_space = _screen_to_viewport_hp * in_screen_space;
 //    const Vec4d in_clip_space = _viewport_to_clip_hp * in_viewport_space;
@@ -2053,7 +2106,8 @@ Vec4f Canvas<T>::TransformToVisrange(const Vec4f& in_screen_space,
 // ===============================================================================
 
 template<typename T>
-void Canvas<T>::UpdateSizeLimits(void) {
+void Canvas<T>::UpdateSizeLimits(void)
+{
 #ifdef DEBUG_CALLS
     printf("Canvas::UpdateSizeLimits\n");
 #endif
@@ -2072,7 +2126,8 @@ void Canvas<T>::UpdateSizeLimits(void) {
 
 //+++++++++++++++++++++++++++++++++++++++++++++
 template<typename T>
-void Canvas<T>::FinalizeTextRenderer(void) {
+void Canvas<T>::FinalizeTextRenderer(void)
+{
 #ifdef DEBUG_CALLS
     printf("Canvas::FinalizeTextRenderer\n");
 #endif
@@ -2088,7 +2143,8 @@ void Canvas<T>::FinalizeTextRenderer(void) {
 // ===============================================================================
 
 template<typename T>
-void Canvas<T>::SetDarkColorScheme(void) {
+void Canvas<T>::SetDarkColorScheme(void)
+{
     _grid.SetDarkColorScheme();
     this->SetBackgroundColor(tiny_gl_text_renderer::colors::gray1);
     this->SetInFrameBackgroundColor(tiny_gl_text_renderer::colors::gray05);
@@ -2100,7 +2156,8 @@ void Canvas<T>::SetDarkColorScheme(void) {
 }
 
 template<typename T>
-void Canvas<T>::SetBrightColorScheme(void) {
+void Canvas<T>::SetBrightColorScheme(void)
+{
     _grid.SetBrightColorScheme();
     this->SetBackgroundColor(tiny_gl_text_renderer::colors::gray9);
     this->SetInFrameBackgroundColor(tiny_gl_text_renderer::colors::gray95);
@@ -2112,7 +2169,8 @@ void Canvas<T>::SetBrightColorScheme(void) {
 }
 
 template<typename T>
-void Canvas<T>::SetBackgroundColor(const color_t& color) {
+void Canvas<T>::SetBackgroundColor(const color_t& color)
+{
 #ifdef DEBUG_CALLS
     printf("Canvas::SetBackgroundColor\n");
 #endif
@@ -2125,7 +2183,8 @@ void Canvas<T>::SetBackgroundColor(const color_t& color) {
 }
 
 template<typename T>
-void Canvas<T>::SetInFrameBackgroundColor(const color_t& color) {
+void Canvas<T>::SetInFrameBackgroundColor(const color_t& color)
+{
 #ifdef DEBUG_CALLS
     printf("Canvas::SetInFrameBackgroundColor\n");
 #endif
