@@ -15,43 +15,43 @@ inline int Grid<T>::CalculateStep(XYrange<T> visrange, const T vw, const T vh)
         return 1;
     }
 
-    unsigned int pix_per_unit_x = static_cast<unsigned int>(_fine_step_x * vw / dx);
-    unsigned int pix_per_unit_y = static_cast<unsigned int>(_fine_step_y * vh / dy);
+    unsigned int pix_per_unit_x = static_cast<unsigned int>(fine_step_x_ * vw / dx);
+    unsigned int pix_per_unit_y = static_cast<unsigned int>(fine_step_y_ * vh / dy);
 
-    if ((pix_per_unit_x >= _cell_size_in_pix_min) &&
-        (pix_per_unit_x <= _cell_size_in_pix_max) &&
-        (pix_per_unit_y >= _cell_size_in_pix_min) &&
-        (pix_per_unit_y <= _cell_size_in_pix_max)) {
+    if ((pix_per_unit_x >= cell_size_in_pix_min_) &&
+        (pix_per_unit_x <= cell_size_in_pix_max_) &&
+        (pix_per_unit_y >= cell_size_in_pix_min_) &&
+        (pix_per_unit_y <= cell_size_in_pix_max_)) {
         // Everything is already fine, just quit
         return 0;
     }
 
-    if (pix_per_unit_x < _cell_size_in_pix_min) {
-        while (pix_per_unit_x < _cell_size_in_pix_min) {
-            _fine_step_x *= 10.0;
-            pix_per_unit_x = static_cast<int>(_fine_step_x * vw / dx);
+    if (pix_per_unit_x < cell_size_in_pix_min_) {
+        while (pix_per_unit_x < cell_size_in_pix_min_) {
+            fine_step_x_ *= 10.0;
+            pix_per_unit_x = static_cast<int>(fine_step_x_ * vw / dx);
         }
     } else {
-        while (pix_per_unit_x > _cell_size_in_pix_max) {
-            _fine_step_x /= 10.0;
-            pix_per_unit_x = static_cast<int>(_fine_step_x * vw / dx);
+        while (pix_per_unit_x > cell_size_in_pix_max_) {
+            fine_step_x_ /= 10.0;
+            pix_per_unit_x = static_cast<int>(fine_step_x_ * vw / dx);
         }
     }
 
-    if (pix_per_unit_y < _cell_size_in_pix_min) {
-        while (pix_per_unit_y < _cell_size_in_pix_min) {
-            _fine_step_y *= 10.0;
-            pix_per_unit_y = static_cast<int>(_fine_step_y * vh / dy);
+    if (pix_per_unit_y < cell_size_in_pix_min_) {
+        while (pix_per_unit_y < cell_size_in_pix_min_) {
+            fine_step_y_ *= 10.0;
+            pix_per_unit_y = static_cast<int>(fine_step_y_ * vh / dy);
         }
     } else {
-        while (pix_per_unit_y > _cell_size_in_pix_max) {
-            _fine_step_y /= 10.0;
-            pix_per_unit_y = static_cast<int>(_fine_step_y * vh / dy);
+        while (pix_per_unit_y > cell_size_in_pix_max_) {
+            fine_step_y_ /= 10.0;
+            pix_per_unit_y = static_cast<int>(fine_step_y_ * vh / dy);
         }
     }
 
-    _coarse_step_x = static_cast<T>(_coarse_grid_factor) * _fine_step_x;
-    _coarse_step_y = static_cast<T>(_coarse_grid_factor) * _fine_step_y;
+    coarse_step_x_ = static_cast<T>(coarse_grid_factor_) * fine_step_x_;
+    coarse_step_y_ = static_cast<T>(coarse_grid_factor_) * fine_step_y_;
 
     return 0;
 }
@@ -68,14 +68,14 @@ inline int Grid<T>::BuildGrid(XYrange<T> visrange, XYrange<T> totalrange)
     if (xmin >= xmax || ymin >= ymax) return 1;
 
     // Fine - lowest
-    const T   xmin_fine_scaled = xmin / _fine_step_x;
+    const T   xmin_fine_scaled = xmin / fine_step_x_;
     const int xlow_fine_scaled = static_cast<int>(std::ceil(xmin_fine_scaled));
-    const T   ymin_fine_scaled = ymin / _fine_step_y;
+    const T   ymin_fine_scaled = ymin / fine_step_y_;
     const int ylow_fine_scaled = static_cast<int>(std::ceil(ymin_fine_scaled));
     // Fine - highest
-    const T   xmax_fine_scaled = xmax / _fine_step_x;
+    const T   xmax_fine_scaled = xmax / fine_step_x_;
     const int xhig_fine_scaled = static_cast<int>(std::floor(xmax_fine_scaled));
-    const T   ymax_fine_scaled = ymax / _fine_step_y;
+    const T   ymax_fine_scaled = ymax / fine_step_y_;
     const int yhig_fine_scaled = static_cast<int>(std::floor(ymax_fine_scaled));
 
     const unsigned int n_grid_lines_x = xhig_fine_scaled - xlow_fine_scaled + 1;
@@ -89,64 +89,64 @@ inline int Grid<T>::BuildGrid(XYrange<T> visrange, XYrange<T> totalrange)
 
     // Vertices --------------------------------------------------------------
     {
-        if (_vertices == nullptr) {
-            _vertices = new vertex_colored_t[2 * (n_grid_lines_x + n_grid_lines_y)];
+        if (vertices_ == nullptr) {
+            vertices_ = new vertex_colored_t[2 * (n_grid_lines_x + n_grid_lines_y)];
         } else {
             // If the size did not change - do not reallocate
             if (_n_vertices != 2 * (n_grid_lines_x + n_grid_lines_y)) {
-                delete[] _vertices;
-                _vertices = new vertex_colored_t[2 * (n_grid_lines_x + n_grid_lines_y)];
+                delete[] vertices_;
+                vertices_ = new vertex_colored_t[2 * (n_grid_lines_x + n_grid_lines_y)];
             }
         }
         // Should be done after reallocation because _n_vertices
         // stores the old array size
         _n_vertices = 2 * (n_grid_lines_x + n_grid_lines_y);
 
-        const T x_start = static_cast<T>(xlow_fine_scaled) * _fine_step_x;
-        const T y_start = static_cast<T>(ylow_fine_scaled) * _fine_step_y;
+        const T x_start = static_cast<T>(xlow_fine_scaled) * fine_step_x_;
+        const T y_start = static_cast<T>(ylow_fine_scaled) * fine_step_y_;
 
         unsigned int vertex_offset = 0;
         for (unsigned int i = 0; i < n_grid_lines_x; i++) {
-            _vertices[vertex_offset + i * 2 + 0].coords_ =
+            vertices_[vertex_offset + i * 2 + 0].coords_ =
                 point_t(
-                    static_cast<float>(x_start + i * _fine_step_x),
+                    static_cast<float>(x_start + i * fine_step_x_),
                     static_cast<float>(totalrange.lowy()),
                     0.0f, 1.0f);
-            _vertices[vertex_offset + i * 2 + 1].coords_ =
+            vertices_[vertex_offset + i * 2 + 1].coords_ =
                 point_t(
-                    static_cast<float>(x_start + i * _fine_step_x),
+                    static_cast<float>(x_start + i * fine_step_x_),
                     static_cast<float>(totalrange.highy()),
                     0.0f, 1.0f);
-            _vertices[vertex_offset + i * 2 + 0].color_ = _vgrid_fine_line_color;
-            _vertices[vertex_offset + i * 2 + 1].color_ = _vgrid_fine_line_color;
+            vertices_[vertex_offset + i * 2 + 0].color_ = vgrid_fine_line_color_;
+            vertices_[vertex_offset + i * 2 + 1].color_ = vgrid_fine_line_color_;
         }
         vertex_offset = 2 * n_grid_lines_x;
         for (unsigned int i = 0; i < n_grid_lines_y; i++) {
-            _vertices[vertex_offset + i * 2 + 0].coords_ =
+            vertices_[vertex_offset + i * 2 + 0].coords_ =
                 point_t(
                     static_cast<float>(totalrange.lowx()),
-                    static_cast<float>(y_start + i * _fine_step_y),
+                    static_cast<float>(y_start + i * fine_step_y_),
                     0.0f, 1.0f);
-            _vertices[vertex_offset + i * 2 + 1].coords_ =
+            vertices_[vertex_offset + i * 2 + 1].coords_ =
                 point_t(
                     static_cast<float>(totalrange.highx()),
-                    static_cast<float>(y_start + i * _fine_step_y),
+                    static_cast<float>(y_start + i * fine_step_y_),
                     0.0f, 1.0f);
-            _vertices[vertex_offset + i * 2 + 0].color_ = _hgrid_fine_line_color;
-            _vertices[vertex_offset + i * 2 + 1].color_ = _hgrid_fine_line_color;
+            vertices_[vertex_offset + i * 2 + 0].color_ = hgrid_fine_line_color_;
+            vertices_[vertex_offset + i * 2 + 1].color_ = hgrid_fine_line_color_;
         }
     }
     // Wires fine ------------------------------------------------------------
     {
         _n_wires_fine_x = n_grid_lines_x;
         _n_wires_fine_y = n_grid_lines_y;
-        if (_wires_fine == nullptr) {
-            _wires_fine = new wire_t[_n_wires_fine_x + _n_wires_fine_y];
+        if (wires_fine_ == nullptr) {
+            wires_fine_ = new wire_t[_n_wires_fine_x + _n_wires_fine_y];
         } else {
             // If the size did not change - do not reallocate
             if (_n_wires_fine != _n_wires_fine_x + _n_wires_fine_y) {
-                delete[] _wires_fine;
-                _wires_fine = new wire_t[_n_wires_fine_x + _n_wires_fine_y];
+                delete[] wires_fine_;
+                wires_fine_ = new wire_t[_n_wires_fine_x + _n_wires_fine_y];
             }
         }
         // Should be done after reallocation because _n_wires_fine
@@ -154,36 +154,36 @@ inline int Grid<T>::BuildGrid(XYrange<T> visrange, XYrange<T> totalrange)
         _n_wires_fine = _n_wires_fine_x + _n_wires_fine_y;
 
         for (unsigned int i = 0; i < _n_wires_fine_x + _n_wires_fine_y; i++) {
-            _wires_fine[i].v0 = 2 * i + 0;
-            _wires_fine[i].v1 = 2 * i + 1;
+            wires_fine_[i].v0 = 2 * i + 0;
+            wires_fine_[i].v1 = 2 * i + 1;
         }
     }
 
     // Wires coarse ----------------------------------------------------------
     {
         // Coarse - lowest
-        const T   xmin_coarse_scaled = xmin / _coarse_step_x;
+        const T   xmin_coarse_scaled = xmin / coarse_step_x_;
         const int xlow_coarse_scaled = static_cast<int>(std::ceil(xmin_coarse_scaled));
-        const T   ymin_coarse_scaled = ymin / _coarse_step_y;
+        const T   ymin_coarse_scaled = ymin / coarse_step_y_;
         const int ylow_coarse_scaled = static_cast<int>(std::ceil(ymin_coarse_scaled));
         // Coarse - highest
-        const T   xmax_coarse_scaled = xmax / _coarse_step_x;
+        const T   xmax_coarse_scaled = xmax / coarse_step_x_;
         const int xhig_coarse_scaled = static_cast<int>(std::floor(xmax_coarse_scaled));
-        const T   ymax_coarse_scaled = ymax / _coarse_step_y;
+        const T   ymax_coarse_scaled = ymax / coarse_step_y_;
         const int yhig_coarse_scaled = static_cast<int>(std::floor(ymax_coarse_scaled));
 
-        const int offset_x = xlow_coarse_scaled * _coarse_grid_factor - xlow_fine_scaled;
-        const int offset_y = ylow_coarse_scaled * _coarse_grid_factor - ylow_fine_scaled;
+        const int offset_x = xlow_coarse_scaled * coarse_grid_factor_ - xlow_fine_scaled;
+        const int offset_y = ylow_coarse_scaled * coarse_grid_factor_ - ylow_fine_scaled;
 
         _n_wires_coarse_x = xhig_coarse_scaled - xlow_coarse_scaled + 1;
         _n_wires_coarse_y = yhig_coarse_scaled - ylow_coarse_scaled + 1;
-        if (_wires_coarse == nullptr) {
-            _wires_coarse = new wire_t[_n_wires_coarse_x + _n_wires_coarse_y];
+        if (wires_coarse_ == nullptr) {
+            wires_coarse_ = new wire_t[_n_wires_coarse_x + _n_wires_coarse_y];
         } else {
             // If the size did not change - do not reallocate
             if (_n_wires_coarse != _n_wires_coarse_x + _n_wires_coarse_y) {
-                delete[] _wires_coarse;
-                _wires_coarse = new wire_t[_n_wires_coarse_x + _n_wires_coarse_y];
+                delete[] wires_coarse_;
+                wires_coarse_ = new wire_t[_n_wires_coarse_x + _n_wires_coarse_y];
             }
         }
         // Should be done after reallocation because _n_wires_coarse
@@ -192,13 +192,13 @@ inline int Grid<T>::BuildGrid(XYrange<T> visrange, XYrange<T> totalrange)
 
         unsigned int vertex_offset = 0;
         for (unsigned int i = 0; i < _n_wires_coarse_x; i++) {
-            _wires_coarse[i].v0 = vertex_offset + 2 * offset_x + 2 * i * _coarse_grid_factor + 0;
-            _wires_coarse[i].v1 = vertex_offset + 2 * offset_x + 2 * i * _coarse_grid_factor + 1;
+            wires_coarse_[i].v0 = vertex_offset + 2 * offset_x + 2 * i * coarse_grid_factor_ + 0;
+            wires_coarse_[i].v1 = vertex_offset + 2 * offset_x + 2 * i * coarse_grid_factor_ + 1;
         }
         vertex_offset = 2 * n_grid_lines_x;
         for (unsigned int i = 0; i < _n_wires_coarse_y; i++) {
-            _wires_coarse[_n_wires_coarse_x + i].v0 = vertex_offset + 2 * offset_y + 2 * i * _coarse_grid_factor + 0;
-            _wires_coarse[_n_wires_coarse_x + i].v1 = vertex_offset + 2 * offset_y + 2 * i * _coarse_grid_factor + 1;
+            wires_coarse_[_n_wires_coarse_x + i].v0 = vertex_offset + 2 * offset_y + 2 * i * coarse_grid_factor_ + 0;
+            wires_coarse_[_n_wires_coarse_x + i].v1 = vertex_offset + 2 * offset_y + 2 * i * coarse_grid_factor_ + 1;
         }
     }
     return 0;

@@ -12,8 +12,8 @@
 namespace tiny_graph_plot
 {
 
-UserWindow::UserWindow(GLFWwindow* window, const unsigned int w, const unsigned int h) :
-    _window(window), _window_w(w), _window_h(h)
+UserWindow::UserWindow(GLFWwindow* window, const unsigned int w, const unsigned int h)
+:   _window(window), _window_w(w), _window_h(h)
 {
 #ifdef SET_CONTEXT
     glfwMakeContextCurrent(_window);

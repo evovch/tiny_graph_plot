@@ -29,7 +29,7 @@ using tiny_gl_text_renderer::quad_t;
 
 template<typename T>
 Canvas<T>::Canvas(GLFWwindow* window, const unsigned int w, const unsigned int h)
-    : UserWindow(window, w, h) {
+:   UserWindow(window, w, h) {
 #ifdef DEBUG_CALLS
     printf("Canvas::Canvas\n");
 #endif
