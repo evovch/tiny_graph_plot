@@ -1,7 +1,8 @@
 #pragma once
 
-#include <limits>
-#include <algorithm>
+//#include <limits>
+#include <vector>
+#include <type_traits>
 
 #include "drawable.h"
 
@@ -23,8 +24,8 @@ private:
         _x_min(0.0),
         _x_max(0.0) {}
     virtual ~Histogram1d() {
-        if (this->_points != nullptr) {
-            delete[] this->_points;
+        if (this->points_ != nullptr) {
+            delete[] this->points_;
         }
     }
     Histogram1d(const Histogram1d& other) = delete;
@@ -36,9 +37,9 @@ public:
         _n_bins = nbins;
         _x_min = xmin;
         _x_max = xmax;
-        this->_size_info = SizeInfo(3 * _n_bins, 3 * _n_bins, 3 * _n_bins - 1, 0); //TODO
+        this->size_info_ = SizeInfo(3 * _n_bins, 3 * _n_bins, 3 * _n_bins - 1, 0); //TODO
         _bins.resize(1 + _n_bins + 1); // underflow, data, overflow
-        this->_points = new Vec2<T>[3 * _n_bins];
+        this->points_ = new Vec2<T>[3 * _n_bins];
     }
     void SetUnderflowValue(const VALUETYPE value) {
         _bins[0] = value;
@@ -51,42 +52,13 @@ public:
         const T bin_width = (_x_max - _x_min) / T(_n_bins);
         const T x = _x_min + (T(iBin) + T(0.5)) * bin_width;
         const T y = static_cast<T>(value);
-        this->_points[iBin*3+0] = Vec2<T>(x - T(0.5) * bin_width, y);
-        this->_points[iBin*3+1] = Vec2<T>(x,                      y);
-        this->_points[iBin*3+2] = Vec2<T>(x + T(0.5) * bin_width, y);
+        this->points_[iBin*3+0] = Vec2<T>(x - T(0.5) * bin_width, y);
+        this->points_[iBin*3+1] = Vec2<T>(x,                      y);
+        this->points_[iBin*3+2] = Vec2<T>(x + T(0.5) * bin_width, y);
     }
     //std::vector<VALUETYPE>& GetBinsToModify() { return _bins; }
-    void GenGauss(const unsigned int nbins, const T xmin, const T xmax,
-        const T a, const T b, const T c) {
-        _n_bins = nbins;
-        _x_min = xmin;
-        _x_max = xmax;
-        _bins.resize(1 + _n_bins + 1); // underflow, data, overflow
-        //this->_points.resize(3 * _n_bins);
-        this->_points = new Vec2<T>[3 * _n_bins];
-        _bins[0] = 0; // underflow
-        for (unsigned int iBin = 0; iBin < _n_bins; iBin++) {
-            _bins[iBin + 1] = 0; // data
-        }
-        _bins[_n_bins + 1] = 0; // overflow
-        const T bin_width = (_x_max - _x_min) / T(_n_bins);
-        const T k = -T(0.5) / (c * c);
-        T y_min = std::numeric_limits<T>::max();
-        T y_max = std::numeric_limits<T>::lowest();
-        for (unsigned int iBin = 0; iBin < _n_bins; iBin++) {
-            const T x = _x_min + (T(iBin) + T(0.5)) * bin_width;
-            const T y = a * exp(k * (x - b) * (x - b));
-            const VALUETYPE val = static_cast<VALUETYPE>(floor(y));
-            _bins[iBin + 1] = val;
-            this->_points[iBin*3+0] = Vec2<T>(x - T(0.5) * bin_width, y);
-            this->_points[iBin*3+1] = Vec2<T>(x,                      y);
-            this->_points[iBin*3+2] = Vec2<T>(x + T(0.5) * bin_width, y);
-            y_min = std::min(y_min, std::floor(y));
-            y_max = std::max(y_max, std::floor(y));
-        }
-        this->_size_info = SizeInfo(3 * _n_bins, 3 * _n_bins, 3 * _n_bins - 1, 0); //TODO
-        this->_xy_range = XYrange<T>(_x_min, _x_max - _x_min, y_min, y_max - y_min);
-    }
+    void GenGauss(
+        const unsigned int nbins, const T xmin, const T xmax, const T a, const T b, const T c);
 private:
     unsigned int _n_bins; //!< Number of bins not including the underflow and the overflow bins
     T _x_min;
@@ -101,3 +73,5 @@ using Histogram1dF = Histogram1d<float, unsigned long>;
 using Histogram1dD = Histogram1d<double, unsigned long>;
 
 } // end of namespace tiny_graph_plot
+
+#include "histogram1d_inline.h"
