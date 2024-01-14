@@ -16,7 +16,7 @@ class Mat3
                || std::is_same<T, double>::value, "");
 public:
     explicit Mat3()
-    :   _data{ T(1.0), T(0.0), T(0.0),
+    :   data_{ T(1.0), T(0.0), T(0.0),
                T(0.0), T(1.0), T(0.0),
                T(0.0), T(0.0), T(1.0) } {}
 
@@ -25,15 +25,15 @@ public:
         const T m10, const T m11, const T m12,
         const T m20, const T m21, const T m22)
 
-    :   _data{ m00, m01, m02,
+    :   data_{ m00, m01, m02,
                m10, m11, m12,
                m20, m21, m22 } {}
 
     ~Mat3() = default;
     void Reset() {
-        _data[0*3+0] = T(1.0); _data[0*3+1] = T(0.0); _data[0*3+2] = T(0.0);
-        _data[1*3+0] = T(0.0); _data[1*3+1] = T(1.0); _data[1*3+2] = T(0.0);
-        _data[2*3+0] = T(0.0); _data[2*3+1] = T(0.0); _data[2*3+2] = T(1.0);
+        data_[0*3+0] = T(1.0); data_[0*3+1] = T(0.0); data_[0*3+2] = T(0.0);
+        data_[1*3+0] = T(0.0); data_[1*3+1] = T(1.0); data_[1*3+2] = T(0.0);
+        data_[2*3+0] = T(0.0); data_[2*3+1] = T(0.0); data_[2*3+2] = T(1.0);
 
     }
     void Set(
@@ -41,30 +41,30 @@ public:
         const T m10, const T m11, const T m12,
         const T m20, const T m21, const T m22) {
 
-        _data[0*3+0] = m00; _data[0*3+1] = m01; _data[0*3+2] = m02;
-        _data[1*3+0] = m10; _data[1*3+1] = m11; _data[1*3+2] = m12;
-        _data[2*3+0] = m20; _data[2*3+1] = m21; _data[2*3+2] = m22;
+        data_[0*3+0] = m00; data_[0*3+1] = m01; data_[0*3+2] = m02;
+        data_[1*3+0] = m10; data_[1*3+1] = m11; data_[1*3+2] = m12;
+        data_[2*3+0] = m20; data_[2*3+1] = m21; data_[2*3+2] = m22;
 
     }
-    const T* const GetData() const { return _data.data(); }
+    const T* const GetData() const { return data_.data(); }
     T operator[](const size_t i) const {
-        assert(i < _data.size());
-        return _data[i];
+        assert(i < data_.size());
+        return data_[i];
     }
     T& operator[](const size_t i) {
-        assert(i < _data.size());
-        return _data[i];
+        assert(i < data_.size());
+        return data_[i];
     }
     Vec3<T> operator*(const Vec3<T>& v) const {
         return Vec3<T>(
-            _data[0*3+0] * v[0] + _data[1*3+0] * v[1] + _data[2*3+0] * v[2],
-            _data[0*3+1] * v[0] + _data[1*3+1] * v[1] + _data[2*3+1] * v[2],
-            _data[0*3+2] * v[0] + _data[1*3+2] * v[1] + _data[2*3+2] * v[2]
+            data_[0*3+0] * v[0] + data_[1*3+0] * v[1] + data_[2*3+0] * v[2],
+            data_[0*3+1] * v[0] + data_[1*3+1] * v[1] + data_[2*3+1] * v[2],
+            data_[0*3+2] * v[0] + data_[1*3+2] * v[1] + data_[2*3+2] * v[2]
         
         );
     }
 private:
-    std::array<T, 9> _data;
+    std::array<T, 9> data_;
 };
 
 template class Mat3<float>;
