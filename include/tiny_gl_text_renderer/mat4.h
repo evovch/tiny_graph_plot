@@ -1,5 +1,7 @@
 #pragma once
 
+#include <array>
+#include <cassert>
 #include <type_traits>
 
 #include "vec4.h"
@@ -44,12 +46,14 @@ public:
         _data[2 * 4 + 0] = m20; _data[2 * 4 + 1] = m21; _data[2 * 4 + 2] = m22; _data[2 * 4 + 3] = m23;
         _data[3 * 4 + 0] = m30; _data[3 * 4 + 1] = m31; _data[3 * 4 + 2] = m32; _data[3 * 4 + 3] = m33;
     }
-    __forceinline const T* const GetData() const { return _data; }
-    __forceinline const T operator[](const size_t idx) const { //TODO return byref?
-        return _data[idx];
+    __forceinline const T* const GetData() const { return _data.data(); }
+    __forceinline const T operator[](const size_t i) const { //TODO return byref?
+        assert(i < _data.size());
+        return _data[i];
     }
-    __forceinline T& operator[](const size_t idx) {
-        return _data[idx];
+    __forceinline T& operator[](const size_t i) {
+        assert(i < _data.size());
+        return _data[i];
     }
     __forceinline Vec4<T> operator*(const Vec4<T>& op2) const {
         Vec4<T> ret;
@@ -82,7 +86,7 @@ public:
             _data[3*4+0]*rhs[0*4+3] + _data[3*4+1]*rhs[1*4+3] + _data[3*4+2]*rhs[2*4+3] + _data[3*4+3]*rhs[3*4+3]);
     }
 private:
-    T _data[16];
+    std::array<T, 16> _data;
 };
 
 template class Mat4<float>;

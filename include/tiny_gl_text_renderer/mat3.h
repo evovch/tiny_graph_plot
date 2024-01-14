@@ -1,5 +1,7 @@
 #pragma once
 
+#include <array>
+#include <cassert>
 #include <type_traits>
 
 #include "vec3.h"
@@ -41,12 +43,14 @@ public:
         _data[1 * 3 + 0] = m10; _data[1 * 3 + 1] = m11; _data[1 * 3 + 2] = m12;
         _data[2 * 3 + 0] = m20; _data[2 * 3 + 1] = m21; _data[2 * 3 + 2] = m22;
     }
-    __forceinline const T* const GetData() const { return _data; }
-    __forceinline const T operator[](const size_t idx) const { //TODO return byref?
-        return _data[idx];
+    __forceinline const T* const GetData() const { return _data.data(); }
+    __forceinline const T operator[](const size_t i) const { //TODO return byref?
+        assert(i < _data.size());
+        return _data[i];
     }
-    __forceinline T& operator[](const size_t idx) {
-        return _data[idx];
+    __forceinline T& operator[](const size_t i) {
+        assert(i < _data.size());
+        return _data[i];
     }
     __forceinline Vec3<T> operator*(const Vec3<T>& op2) const {
         Vec3<T> ret;
@@ -56,7 +60,7 @@ public:
         return ret;
     }
 private:
-    T _data[9];
+    std::array<T, 9> _data;
 };
 
 template class Mat3<float>;

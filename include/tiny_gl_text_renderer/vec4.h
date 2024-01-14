@@ -1,5 +1,7 @@
 #pragma once
 
+#include <array>
+#include <cassert>
 #include <cstdio>
 #include <type_traits>
 
@@ -13,34 +15,22 @@ class Vec4
                || std::is_same<T, double>::value, "");
 public:
     Vec4(void) : _data{ 0.0, 0.0, 0.0, 0.0 } {}
-    Vec4(const T x, const T y, const T z, const T w) :
-        _data{ x, y, z, w } {}
-    Vec4(const Vec4& other) :
-        _data{ other._data[0], other._data[1], other._data[2], other._data[3] } {}
-    Vec4(Vec4&& other) noexcept :
-        _data{ other._data[0], other._data[1], other._data[2], other._data[3] } {}
-    ~Vec4(void) {}
+    Vec4(const T x, const T y, const T z, const T w)
+    :   _data{ x, y, z, w } {}
+    ~Vec4(void) = default;
+    Vec4(const Vec4& other) = default;
+    Vec4(Vec4&& other) = default;
+    Vec4& operator=(const Vec4& other) = default;
+    Vec4& operator=(Vec4&& other) = default;
 public:
-    __forceinline Vec4& operator=(const Vec4& rhs) {
-        _data[0] = rhs._data[0];
-        _data[1] = rhs._data[1];
-        _data[2] = rhs._data[2];
-        _data[3] = rhs._data[3];
-        return *this;
+    __forceinline const T* const GetData(void) const { return _data.data(); }
+    __forceinline const T operator[](const size_t i) const { //TODO return byref?
+        assert(i < _data.size());
+        return _data[i];
     }
-    __forceinline Vec4& operator=(Vec4&& rhs) noexcept {
-        _data[0] = rhs._data[0];
-        _data[1] = rhs._data[1];
-        _data[2] = rhs._data[2];
-        _data[3] = rhs._data[3];
-        return *this;
-    }
-    __forceinline const T* const GetData(void) const { return _data; }
-    __forceinline const T operator[](const size_t idx) const { //TODO return byref?
-        return _data[idx];
-    }
-    __forceinline T& operator[](const size_t idx) {
-        return _data[idx];
+    __forceinline T& operator[](const size_t i) {
+        assert(i < _data.size());
+        return _data[i];
     }
     void Print(const char* suffix = "") const {
         printf("% 0.4f\t% 0.4f\t% 0.4f\t% 0.4f%s",
@@ -56,7 +46,7 @@ public:
     __forceinline const T b(void) const { return _data[2]; }
     __forceinline const T a(void) const { return _data[3]; }
 private:
-    T _data[4];
+    std::array<T, 4> _data;
 };
 
 template class Vec4<float>;

@@ -1,5 +1,7 @@
 #pragma once
 
+#include <array>
+#include <cassert>
 #include <cstdio>
 #include <type_traits>
 
@@ -17,30 +19,22 @@ class Vec2
                || std::is_same<T, double>::value, "");
 public:
     Vec2(void) : _data{ 0.0, 0.0 } {}
-    Vec2(const T x, const T y) :
-        _data{ x, y } {}
-    Vec2(const Vec2& other) :
-        _data{ other._data[0], other._data[1] } {}
-    Vec2(Vec2&& other) noexcept :
-        _data{ other._data[0], other._data[1] } {}
-    ~Vec2(void) {}
+    Vec2(const T x, const T y)
+    :   _data{ x, y } {}
+    ~Vec2(void) = default;
+    Vec2(const Vec2& other) = default;
+    Vec2(Vec2&& other) = default;
+    Vec2& operator=(const Vec2& other) = default;
+    Vec2& operator=(Vec2&& other) = default;
 public:
-    __forceinline Vec2& operator=(const Vec2& rhs) {
-        _data[0] = rhs._data[0];
-        _data[1] = rhs._data[1];
-        return *this;
+    __forceinline const T* const GetData(void) const { return _data.data(); }
+    __forceinline const T operator[](const size_t i) const { //TODO return byref?
+        assert(i < _data.size());
+        return _data[i];
     }
-    __forceinline Vec2& operator=(Vec2&& rhs) noexcept {
-        _data[0] = rhs._data[0];
-        _data[1] = rhs._data[1];
-        return *this;
-    }
-    __forceinline const T* const GetData(void) const { return _data; }
-    __forceinline const T operator[](const size_t idx) const { //TODO return byref?
-        return _data[idx];
-    }
-    __forceinline T& operator[](const size_t idx) {
-        return _data[idx];
+    __forceinline T& operator[](const size_t i) {
+        assert(i < _data.size());
+        return _data[i];
     }
     void Print(const char* suffix = "") const {
         printf("% 0.4f\t% 0.4f%s",
@@ -50,7 +44,7 @@ public:
     __forceinline const T x(void) const { return _data[0]; }
     __forceinline const T y(void) const { return _data[1]; }
 private:
-    T _data[2];
+    std::array<T, 2> _data;
 };
 
 template class Vec2<float>;
