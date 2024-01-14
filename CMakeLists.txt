@@ -36,4 +36,4 @@ target_link_libraries(tiny_graph_plot opengl32)
 
 install(TARGETS tiny_graph_plot DESTINATION bin)
 
-set(CMAKE_CXX_FLAGS "-Wall -Wextra -Werror")
+set(CMAKE_CXX_FLAGS "-Wall -Wextra -Werror -pedantic")
