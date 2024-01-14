@@ -22,7 +22,7 @@ class Graph : public Drawable<T>
 private:
     explicit Graph()
     :   Drawable<T>(),
-        _n_p(0u),
+        n_points_(0u),
         shared_points_(false) {}
     virtual ~Graph() {
         if (this->points_ != nullptr && !shared_points_) {
@@ -41,8 +41,8 @@ public:
         for further visualization.
     */
     void SetSharedBuffer(const unsigned int p_size, Vec2<T>* const p_xy) {
-        _n_p = p_size;
-        this->size_info_ = SizeInfo(p_size, p_size, p_size - 1, 0);
+        n_points_ = p_size;
+        this->size_info_ = SizeInfo(p_size, p_size, p_size - 1u, 0u);
         shared_points_ = true;
         this->points_ = p_xy;
         this->CalculateRanges();
@@ -51,7 +51,7 @@ public:
 private:
     void CalculateRanges() const;
 private:
-    unsigned int _n_p; //!< Number of points
+    unsigned int n_points_; //!< Number of points
     bool shared_points_;
 };
 

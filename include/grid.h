@@ -33,21 +33,21 @@ public:
     int CalculateStep(XYrange<T> visrange, const T vw, const T vh);
     int BuildGrid(XYrange<T> visrange, XYrange<T> totalrange);
     const vertex_colored_t* GetVerticesData(unsigned int& o_n) const noexcept {
-        o_n = _n_vertices;
+        o_n = n_vertices_;
         return vertices_;
     }
     const wire_t* GetWiresFineData(unsigned int& o_n_x, unsigned int& o_n_y) const noexcept {
-        o_n_x = _n_wires_fine_x;
-        o_n_y = _n_wires_fine_y;
+        o_n_x = n_wires_fine_x_;
+        o_n_y = n_wires_fine_y_;
         return wires_fine_;
     }
     const wire_t* GetWiresCoarseData(unsigned int& o_n_x, unsigned int& o_n_y) const noexcept {
-        o_n_x = _n_wires_coarse_x;
-        o_n_y = _n_wires_coarse_y;
+        o_n_x = n_wires_coarse_x_;
+        o_n_y = n_wires_coarse_y_;
         return wires_coarse_;
     }
-    T GetFineXstep() const   noexcept { return fine_step_x_; }
-    T GetFineYstep() const   noexcept { return fine_step_y_; }
+    T GetFineXstep()   const noexcept { return fine_step_x_; }
+    T GetFineYstep()   const noexcept { return fine_step_y_; }
     T GetCoarseXstep() const noexcept { return coarse_step_x_; }
     T GetCoarseYstep() const noexcept { return coarse_step_y_; }
 private:
@@ -60,13 +60,13 @@ private:
     T fine_step_y_ = T(0.2);
     T coarse_step_x_ = T(1.0); //!< fine_step_x_ * coarse_grid_factor_
     T coarse_step_y_ = T(1.0); //!< fine_step_y_ * coarse_grid_factor_
-    unsigned int _n_vertices = 0u;
-    unsigned int _n_wires_fine_x = 0u; //!< Number of vertical wires of the fine grid along X direction
-    unsigned int _n_wires_fine_y = 0u; //!< Number of horizontal wires of the fine grid along Y direction
-    unsigned int _n_wires_coarse_x = 0u; //!< Number of vertical wires of the coarse grid along X direction
-    unsigned int _n_wires_coarse_y = 0u; //!< Number of horizontal wires of the coarse grid along Y direction
-    unsigned int _n_wires_fine = 0u;   //!< _n_wires_fine_x + _n_wires_fine_y
-    unsigned int _n_wires_coarse = 0u; //!< _n_wires_coarse_x + _n_wires_coarse_y
+    unsigned int n_vertices_       = 0u;
+    unsigned int n_wires_fine_x_   = 0u; //!< Number of vertical wires of the fine grid along X direction
+    unsigned int n_wires_fine_y_   = 0u; //!< Number of horizontal wires of the fine grid along Y direction
+    unsigned int n_wires_coarse_x_ = 0u; //!< Number of vertical wires of the coarse grid along X direction
+    unsigned int n_wires_coarse_y_ = 0u; //!< Number of horizontal wires of the coarse grid along Y direction
+    unsigned int n_wires_fine_     = 0u; //!< n_wires_fine_x_ + n_wires_fine_y_
+    unsigned int n_wires_coarse_   = 0u; //!< n_wires_coarse_x_ + n_wires_coarse_y_
     vertex_colored_t* vertices_ = nullptr;
     wire_t* wires_fine_ = nullptr;
     wire_t* wires_coarse_ = nullptr;

@@ -17,7 +17,7 @@ class XYrange
 public:
     explicit XYrange() = default;
     explicit XYrange(const T x_min, const T dx, const T y_min, const T dy) noexcept
-    :   _x_min(x_min), _dx(dx), _y_min(y_min), _dy(dy) {}
+    :   x_min_(x_min), dx_(dx), y_min_(y_min), dy_(dy) {}
     ~XYrange() = default;
     XYrange(const XYrange& other) = default;
     XYrange(XYrange&& other) = default;
@@ -26,71 +26,72 @@ public:
 public:
     template<typename U>
     XYrange& operator=(const XYrange<U>& rhs) {
-        _x_min = static_cast<T>(rhs.lowx());
-        _dx    = static_cast<T>(rhs.dx());
-        _y_min = static_cast<T>(rhs.lowy());
-        _dy    = static_cast<T>(rhs.dy());
+        x_min_ = static_cast<T>(rhs.lowx());
+        dx_    = static_cast<T>(rhs.dx());
+        y_min_ = static_cast<T>(rhs.lowy());
+        dy_    = static_cast<T>(rhs.dy());
         return *this;
     }
     template<typename U>
     void Include(const XYrange<U>& other) {
-        const T x_max = std::fmax(_x_min + _dx, static_cast<T>(other.lowx() + other.dx()));
-        const T y_max = std::fmax(_y_min + _dy, static_cast<T>(other.lowy() + other.dy()));
-        _x_min = std::fmin(_x_min, static_cast<T>(other.lowx()));
-        _y_min = std::fmin(_y_min, static_cast<T>(other.lowy()));
-        _dx = x_max - _x_min;
-        _dy = y_max - _y_min;
+        const T x_max = std::fmax(x_min_ + dx_, static_cast<T>(other.lowx() + other.dx()));
+        const T y_max = std::fmax(y_min_ + dy_, static_cast<T>(other.lowy() + other.dy()));
+        x_min_ = std::fmin(x_min_, static_cast<T>(other.lowx()));
+        y_min_ = std::fmin(y_min_, static_cast<T>(other.lowy()));
+        dx_ = x_max - x_min_;
+        dy_ = y_max - y_min_;
     }
     void Include(const Vec2<T>& point) {
         if (!std::isfinite(point.x()) || !std::isfinite(point.y())) return;
-        const T x_max = std::fmax(_x_min + _dx, point.x());
-        const T y_max = std::fmax(_y_min + _dy, point.y());
-        _x_min = std::fmin(_x_min, point.x());
-        _y_min = std::fmin(_y_min, point.y());
-        _dx = x_max - _x_min;
-        _dy = y_max - _y_min;
+        const T x_max = std::fmax(x_min_ + dx_, point.x());
+        const T y_max = std::fmax(y_min_ + dy_, point.y());
+        x_min_ = std::fmin(x_min_, point.x());
+        y_min_ = std::fmin(y_min_, point.y());
+        dx_ = x_max - x_min_;
+        dy_ = y_max - y_min_;
 
     }
     bool IncludesX(const T x) const noexcept {
-        return (x >= _x_min) && (x <= _x_min + _dx);
+        return (x >= x_min_) && (x <= x_min_ + dx_);
     }
     void FixDegenerateCases() noexcept {
-        if (_dx <= 1.0e-8) { // abs?
-            _x_min -= static_cast<T>(0.5);
-            _dx     = static_cast<T>(1.0);
+        constexpr T epsilon = T(1.0e-8);
+        if (dx_ <= epsilon) { // abs?
+            x_min_ -= T(0.5);
+            dx_     = T(1.0);
         }
-        if (_dy <= 1.0e-8) { // abs?
-            _y_min -= static_cast<T>(0.5);
-            _dy     = static_cast<T>(1.0);
+        if (dy_ <= epsilon) { // abs?
+            y_min_ -= T(0.5);
+            dy_     = T(1.0);
         }
     }
     void Set1(const T x_min, const T x_max, const T y_min, const T y_max) noexcept {
-        _x_min = x_min; _dx = x_max - x_min; _y_min = y_min; _dy = y_max - y_min;
+        x_min_ = x_min; dx_ = x_max - x_min; y_min_ = y_min; dy_ = y_max - y_min;
     }
     void Set2(const T x_min, const T dx, const T y_min, const T dy) noexcept {
-        _x_min = x_min; _dx = dx; _y_min = y_min; _dy = dy;
+        x_min_ = x_min; dx_ = dx; y_min_ = y_min; dy_ = dy;
     }
-    void SetXrange1(const T x_min, const T x_max) noexcept { _x_min = x_min; _dx = x_max - x_min; }
-    void SetYrange1(const T y_min, const T y_max) noexcept { _y_min = y_min; _dy = y_max - y_min; }
-    void SetXrange2(const T x_min, const T dx) noexcept { _x_min = x_min; _dx = dx; }
-    void SetYrange2(const T y_min, const T dy) noexcept { _y_min = y_min; _dy = dy; }
-    void MoveX(const T shift) noexcept { _x_min += shift; }
-    void MoveY(const T shift) noexcept { _y_min += shift; }
-    const T& lowx() const noexcept { return _x_min; }
-    const T highx() const noexcept { return _x_min + _dx; }
-    const T& lowy() const noexcept { return _y_min; }
-    const T highy() const noexcept { return _y_min + _dy; }
-    const T& dx() const noexcept   { return _dx; }
-    const T& dy() const noexcept   { return _dy; }
-    T xm() const noexcept    { return _x_min + T(0.5) * _dx; }
-    T ym() const noexcept    { return _y_min + T(0.5) * _dy; }
-    T twoxm() const noexcept { return T(2.0) * _x_min + _dx; }
-    T twoym() const noexcept { return T(2.0) * _y_min + _dy; }
+    void SetXrange1(const T x_min, const T x_max) noexcept { x_min_ = x_min; dx_ = x_max - x_min; }
+    void SetYrange1(const T y_min, const T y_max) noexcept { y_min_ = y_min; dy_ = y_max - y_min; }
+    void SetXrange2(const T x_min, const T dx) noexcept { x_min_ = x_min; dx_ = dx; }
+    void SetYrange2(const T y_min, const T dy) noexcept { y_min_ = y_min; dy_ = dy; }
+    void MoveX(const T shift) noexcept { x_min_ += shift; }
+    void MoveY(const T shift) noexcept { y_min_ += shift; }
+    T lowx()  const noexcept { return x_min_; }
+    T highx() const noexcept { return x_min_ + dx_; }
+    T lowy()  const noexcept { return y_min_; }
+    T highy() const noexcept { return y_min_ + dy_; }
+    T dx()    const noexcept { return dx_; }
+    T dy()    const noexcept { return dy_; }
+    T xm()    const noexcept { return x_min_ + T(0.5) * dx_; }
+    T ym()    const noexcept { return y_min_ + T(0.5) * dy_; }
+    T twoxm() const noexcept { return T(2.0) * x_min_ + dx_; }
+    T twoym() const noexcept { return T(2.0) * y_min_ + dy_; }
 private:
-    T _x_min = T(0.0);
-    T _dx = T(1.0);
-    T _y_min = T(0.0);
-    T _dy = T(1.0);
+    T x_min_ = T(0.0);
+    T dx_    = T(1.0);
+    T y_min_ = T(0.0);
+    T dy_    = T(1.0);
 };
 
 template class XYrange<float>;

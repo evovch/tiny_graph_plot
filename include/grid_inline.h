@@ -78,10 +78,11 @@ inline int Grid<T>::BuildGrid(XYrange<T> visrange, XYrange<T> totalrange)
     const T   ymax_fine_scaled = ymax / fine_step_y_;
     const int yhig_fine_scaled = static_cast<int>(std::floor(ymax_fine_scaled));
 
-    const unsigned int n_grid_lines_x = xhig_fine_scaled - xlow_fine_scaled + 1;
-    const unsigned int n_grid_lines_y = yhig_fine_scaled - ylow_fine_scaled + 1;
+    const unsigned int n_grid_lines_x = xhig_fine_scaled - xlow_fine_scaled + 1u;
+    const unsigned int n_grid_lines_y = yhig_fine_scaled - ylow_fine_scaled + 1u;
+    const unsigned int new_n_vertices = 2u * (n_grid_lines_x + n_grid_lines_y);
 
-    if (_n_vertices == 2 * (n_grid_lines_x + n_grid_lines_y)) {
+    if (n_vertices_ == new_n_vertices) {
         // The grid should not be changed
         //TODO check
         return 1;
@@ -90,23 +91,23 @@ inline int Grid<T>::BuildGrid(XYrange<T> visrange, XYrange<T> totalrange)
     // Vertices --------------------------------------------------------------
     {
         if (vertices_ == nullptr) {
-            vertices_ = new vertex_colored_t[2 * (n_grid_lines_x + n_grid_lines_y)];
+            vertices_ = new vertex_colored_t[new_n_vertices];
         } else {
             // If the size did not change - do not reallocate
-            if (_n_vertices != 2 * (n_grid_lines_x + n_grid_lines_y)) {
+            if (n_vertices_ != new_n_vertices) {
                 delete[] vertices_;
-                vertices_ = new vertex_colored_t[2 * (n_grid_lines_x + n_grid_lines_y)];
+                vertices_ = new vertex_colored_t[new_n_vertices];
             }
         }
-        // Should be done after reallocation because _n_vertices
+        // Should be done after reallocation because n_vertices_
         // stores the old array size
-        _n_vertices = 2 * (n_grid_lines_x + n_grid_lines_y);
+        n_vertices_ = new_n_vertices;
 
         const T x_start = static_cast<T>(xlow_fine_scaled) * fine_step_x_;
         const T y_start = static_cast<T>(ylow_fine_scaled) * fine_step_y_;
 
-        unsigned int vertex_offset = 0;
-        for (unsigned int i = 0; i < n_grid_lines_x; i++) {
+        unsigned int vertex_offset = 0u;
+        for (unsigned int i = 0u; i < n_grid_lines_x; i++) {
             vertices_[vertex_offset + i * 2 + 0].coords_ =
                 point_t(
                     static_cast<float>(x_start + i * fine_step_x_),
@@ -121,7 +122,7 @@ inline int Grid<T>::BuildGrid(XYrange<T> visrange, XYrange<T> totalrange)
             vertices_[vertex_offset + i * 2 + 1].color_ = vgrid_fine_line_color_;
         }
         vertex_offset = 2 * n_grid_lines_x;
-        for (unsigned int i = 0; i < n_grid_lines_y; i++) {
+        for (unsigned int i = 0u; i < n_grid_lines_y; i++) {
             vertices_[vertex_offset + i * 2 + 0].coords_ =
                 point_t(
                     static_cast<float>(totalrange.lowx()),
@@ -138,22 +139,22 @@ inline int Grid<T>::BuildGrid(XYrange<T> visrange, XYrange<T> totalrange)
     }
     // Wires fine ------------------------------------------------------------
     {
-        _n_wires_fine_x = n_grid_lines_x;
-        _n_wires_fine_y = n_grid_lines_y;
+        n_wires_fine_x_ = n_grid_lines_x;
+        n_wires_fine_y_ = n_grid_lines_y;
         if (wires_fine_ == nullptr) {
-            wires_fine_ = new wire_t[_n_wires_fine_x + _n_wires_fine_y];
+            wires_fine_ = new wire_t[n_wires_fine_x_ + n_wires_fine_y_];
         } else {
             // If the size did not change - do not reallocate
-            if (_n_wires_fine != _n_wires_fine_x + _n_wires_fine_y) {
+            if (n_wires_fine_ != n_wires_fine_x_ + n_wires_fine_y_) {
                 delete[] wires_fine_;
-                wires_fine_ = new wire_t[_n_wires_fine_x + _n_wires_fine_y];
+                wires_fine_ = new wire_t[n_wires_fine_x_ + n_wires_fine_y_];
             }
         }
-        // Should be done after reallocation because _n_wires_fine
+        // Should be done after reallocation because n_wires_fine_
         // stores the old array size
-        _n_wires_fine = _n_wires_fine_x + _n_wires_fine_y;
+        n_wires_fine_ = n_wires_fine_x_ + n_wires_fine_y_;
 
-        for (unsigned int i = 0; i < _n_wires_fine_x + _n_wires_fine_y; i++) {
+        for (unsigned int i = 0u; i < n_wires_fine_x_ + n_wires_fine_y_; i++) {
             wires_fine_[i].v0 = 2 * i + 0;
             wires_fine_[i].v1 = 2 * i + 1;
         }
@@ -175,30 +176,30 @@ inline int Grid<T>::BuildGrid(XYrange<T> visrange, XYrange<T> totalrange)
         const int offset_x = xlow_coarse_scaled * coarse_grid_factor_ - xlow_fine_scaled;
         const int offset_y = ylow_coarse_scaled * coarse_grid_factor_ - ylow_fine_scaled;
 
-        _n_wires_coarse_x = xhig_coarse_scaled - xlow_coarse_scaled + 1;
-        _n_wires_coarse_y = yhig_coarse_scaled - ylow_coarse_scaled + 1;
+        n_wires_coarse_x_ = xhig_coarse_scaled - xlow_coarse_scaled + 1;
+        n_wires_coarse_y_ = yhig_coarse_scaled - ylow_coarse_scaled + 1;
         if (wires_coarse_ == nullptr) {
-            wires_coarse_ = new wire_t[_n_wires_coarse_x + _n_wires_coarse_y];
+            wires_coarse_ = new wire_t[n_wires_coarse_x_ + n_wires_coarse_y_];
         } else {
             // If the size did not change - do not reallocate
-            if (_n_wires_coarse != _n_wires_coarse_x + _n_wires_coarse_y) {
+            if (n_wires_coarse_ != n_wires_coarse_x_ + n_wires_coarse_y_) {
                 delete[] wires_coarse_;
-                wires_coarse_ = new wire_t[_n_wires_coarse_x + _n_wires_coarse_y];
+                wires_coarse_ = new wire_t[n_wires_coarse_x_ + n_wires_coarse_y_];
             }
         }
-        // Should be done after reallocation because _n_wires_coarse
+        // Should be done after reallocation because n_wires_coarse_
         // stores the old array size
-        _n_wires_coarse = _n_wires_coarse_x + _n_wires_coarse_y;
+        n_wires_coarse_ = n_wires_coarse_x_ + n_wires_coarse_y_;
 
-        unsigned int vertex_offset = 0;
-        for (unsigned int i = 0; i < _n_wires_coarse_x; i++) {
+        unsigned int vertex_offset = 0u;
+        for (unsigned int i = 0u; i < n_wires_coarse_x_; i++) {
             wires_coarse_[i].v0 = vertex_offset + 2 * offset_x + 2 * i * coarse_grid_factor_ + 0;
             wires_coarse_[i].v1 = vertex_offset + 2 * offset_x + 2 * i * coarse_grid_factor_ + 1;
         }
         vertex_offset = 2 * n_grid_lines_x;
-        for (unsigned int i = 0; i < _n_wires_coarse_y; i++) {
-            wires_coarse_[_n_wires_coarse_x + i].v0 = vertex_offset + 2 * offset_y + 2 * i * coarse_grid_factor_ + 0;
-            wires_coarse_[_n_wires_coarse_x + i].v1 = vertex_offset + 2 * offset_y + 2 * i * coarse_grid_factor_ + 1;
+        for (unsigned int i = 0u; i < n_wires_coarse_y_; i++) {
+            wires_coarse_[n_wires_coarse_x_ + i].v0 = vertex_offset + 2 * offset_y + 2 * i * coarse_grid_factor_ + 0;
+            wires_coarse_[n_wires_coarse_x_ + i].v1 = vertex_offset + 2 * offset_y + 2 * i * coarse_grid_factor_ + 1;
         }
     }
     return 0;

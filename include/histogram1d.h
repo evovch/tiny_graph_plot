@@ -1,6 +1,7 @@
 #pragma once
 
 //#include <limits>
+#include <cassert>
 #include <vector>
 #include <type_traits>
 
@@ -20,9 +21,9 @@ class Histogram1d : public Drawable<T>
 private:
     explicit Histogram1d()
     :   Drawable<T>(),
-        _n_bins(0),
-        _x_min(0.0),
-        _x_max(0.0) {}
+        n_bins_(0u),
+        x_min_(T(0.0)),
+        x_max_(T(0.0)) {}
     virtual ~Histogram1d() {
         if (this->points_ != nullptr) {
             delete[] this->points_;
@@ -34,36 +35,37 @@ private:
     Histogram1d& operator=(Histogram1d&& other) = delete;
 public:
     void Init(const unsigned int nbins, const T xmin, const T xmax) {
-        _n_bins = nbins;
-        _x_min = xmin;
-        _x_max = xmax;
-        this->size_info_ = SizeInfo(3 * _n_bins, 3 * _n_bins, 3 * _n_bins - 1, 0); //TODO
-        _bins.resize(1 + _n_bins + 1); // underflow, data, overflow
-        this->points_ = new Vec2<T>[3 * _n_bins];
+        n_bins_ = nbins;
+        x_min_ = xmin;
+        x_max_ = xmax;
+        this->size_info_ = SizeInfo(3u * n_bins_, 3u * n_bins_, 3u * n_bins_ - 1u, 0); //TODO
+        bins_.resize(1u + n_bins_ + 1u); // underflow, data, overflow
+        this->points_ = new Vec2<T>[3u * n_bins_];
     }
-    void SetUnderflowValue(const VALUETYPE value) {
-        _bins[0] = value;
+    void SetUnderflowValue(const VALUETYPE value) noexcept {
+        bins_[0u] = value;
     }
-    void SetOverflowValue(const VALUETYPE value) {
-        _bins[_n_bins + 1] = value;
+    void SetOverflowValue(const VALUETYPE value) noexcept {
+        bins_[n_bins_ + 1u] = value;
     }
     void SetBinValue(const unsigned int iBin, const VALUETYPE value) {
-        _bins[iBin + 1] = value;
-        const T bin_width = (_x_max - _x_min) / T(_n_bins);
-        const T x = _x_min + (T(iBin) + T(0.5)) * bin_width;
+        assert(iBin < bins_.size());
+        bins_[iBin + 1u] = value;
+        const T bin_width = (x_max_ - x_min_) / T(n_bins_);
+        const T x = x_min_ + (T(iBin) + T(0.5)) * bin_width;
         const T y = static_cast<T>(value);
-        this->points_[iBin*3+0] = Vec2<T>(x - T(0.5) * bin_width, y);
-        this->points_[iBin*3+1] = Vec2<T>(x,                      y);
-        this->points_[iBin*3+2] = Vec2<T>(x + T(0.5) * bin_width, y);
+        this->points_[iBin * 3u + 0u] = Vec2<T>(x - T(0.5) * bin_width, y);
+        this->points_[iBin * 3u + 1u] = Vec2<T>(x,                      y);
+        this->points_[iBin * 3u + 2u] = Vec2<T>(x + T(0.5) * bin_width, y);
     }
-    //std::vector<VALUETYPE>& GetBinsToModify() { return _bins; }
+    //std::vector<VALUETYPE>& GetBinsToModify() { return bins_; }
     void GenGauss(
         const unsigned int nbins, const T xmin, const T xmax, const T a, const T b, const T c);
 private:
-    unsigned int _n_bins; //!< Number of bins not including the underflow and the overflow bins
-    T _x_min;
-    T _x_max;
-    std::vector<VALUETYPE> _bins; // [1+_n_bins+1]
+    unsigned int n_bins_; //!< Number of bins not including the underflow and the overflow bins
+    T x_min_;
+    T x_max_;
+    std::vector<VALUETYPE> bins_; // [1+n_bins_+1]
 };
 
 template class Histogram1d<float, unsigned long>;
