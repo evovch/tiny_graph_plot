@@ -240,10 +240,10 @@ public:
         o_n_y = _n_wires_coarse_y;
         return _wires_coarse;
     }
-    const T& GetFineXstep(void) const { return _fine_step_x; }
-    const T& GetFineYstep(void) const { return _fine_step_y; }
-    const T& GetCoarseXstep(void) const { return _coarse_step_x; }
-    const T& GetCoarseYstep(void) const { return _coarse_step_y; }
+    const T& GetFineXstep() const { return _fine_step_x; }
+    const T& GetFineYstep() const { return _fine_step_y; }
+    const T& GetCoarseXstep() const { return _coarse_step_x; }
+    const T& GetCoarseYstep() const { return _coarse_step_y; }
 private:
     const unsigned int _coarse_grid_factor = 5;
     const unsigned int _cell_size_in_pix_min = 20;
@@ -265,13 +265,13 @@ private:
     wire_t* _wires_fine = nullptr;
     wire_t* _wires_coarse = nullptr;
 public: // visual parameters
-    void SetDarkColorScheme(void) {
+    void SetDarkColorScheme() {
         _hgrid_fine_line_color   = tiny_gl_text_renderer::colors::gray6;
         _vgrid_fine_line_color   = tiny_gl_text_renderer::colors::gray6;
         _hgrid_coarse_line_color = tiny_gl_text_renderer::colors::gray5;
         _vgrid_coarse_line_color = tiny_gl_text_renderer::colors::gray5;
     }
-    void SetBrightColorScheme(void) {
+    void SetBrightColorScheme() {
         _hgrid_fine_line_color   = tiny_gl_text_renderer::colors::gray3;
         _vgrid_fine_line_color   = tiny_gl_text_renderer::colors::gray3;
         _hgrid_coarse_line_color = tiny_gl_text_renderer::colors::gray2;
@@ -285,14 +285,14 @@ public: // visual parameters
     void SetVGridFineLineWidth(const float width)   { _vgrid_fine_line_width = width; }
     void SetHGridCoarseLineWidth(const float width) { _hgrid_coarse_line_width = width; }
     void SetVGridCoarseLineWidth(const float width) { _vgrid_coarse_line_width = width; }
-    const color_t& GetHGridFineColor(void)   const { return _hgrid_fine_line_color; }
-    const color_t& GetVGridFineColor(void)   const { return _vgrid_fine_line_color; }
-    const color_t& GetHGridCoarseColor(void) const { return _hgrid_coarse_line_color; }
-    const color_t& GetVGridCoarseColor(void) const { return _vgrid_coarse_line_color; }
-    float GetHGridFineLineWidth(void)   const { return _hgrid_fine_line_width; }
-    float GetVGridFineLineWidth(void)   const { return _vgrid_fine_line_width; }
-    float GetHGridCoarseLineWidth(void) const { return _hgrid_coarse_line_width; }
-    float GetVGridCoarseLineWidth(void) const { return _vgrid_coarse_line_width; }
+    const color_t& GetHGridFineColor()   const { return _hgrid_fine_line_color; }
+    const color_t& GetVGridFineColor()   const { return _vgrid_fine_line_color; }
+    const color_t& GetHGridCoarseColor() const { return _hgrid_coarse_line_color; }
+    const color_t& GetVGridCoarseColor() const { return _vgrid_coarse_line_color; }
+    float GetHGridFineLineWidth()   const { return _hgrid_fine_line_width; }
+    float GetVGridFineLineWidth()   const { return _vgrid_fine_line_width; }
+    float GetHGridCoarseLineWidth() const { return _hgrid_coarse_line_width; }
+    float GetVGridCoarseLineWidth() const { return _vgrid_coarse_line_width; }
 private: // visual parameters
     color_t _hgrid_fine_line_color   = tiny_gl_text_renderer::colors::gray6;
     color_t _vgrid_fine_line_color   = tiny_gl_text_renderer::colors::gray6;
