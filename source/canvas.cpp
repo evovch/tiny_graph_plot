@@ -158,7 +158,7 @@ void Canvas<T>::Show(void)
             (void*)offsetof(vertex_colored_t, color_));
         glEnableVertexAttribArray(0);
         glEnableVertexAttribArray(1);
-        glBindVertexArray(0);
+        //glBindVertexArray(0); // Not really needed.
     }
 
     // Allocate index buffers space for all graphs. ------------------------------
