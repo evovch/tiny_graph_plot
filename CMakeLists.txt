@@ -7,6 +7,7 @@ if(MSVC)
 endif()
 
 set(SOURCES
+	source/buffer_set.cpp
 	source/canvas.cpp
 	source/canvas_manager.cpp
 	source/glfw_callback_functions.cpp

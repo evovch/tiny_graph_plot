@@ -58,14 +58,6 @@ Canvas<T>::~Canvas(void)
         glDeleteBuffers(1, &_iboID_grid_w);
         glDeleteBuffers(1, &_iboID_grid_coarse_w);
 
-        glDeleteVertexArrays(1, &_vaoID_axes);
-        glDeleteBuffers(1, &_vboID_axes);
-        glDeleteBuffers(1, &_iboID_axes_w);
-
-        glDeleteVertexArrays(1, &_vaoID_vref);
-        glDeleteBuffers(1, &_vboID_vref);
-        glDeleteBuffers(1, &_iboID_vref_w);
-
         glDeleteVertexArrays(1, &_vaoID_frame);
         glDeleteBuffers(1, &_vboID_frame);
         glDeleteBuffers(1, &_iboID_frame_onscr_w);
@@ -76,18 +68,10 @@ Canvas<T>::~Canvas(void)
         glDeleteBuffers(1, &_iboID_graphs_w);
         glDeleteBuffers(1, &_iboID_graphs_m);
 
-        glDeleteVertexArrays(1, &_vaoID_cursor);
-        glDeleteBuffers(1, &_vboID_cursor);
-        glDeleteBuffers(1, &_iboID_cursor_onscr_w);
-
         glDeleteVertexArrays(1, &_vaoID_sel);
         glDeleteBuffers(1, &_vboID_sel);
         glDeleteBuffers(1, &_iboID_sel_q);
         glDeleteBuffers(1, &_iboID_sel_w);
-
-        glDeleteVertexArrays(1, &_vaoID_c);
-        glDeleteBuffers(1, &_vboID_c);
-        glDeleteBuffers(1, &_iboID_c);
     }
 
     // Programs ------------------------------------------------------------------
@@ -392,13 +376,9 @@ void Canvas<T>::Init(void)
         glGenBuffers(1, &_iboID_grid_w);
         glGenBuffers(1, &_iboID_grid_coarse_w);
 
-        glGenVertexArrays(1, &_vaoID_axes);
-        glGenBuffers(1, &_vboID_axes);
-        glGenBuffers(1, &_iboID_axes_w);
+        buf_set_axes_.Generate();
 
-        glGenVertexArrays(1, &_vaoID_vref);
-        glGenBuffers(1, &_vboID_vref);
-        glGenBuffers(1, &_iboID_vref_w);
+        buf_set_vref_.Generate();
 
         glGenVertexArrays(1, &_vaoID_frame);
         glGenBuffers(1, &_vboID_frame);
@@ -410,18 +390,14 @@ void Canvas<T>::Init(void)
         glGenBuffers(1, &_iboID_graphs_w);
         glGenBuffers(1, &_iboID_graphs_m);
 
-        glGenVertexArrays(1, &_vaoID_cursor);
-        glGenBuffers(1, &_vboID_cursor);
-        glGenBuffers(1, &_iboID_cursor_onscr_w);
+        buf_set_cursor_.Generate();
 
         glGenVertexArrays(1, &_vaoID_sel);
         glGenBuffers(1, &_vboID_sel);
         glGenBuffers(1, &_iboID_sel_q);
         glGenBuffers(1, &_iboID_sel_w);
 
-        glGenVertexArrays(1, &_vaoID_c);
-        glGenBuffers(1, &_vboID_c);
-        glGenBuffers(1, &_iboID_c);
+        buf_set_circles_.Generate();
     }
 
     // Programs and uniforms -----------------------------------------------------
@@ -678,33 +654,13 @@ void Canvas<T>::AllocateBuffersForFixedSizedData(void) const
     // Allocate vertex buffer space for the axes ---------------------------------
     {
         constexpr unsigned int n_vert = 4u;
-        glBindVertexArray(_vaoID_axes);
-        glBindBuffer(GL_ARRAY_BUFFER, _vboID_axes);
-        glBufferData(GL_ARRAY_BUFFER, n_vert * sizeof(vertex_colored_t),
-            NULL, GL_STATIC_DRAW);
-        glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, sizeof(vertex_colored_t),
-            (void*)offsetof(vertex_colored_t, coords_));
-        glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, sizeof(vertex_colored_t),
-            (void*)offsetof(vertex_colored_t, color_));
-        glEnableVertexAttribArray(0);
-        glEnableVertexAttribArray(1);
-        //glBindVertexArray(0); // Not really needed.
+        buf_set_axes_.Allocate(n_vert);
     }
 
     // Allocate vertex buffer space for the vref line ----------------------------
     {
         constexpr unsigned int n_vert = 2u;
-        glBindVertexArray(_vaoID_vref);
-        glBindBuffer(GL_ARRAY_BUFFER, _vboID_vref);
-        glBufferData(GL_ARRAY_BUFFER, n_vert * sizeof(vertex_colored_t),
-            NULL, GL_STATIC_DRAW);
-        glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, sizeof(vertex_colored_t),
-            (void*)offsetof(vertex_colored_t, coords_));
-        glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, sizeof(vertex_colored_t),
-            (void*)offsetof(vertex_colored_t, color_));
-        glEnableVertexAttribArray(0);
-        glEnableVertexAttribArray(1);
-        //glBindVertexArray(0); // Not really needed.
+        buf_set_vref_.Allocate(n_vert);
     }
 
     // Allocate vertex buffer space for the frame --------------------------------
@@ -726,17 +682,7 @@ void Canvas<T>::AllocateBuffersForFixedSizedData(void) const
     // Allocate vertex buffer space for the cursor -------------------------------
     {
         constexpr unsigned int n_vert = 4u;
-        glBindVertexArray(_vaoID_cursor);
-        glBindBuffer(GL_ARRAY_BUFFER, _vboID_cursor);
-        glBufferData(GL_ARRAY_BUFFER, n_vert * sizeof(vertex_colored_t),
-            NULL, GL_STATIC_DRAW);
-        glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, sizeof(vertex_colored_t),
-            (void*)offsetof(vertex_colored_t, coords_));
-        glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, sizeof(vertex_colored_t),
-            (void*)offsetof(vertex_colored_t, color_));
-        glEnableVertexAttribArray(0);
-        glEnableVertexAttribArray(1);
-        //glBindVertexArray(0); // Not really needed.
+        buf_set_cursor_.Allocate(n_vert);
     }
 
     // Allocate vertex buffer space for the selection rectange -------------------
@@ -770,18 +716,14 @@ void Canvas<T>::SendFixedIndicesToGPU(void) const
     {
         constexpr unsigned int n_wires_axes = 2u;
         const wire_t wires[n_wires_axes] = { {0, 1}, {2, 3} };
-        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, _iboID_axes_w);
-        glBufferData(GL_ELEMENT_ARRAY_BUFFER, n_wires_axes * sizeof(wire_t), wires,
-            GL_STATIC_DRAW);
+        buf_set_axes_.SendIndices(n_wires_axes, wires);
     }
 
     // Vref
     {
         constexpr unsigned int n_wires_vref = 1u;
         const wire_t wires[n_wires_vref] = { {0, 1} };
-        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, _iboID_vref_w);
-        glBufferData(GL_ELEMENT_ARRAY_BUFFER, n_wires_vref * sizeof(wire_t),
-            wires, GL_STATIC_DRAW);
+        buf_set_vref_.SendIndices(n_wires_vref, wires);
     }
 
     // Frame
@@ -802,9 +744,7 @@ void Canvas<T>::SendFixedIndicesToGPU(void) const
     {
         constexpr unsigned int n_wires_cursor = 2u;
         const wire_t wires[n_wires_cursor] = { {0, 1}, {2, 3} };
-        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, _iboID_cursor_onscr_w);
-        glBufferData(GL_ELEMENT_ARRAY_BUFFER, n_wires_cursor * sizeof(wire_t),
-            wires, GL_STATIC_DRAW);
+        buf_set_cursor_.SendIndices(n_wires_cursor, wires);
     }
 
     // Selection rectangle
@@ -981,21 +921,14 @@ void Canvas<T>::DrawAxes(void) const
         vertices[2].color_ = axes_line_color_;
         vertices[3].color_ = axes_line_color_;
 
-        glBindVertexArray(_vaoID_axes);
-        glBindBuffer(GL_ARRAY_BUFFER, _vboID_axes);
-        glBufferSubData(GL_ARRAY_BUFFER, 0,
-            n_vert * sizeof(vertex_colored_t), vertices);
-        //glBindVertexArray(0); // Not really needed.
+        buf_set_axes_.SendVertices(n_vert, vertices);
     }
     // Draw wires. Wires indices have already been sent. -------------------------
     {
         constexpr unsigned int n_wires = 2u;
         glUseProgram(_progID_w);
         glLineWidth(axes_line_width_);
-        glBindVertexArray(_vaoID_axes);
-        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, _iboID_axes_w);
-        glDrawElements(GL_LINES, 2 * n_wires, GL_UNSIGNED_INT, NULL);
-        //glBindVertexArray(0); // Not really needed.
+        buf_set_axes_.Draw(n_wires);
         //glUseProgram(0); // Not really needed.
     }
 }
@@ -1027,21 +960,14 @@ void Canvas<T>::DrawVref(void) const
         vertices[0].color_ = vref_line_color_;
         vertices[1].color_ = vref_line_color_;
 
-        glBindVertexArray(_vaoID_vref);
-        glBindBuffer(GL_ARRAY_BUFFER, _vboID_vref);
-        glBufferSubData(GL_ARRAY_BUFFER, 0,
-            n_vert * sizeof(vertex_colored_t), vertices);
-        //glBindVertexArray(0); // Not really needed.
+        buf_set_vref_.SendVertices(n_vert, vertices);
     }
     // Draw wires. Wires indices have already been sent. -------------------------
     {
         constexpr unsigned int n_wires = 1u;
         glUseProgram(_progID_w);
         glLineWidth(vref_line_width_);
-        glBindVertexArray(_vaoID_vref);
-        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, _iboID_vref_w);
-        glDrawElements(GL_LINES, 2 * n_wires, GL_UNSIGNED_INT, NULL);
-        //glBindVertexArray(0); // Not really needed.
+        buf_set_vref_.Draw(n_wires);
         //glUseProgram(0); // Not really needed.
     }
 }
@@ -1272,11 +1198,7 @@ void Canvas<T>::DrawCursor(const double xs, const double ys) const
         vertices[2].color_ = cursor_color_;
         vertices[3].color_ = cursor_color_;
 
-        glBindVertexArray(_vaoID_cursor);
-        glBindBuffer(GL_ARRAY_BUFFER, _vboID_cursor);
-        glBufferSubData(GL_ARRAY_BUFFER, 0,
-            n_vert * sizeof(vertex_colored_t), vertices);
-        //glBindVertexArray(0); // Not really needed.
+        buf_set_cursor_.SendVertices(n_vert, vertices);
     }
     // Draw wires. Wires indices have already been sent. -------------------------
     {
@@ -1285,11 +1207,8 @@ void Canvas<T>::DrawCursor(const double xs, const double ys) const
         glEnable(GL_LINE_STIPPLE);
         glLineStipple(1, 0x00FF);
         glLineWidth(cursor_line_width_);
-        glBindVertexArray(_vaoID_cursor);
-        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, _iboID_cursor_onscr_w);
-        glDrawElements(GL_LINES, 2 * n_wires, GL_UNSIGNED_INT, NULL);
+        buf_set_cursor_.Draw(n_wires);
         glDisable(GL_LINE_STIPPLE);
-        //glBindVertexArray(0); // Not really needed.
         //glUseProgram(0); // Not really needed.
     }
 }
@@ -1394,21 +1313,9 @@ void Canvas<T>::DrawCircles(const double xs, const double ys) const
             n_markers++;
         }
 
-        glBindVertexArray(_vaoID_c);
-        glBindBuffer(GL_ARRAY_BUFFER, _vboID_c);
-        glBufferData(GL_ARRAY_BUFFER, n_vert * sizeof(vertex_colored_t),
-            vertices, GL_STATIC_DRAW);
-        glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, sizeof(vertex_colored_t),
-            (void*)offsetof(vertex_colored_t, coords_));
-        glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, sizeof(vertex_colored_t),
-            (void*)offsetof(vertex_colored_t, color_));
-        glEnableVertexAttribArray(0);
-        glEnableVertexAttribArray(1);
-        //glBindVertexArray(0); // Not really needed.
+        buf_set_circles_.Allocate(n_vert, vertices);
 
-        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, _iboID_c);
-        glBufferData(GL_ELEMENT_ARRAY_BUFFER, n_markers * sizeof(vertex_colored_t),
-            markers, GL_STATIC_DRAW);
+        buf_set_circles_.SendIndicesMarkers(n_markers, markers);
 
         if (vertices != nullptr) delete[] vertices;
         if (markers != nullptr) delete[] markers;
@@ -1416,10 +1323,7 @@ void Canvas<T>::DrawCircles(const double xs, const double ys) const
     // Draw. ---------------------------------------------------------------------
     {
         glUseProgram(_progID_c);
-        glBindVertexArray(_vaoID_c);
-        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, _iboID_c);
-        glDrawElements(GL_POINTS, 1 * n_markers, GL_UNSIGNED_INT, NULL);
-        //glBindVertexArray(0); // Not really needed.
+        buf_set_circles_.DrawMarkers(n_markers);
         //glUseProgram(0); // Not really needed.
     }
 }

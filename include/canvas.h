@@ -6,6 +6,7 @@
 #include "tiny_gl_text_renderer/data_types.h"
 #include "tiny_gl_text_renderer/colors.h"
 #include "tiny_gl_text_renderer/mat4.h"
+#include "buffer_set.h"
 #include "xy_range.h"
 #include "grid.h"
 #include "user_window.h"
@@ -79,12 +80,8 @@ private:
     GLuint _vboID_grid;
     GLuint _iboID_grid_w;
     GLuint _iboID_grid_coarse_w;
-    GLuint _vaoID_axes;     //!< 2. Axes
-    GLuint _vboID_axes;
-    GLuint _iboID_axes_w;
-    GLuint _vaoID_vref;     //!< 3. Vref
-    GLuint _vboID_vref;
-    GLuint _iboID_vref_w;
+    BufferSet buf_set_axes_; //!< 2. Axes
+    BufferSet buf_set_vref_; //!< 3. Vref
     GLuint _vaoID_frame;    //!< 4. Frame
     GLuint _vboID_frame;
     GLuint _iboID_frame_onscr_w;
@@ -93,16 +90,12 @@ private:
     GLuint _vboID_graphs;
     GLuint _iboID_graphs_w;
     GLuint _iboID_graphs_m;
-    GLuint _vaoID_cursor;   //!< 6. Cursor
-    GLuint _vboID_cursor;
-    GLuint _iboID_cursor_onscr_w;
+    BufferSet buf_set_cursor_; //!< 6. Cursor
     GLuint _vaoID_sel;      //!< 7. Select rectangle
     GLuint _vboID_sel;
     GLuint _iboID_sel_q;
     GLuint _iboID_sel_w;
-    GLuint _vaoID_c;        //!< 8. Circles
-    GLuint _vboID_c;
-    GLuint _iboID_c;
+    BufferSet buf_set_circles_; //!< 8. Circles
     // Programs
     GLuint _progID_sel_q;
     GLuint _progID_onscr_q;
