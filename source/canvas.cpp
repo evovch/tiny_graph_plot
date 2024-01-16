@@ -720,7 +720,7 @@ void Canvas<T>::AllocateBuffersForFixedSizedData(void) const
             (void*)offsetof(vertex_colored_t, color_));
         glEnableVertexAttribArray(0);
         glEnableVertexAttribArray(1);
-        glBindVertexArray(0);
+        //glBindVertexArray(0); // Not really needed.
     }
 
     // Allocate vertex buffer space for the cursor -------------------------------
@@ -752,7 +752,7 @@ void Canvas<T>::AllocateBuffersForFixedSizedData(void) const
             (void*)offsetof(vertex_colored_t, color_));
         glEnableVertexAttribArray(0);
         glEnableVertexAttribArray(1);
-        glBindVertexArray(0);
+        //glBindVertexArray(0); // Not really needed.
     }
 }
 
@@ -861,7 +861,7 @@ int Canvas<T>::SendGridToGPU(void)
             (void*)offsetof(vertex_colored_t, color_));
         glEnableVertexAttribArray(0);
         glEnableVertexAttribArray(1);
-        glBindVertexArray(0);
+        //glBindVertexArray(0); // Not really needed.
     }
 
     // Send wires indices. -------------------------------------------------------
@@ -943,8 +943,8 @@ void Canvas<T>::DrawGrid(void) const
             glDrawElements(GL_LINES, 2 * n_wires_coarse_y, GL_UNSIGNED_INT,
                 (GLvoid*)((size_t)(n_wires_coarse_x) * sizeof(wire_t)));
         }
-        glBindVertexArray(0);
-        glUseProgram(0);
+        //glBindVertexArray(0); // Not really needed.
+        //glUseProgram(0); // Not really needed.
     }
 }
 
@@ -1135,8 +1135,8 @@ void Canvas<T>::DrawFrame(void) const
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, _iboID_frame_onscr_w);
         glLineWidth(2.0f);
         glDrawElements(GL_LINES, 2 * n_wires, GL_UNSIGNED_INT, NULL);
-        glBindVertexArray(0);
-        glUseProgram(0);
+        //glBindVertexArray(0); // Not really needed.
+        //glUseProgram(0); // Not really needed.
     }
 }
 
@@ -1221,8 +1221,8 @@ void Canvas<T>::DrawDrawable(const Drawable<T>* const p_graph, const SizeInfo& p
         glPointSize(p_graph->GetMarkerSize());
         glDrawElementsBaseVertex(GL_POINTS, 1 * cur_size._n_m, GL_UNSIGNED_INT,
             (GLvoid*)(p_offset._n_m * sizeof(marker_t)), (GLint)p_offset._n_v);
-        glBindVertexArray(0);
-        glUseProgram(0);
+        //glBindVertexArray(0); // Not really needed.
+        //glUseProgram(0); // Not really needed.
     }
     // Draw wires. Wires indices have already been sent. -------------------------
     {
@@ -1232,8 +1232,8 @@ void Canvas<T>::DrawDrawable(const Drawable<T>* const p_graph, const SizeInfo& p
         glLineWidth(p_graph->GetLineWidth());
         glDrawElementsBaseVertex(GL_LINES, 2 * cur_size._n_w, GL_UNSIGNED_INT,
             (GLvoid*)(p_offset._n_w * sizeof(wire_t)), (GLint)p_offset._n_v);
-        glBindVertexArray(0);
-        glUseProgram(0);
+        //glBindVertexArray(0); // Not really needed.
+        //glUseProgram(0); // Not really needed.
     }
 }
 
@@ -1340,17 +1340,17 @@ void Canvas<T>::DrawSelRectangle(const double xs0, const double ys0,
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, _iboID_sel_w);
         glLineWidth(2.0f);
         glDrawElements(GL_LINES, 2 * n_wires, GL_UNSIGNED_INT, NULL);
-        //glBindVertexArray(0);
-        //glUseProgram(0);
+        //glBindVertexArray(0); // Not really needed.
+        //glUseProgram(0); // Not really needed.
 
         // Draw quads. Quads indices have already been sent. ---------------------
-        const unsigned int n_quads = 1;
+        constexpr unsigned int n_quads = 1u;
         glUseProgram(_progID_sel_q);
         glBindVertexArray(_vaoID_sel);
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, _iboID_sel_q);
         glDrawElements(GL_QUADS, 4 * n_quads, GL_UNSIGNED_INT, NULL);
-        glBindVertexArray(0);
-        glUseProgram(0);
+        //glBindVertexArray(0); // Not really needed.
+        //glUseProgram(0); // Not really needed.
     }
 }
 
