@@ -677,7 +677,7 @@ void Canvas<T>::AllocateBuffersForFixedSizedData(void) const
 
     // Allocate vertex buffer space for the axes ---------------------------------
     {
-        const unsigned int n_vert = 4;
+        constexpr unsigned int n_vert = 4u;
         glBindVertexArray(_vaoID_axes);
         glBindBuffer(GL_ARRAY_BUFFER, _vboID_axes);
         glBufferData(GL_ARRAY_BUFFER, n_vert * sizeof(vertex_colored_t),
@@ -688,12 +688,12 @@ void Canvas<T>::AllocateBuffersForFixedSizedData(void) const
             (void*)offsetof(vertex_colored_t, color_));
         glEnableVertexAttribArray(0);
         glEnableVertexAttribArray(1);
-        glBindVertexArray(0);
+        //glBindVertexArray(0); // Not really needed.
     }
 
     // Allocate vertex buffer space for the vref line ----------------------------
     {
-        const unsigned int n_vert = 2;
+        constexpr unsigned int n_vert = 2u;
         glBindVertexArray(_vaoID_vref);
         glBindBuffer(GL_ARRAY_BUFFER, _vboID_vref);
         glBufferData(GL_ARRAY_BUFFER, n_vert * sizeof(vertex_colored_t),
@@ -704,7 +704,7 @@ void Canvas<T>::AllocateBuffersForFixedSizedData(void) const
             (void*)offsetof(vertex_colored_t, color_));
         glEnableVertexAttribArray(0);
         glEnableVertexAttribArray(1);
-        glBindVertexArray(0);
+        //glBindVertexArray(0); // Not really needed.
     }
 
     // Allocate vertex buffer space for the frame --------------------------------
@@ -725,7 +725,7 @@ void Canvas<T>::AllocateBuffersForFixedSizedData(void) const
 
     // Allocate vertex buffer space for the cursor -------------------------------
     {
-        const unsigned int n_vert = 4;
+        constexpr unsigned int n_vert = 4u;
         glBindVertexArray(_vaoID_cursor);
         glBindBuffer(GL_ARRAY_BUFFER, _vboID_cursor);
         glBufferData(GL_ARRAY_BUFFER, n_vert * sizeof(vertex_colored_t),
@@ -736,7 +736,7 @@ void Canvas<T>::AllocateBuffersForFixedSizedData(void) const
             (void*)offsetof(vertex_colored_t, color_));
         glEnableVertexAttribArray(0);
         glEnableVertexAttribArray(1);
-        glBindVertexArray(0);
+        //glBindVertexArray(0); // Not really needed.
     }
 
     // Allocate vertex buffer space for the selection rectange -------------------
@@ -985,7 +985,7 @@ void Canvas<T>::DrawAxes(void) const
         glBindBuffer(GL_ARRAY_BUFFER, _vboID_axes);
         glBufferSubData(GL_ARRAY_BUFFER, 0,
             n_vert * sizeof(vertex_colored_t), vertices);
-        glBindVertexArray(0);
+        //glBindVertexArray(0); // Not really needed.
     }
     // Draw wires. Wires indices have already been sent. -------------------------
     {
@@ -995,8 +995,8 @@ void Canvas<T>::DrawAxes(void) const
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, _iboID_axes_w);
         glLineWidth(axes_line_width_);
         glDrawElements(GL_LINES, 2 * n_wires, GL_UNSIGNED_INT, NULL);
-        glBindVertexArray(0);
-        glUseProgram(0);
+        //glBindVertexArray(0); // Not really needed.
+        //glUseProgram(0); // Not really needed.
     }
 }
 
@@ -1031,7 +1031,7 @@ void Canvas<T>::DrawVref(void) const
         glBindBuffer(GL_ARRAY_BUFFER, _vboID_vref);
         glBufferSubData(GL_ARRAY_BUFFER, 0,
             n_vert * sizeof(vertex_colored_t), vertices);
-        glBindVertexArray(0);
+        //glBindVertexArray(0); // Not really needed.
     }
     // Draw wires. Wires indices have already been sent. -------------------------
     {
@@ -1041,8 +1041,8 @@ void Canvas<T>::DrawVref(void) const
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, _iboID_vref_w);
         glLineWidth(vref_line_width_);
         glDrawElements(GL_LINES, 2 * n_wires, GL_UNSIGNED_INT, NULL);
-        glBindVertexArray(0);
-        glUseProgram(0);
+        //glBindVertexArray(0); // Not really needed.
+        //glUseProgram(0); // Not really needed.
     }
 }
 
@@ -1079,7 +1079,7 @@ void Canvas<T>::SendFrameVerticesToGPU(void) const
         glBindBuffer(GL_ARRAY_BUFFER, _vboID_frame);
         glBufferSubData(GL_ARRAY_BUFFER, 0,
             n_vert * sizeof(vertex_colored_t), vertices);
-        glBindVertexArray(0);
+        //glBindVertexArray(0); // Not really needed.
     }
 }
 
@@ -1103,13 +1103,13 @@ void Canvas<T>::FillInFrame(void) const
 
     // Draw quads. Quads indices have already been sent. -------------------------
     {
-        const unsigned int n_quads = 1;
+        constexpr unsigned int n_quads = 1u;
         glUseProgram(_progID_onscr_q);
         glBindVertexArray(_vaoID_frame);
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, _iboID_frame_onscr_q);
         glDrawElements(GL_QUADS, 4 * n_quads, GL_UNSIGNED_INT, NULL);
-        glBindVertexArray(0);
-        glUseProgram(0);
+        //glBindVertexArray(0); // Not really needed.
+        //glUseProgram(0); // Not really needed.
     }
 }
 
@@ -1172,7 +1172,7 @@ void Canvas<T>::SendDrawableToGPU(const Drawable<T>* const p_graph, const SizeIn
         glBufferSubData(GL_ARRAY_BUFFER,
             p_offset._n_v * sizeof(vertex_colored_t),
             cur_size._n_v * sizeof(vertex_colored_t), vertices);
-        glBindVertexArray(0);
+        //glBindVertexArray(0); // Not really needed.
 
         if (vertices != nullptr) delete[] vertices;
     }
@@ -1276,7 +1276,7 @@ void Canvas<T>::DrawCursor(const double xs, const double ys) const
         glBindBuffer(GL_ARRAY_BUFFER, _vboID_cursor);
         glBufferSubData(GL_ARRAY_BUFFER, 0,
             n_vert * sizeof(vertex_colored_t), vertices);
-        glBindVertexArray(0);
+        //glBindVertexArray(0); // Not really needed.
     }
     // Draw wires. Wires indices have already been sent. -------------------------
     {
@@ -1289,8 +1289,8 @@ void Canvas<T>::DrawCursor(const double xs, const double ys) const
         glLineWidth(cursor_line_width_);
         glDrawElements(GL_LINES, 2 * n_wires, GL_UNSIGNED_INT, NULL);
         glDisable(GL_LINE_STIPPLE);
-        glBindVertexArray(0);
-        glUseProgram(0);
+        //glBindVertexArray(0); // Not really needed.
+        //glUseProgram(0); // Not really needed.
     }
 }
 
@@ -1328,7 +1328,7 @@ void Canvas<T>::DrawSelRectangle(const double xs0, const double ys0,
         glBindBuffer(GL_ARRAY_BUFFER, _vboID_sel);
         glBufferSubData(GL_ARRAY_BUFFER, 0,
             4 * sizeof(vertex_colored_t), vertices);
-        glBindVertexArray(0);
+        //glBindVertexArray(0); // Not really needed.
     }
 
     // Draw. ---------------------------------------------------------------------
@@ -1404,7 +1404,7 @@ void Canvas<T>::DrawCircles(const double xs, const double ys) const
             (void*)offsetof(vertex_colored_t, color_));
         glEnableVertexAttribArray(0);
         glEnableVertexAttribArray(1);
-        glBindVertexArray(0);
+        //glBindVertexArray(0); // Not really needed.
 
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, _iboID_c);
         glBufferData(GL_ELEMENT_ARRAY_BUFFER, n_markers * sizeof(vertex_colored_t),
@@ -1419,8 +1419,8 @@ void Canvas<T>::DrawCircles(const double xs, const double ys) const
         glBindVertexArray(_vaoID_c);
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, _iboID_c);
         glDrawElements(GL_POINTS, 1 * n_markers, GL_UNSIGNED_INT, NULL);
-        glBindVertexArray(0);
-        glUseProgram(0);
+        //glBindVertexArray(0); // Not really needed.
+        //glUseProgram(0); // Not really needed.
     }
 }
 
