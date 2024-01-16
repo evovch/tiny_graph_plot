@@ -917,29 +917,29 @@ void Canvas<T>::DrawGrid(void) const
         glBindVertexArray(_vaoID_grid);
         if (enable_vgrid_) {
             // Fine grid
-            glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, _iboID_grid_w);
             glEnable(GL_LINE_STIPPLE);
             glLineStipple(1, 0x0101);
             glLineWidth(_grid.GetVGridFineLineWidth());
+            glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, _iboID_grid_w);
             glDrawElements(GL_LINES, 2 * n_wires_fine_x, GL_UNSIGNED_INT, NULL);
             glDisable(GL_LINE_STIPPLE);
             // Coarse grid
-            glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, _iboID_grid_coarse_w);
             glLineWidth(_grid.GetVGridCoarseLineWidth());
+            glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, _iboID_grid_coarse_w);
             glDrawElements(GL_LINES, 2 * n_wires_coarse_x, GL_UNSIGNED_INT, NULL);
         }
         if (enable_hgrid_) {
             // Fine grid
-            glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, _iboID_grid_w);
             glEnable(GL_LINE_STIPPLE);
             glLineStipple(1, 0x0101);
             glLineWidth(_grid.GetHGridFineLineWidth());
+            glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, _iboID_grid_w);
             glDrawElements(GL_LINES, 2 * n_wires_fine_y, GL_UNSIGNED_INT,
                 (GLvoid*)((size_t)(n_wires_fine_x) * sizeof(wire_t)));
             glDisable(GL_LINE_STIPPLE);
             // Coarse grid
-            glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, _iboID_grid_coarse_w);
             glLineWidth(_grid.GetHGridCoarseLineWidth());
+            glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, _iboID_grid_coarse_w);
             glDrawElements(GL_LINES, 2 * n_wires_coarse_y, GL_UNSIGNED_INT,
                 (GLvoid*)((size_t)(n_wires_coarse_x) * sizeof(wire_t)));
         }
@@ -991,9 +991,9 @@ void Canvas<T>::DrawAxes(void) const
     {
         constexpr unsigned int n_wires = 2u;
         glUseProgram(_progID_w);
+        glLineWidth(axes_line_width_);
         glBindVertexArray(_vaoID_axes);
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, _iboID_axes_w);
-        glLineWidth(axes_line_width_);
         glDrawElements(GL_LINES, 2 * n_wires, GL_UNSIGNED_INT, NULL);
         //glBindVertexArray(0); // Not really needed.
         //glUseProgram(0); // Not really needed.
@@ -1037,9 +1037,9 @@ void Canvas<T>::DrawVref(void) const
     {
         constexpr unsigned int n_wires = 1u;
         glUseProgram(_progID_w);
+        glLineWidth(vref_line_width_);
         glBindVertexArray(_vaoID_vref);
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, _iboID_vref_w);
-        glLineWidth(vref_line_width_);
         glDrawElements(GL_LINES, 2 * n_wires, GL_UNSIGNED_INT, NULL);
         //glBindVertexArray(0); // Not really needed.
         //glUseProgram(0); // Not really needed.
@@ -1131,9 +1131,9 @@ void Canvas<T>::DrawFrame(void) const
     {
         constexpr unsigned int n_wires = 4u;
         glUseProgram(_progID_onscr_w);
+        glLineWidth(2.0f);
         glBindVertexArray(_vaoID_frame);
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, _iboID_frame_onscr_w);
-        glLineWidth(2.0f);
         glDrawElements(GL_LINES, 2 * n_wires, GL_UNSIGNED_INT, NULL);
         //glBindVertexArray(0); // Not really needed.
         //glUseProgram(0); // Not really needed.
@@ -1216,9 +1216,9 @@ void Canvas<T>::DrawDrawable(const Drawable<T>* const p_graph, const SizeInfo& p
     // Draw markers. Markers indices have already been sent. ---------------------
     {
         glUseProgram(_progID_m);
+        glPointSize(p_graph->GetMarkerSize());
         glBindVertexArray(_vaoID_graphs);
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, _iboID_graphs_m);
-        glPointSize(p_graph->GetMarkerSize());
         glDrawElementsBaseVertex(GL_POINTS, 1 * cur_size._n_m, GL_UNSIGNED_INT,
             (GLvoid*)(p_offset._n_m * sizeof(marker_t)), (GLint)p_offset._n_v);
         //glBindVertexArray(0); // Not really needed.
@@ -1227,9 +1227,9 @@ void Canvas<T>::DrawDrawable(const Drawable<T>* const p_graph, const SizeInfo& p
     // Draw wires. Wires indices have already been sent. -------------------------
     {
         glUseProgram(_progID_w);
+        glLineWidth(p_graph->GetLineWidth());
         glBindVertexArray(_vaoID_graphs);
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, _iboID_graphs_w);
-        glLineWidth(p_graph->GetLineWidth());
         glDrawElementsBaseVertex(GL_LINES, 2 * cur_size._n_w, GL_UNSIGNED_INT,
             (GLvoid*)(p_offset._n_w * sizeof(wire_t)), (GLint)p_offset._n_v);
         //glBindVertexArray(0); // Not really needed.
@@ -1282,11 +1282,11 @@ void Canvas<T>::DrawCursor(const double xs, const double ys) const
     {
         constexpr unsigned int n_wires = 2u;
         glUseProgram(_progID_onscr_w);
-        glBindVertexArray(_vaoID_cursor);
-        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, _iboID_cursor_onscr_w);
         glEnable(GL_LINE_STIPPLE);
         glLineStipple(1, 0x00FF);
         glLineWidth(cursor_line_width_);
+        glBindVertexArray(_vaoID_cursor);
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, _iboID_cursor_onscr_w);
         glDrawElements(GL_LINES, 2 * n_wires, GL_UNSIGNED_INT, NULL);
         glDisable(GL_LINE_STIPPLE);
         //glBindVertexArray(0); // Not really needed.
@@ -1336,9 +1336,9 @@ void Canvas<T>::DrawSelRectangle(const double xs0, const double ys0,
         // Draw wires. Wires indices have already been sent. ---------------------
         constexpr unsigned int n_wires = 4u;
         glUseProgram(_progID_w);
+        glLineWidth(2.0f);
         glBindVertexArray(_vaoID_sel);
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, _iboID_sel_w);
-        glLineWidth(2.0f);
         glDrawElements(GL_LINES, 2 * n_wires, GL_UNSIGNED_INT, NULL);
         //glBindVertexArray(0); // Not really needed.
         //glUseProgram(0); // Not really needed.
