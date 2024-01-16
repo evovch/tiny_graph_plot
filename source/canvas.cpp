@@ -709,7 +709,7 @@ void Canvas<T>::AllocateBuffersForFixedSizedData(void) const
 
     // Allocate vertex buffer space for the frame --------------------------------
     {
-        const unsigned int n_vert = 4;
+        constexpr unsigned int n_vert = 4u;
         glBindVertexArray(_vaoID_frame);
         glBindBuffer(GL_ARRAY_BUFFER, _vboID_frame);
         glBufferData(GL_ARRAY_BUFFER, n_vert * sizeof(vertex_colored_t),
@@ -741,7 +741,7 @@ void Canvas<T>::AllocateBuffersForFixedSizedData(void) const
 
     // Allocate vertex buffer space for the selection rectange -------------------
     {
-        const unsigned int n_vert = 4;
+        constexpr unsigned int n_vert = 4u;
         glBindVertexArray(_vaoID_sel);
         glBindBuffer(GL_ARRAY_BUFFER, _vboID_sel);
         glBufferData(GL_ARRAY_BUFFER, n_vert * sizeof(vertex_colored_t),
@@ -768,7 +768,7 @@ void Canvas<T>::SendFixedIndicesToGPU(void) const
 
     // Axes
     {
-        const unsigned int n_wires_axes = 2;
+        constexpr unsigned int n_wires_axes = 2u;
         const wire_t wires[n_wires_axes] = { {0, 1}, {2, 3} };
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, _iboID_axes_w);
         glBufferData(GL_ELEMENT_ARRAY_BUFFER, n_wires_axes * sizeof(wire_t), wires,
@@ -777,7 +777,7 @@ void Canvas<T>::SendFixedIndicesToGPU(void) const
 
     // Vref
     {
-        const unsigned int n_wires_vref = 1;
+        constexpr unsigned int n_wires_vref = 1u;
         const wire_t wires[n_wires_vref] = { {0, 1} };
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, _iboID_vref_w);
         glBufferData(GL_ELEMENT_ARRAY_BUFFER, n_wires_vref * sizeof(wire_t),
@@ -786,12 +786,12 @@ void Canvas<T>::SendFixedIndicesToGPU(void) const
 
     // Frame
     {
-        const unsigned int n_wires_frame = 4;
+        constexpr unsigned int n_wires_frame = 4u;
         const wire_t wires[n_wires_frame] = { {0,1}, {1,2}, {2,3}, {3,0} };
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, _iboID_frame_onscr_w);
         glBufferData(GL_ELEMENT_ARRAY_BUFFER, n_wires_frame * sizeof(wire_t),
             wires, GL_STATIC_DRAW);
-        const unsigned int n_quads_frame = 1;
+        constexpr unsigned int n_quads_frame = 1u;
         const quad_t quads[n_quads_frame] = { { 0, 1, 2, 3 } };
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, _iboID_frame_onscr_q);
         glBufferData(GL_ELEMENT_ARRAY_BUFFER, n_quads_frame * sizeof(quad_t),
@@ -800,7 +800,7 @@ void Canvas<T>::SendFixedIndicesToGPU(void) const
 
     // Cursor
     {
-        const unsigned int n_wires_cursor = 2;
+        constexpr unsigned int n_wires_cursor = 2u;
         const wire_t wires[n_wires_cursor] = { {0, 1}, {2, 3} };
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, _iboID_cursor_onscr_w);
         glBufferData(GL_ELEMENT_ARRAY_BUFFER, n_wires_cursor * sizeof(wire_t),
@@ -809,12 +809,12 @@ void Canvas<T>::SendFixedIndicesToGPU(void) const
 
     // Selection rectangle
     {
-        const unsigned int n_wires_sel = 4;
+        constexpr unsigned int n_wires_sel = 4u;
         const wire_t wires[n_wires_sel] = { {0, 1}, {1, 2}, {2, 3}, {3, 0} };
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, _iboID_sel_w);
         glBufferData(GL_ELEMENT_ARRAY_BUFFER, n_wires_sel * sizeof(wire_t),
             wires, GL_STATIC_DRAW);
-        const unsigned int n_quads_sel = 1;
+        constexpr unsigned int n_quads_sel = 1u;
         const quad_t quads[n_quads_sel] = { { 0, 1, 2, 3 } };
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, _iboID_sel_q);
         glBufferData(GL_ELEMENT_ARRAY_BUFFER, n_quads_sel * sizeof(quad_t),
@@ -966,7 +966,7 @@ void Canvas<T>::DrawAxes(void) const
 
     // Send vertices and colors. -------------------------------------------------
     {
-        const unsigned int n_vert = 4;
+        constexpr unsigned int n_vert = 4u;
         vertex_colored_t vertices[n_vert];
         vertices[0].coords_ = point_t(
             static_cast<float>(_total_xy_range.lowx()), 0.0f, 0.0f, 1.0f);
@@ -989,7 +989,7 @@ void Canvas<T>::DrawAxes(void) const
     }
     // Draw wires. Wires indices have already been sent. -------------------------
     {
-        const unsigned int n_wires = 2;
+        constexpr unsigned int n_wires = 2u;
         glUseProgram(_progID_w);
         glBindVertexArray(_vaoID_axes);
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, _iboID_axes_w);
@@ -1018,7 +1018,7 @@ void Canvas<T>::DrawVref(void) const
 
     // Send vertices and colors. -------------------------------------------------
     {
-        const unsigned int n_vert = 2;
+        constexpr unsigned int n_vert = 2u;
         vertex_colored_t vertices[n_vert];
         vertices[0].coords_ = point_t(static_cast<float>(ref_x_),
             static_cast<float>(_total_xy_range.lowy()), 0.0f, 1.0f);
@@ -1035,7 +1035,7 @@ void Canvas<T>::DrawVref(void) const
     }
     // Draw wires. Wires indices have already been sent. -------------------------
     {
-        const unsigned int n_wires = 1;
+        constexpr unsigned int n_wires = 1u;
         glUseProgram(_progID_w);
         glBindVertexArray(_vaoID_vref);
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, _iboID_vref_w);
@@ -1060,7 +1060,7 @@ void Canvas<T>::SendFrameVerticesToGPU(void) const
 
     // Send vertices and colors. -------------------------------------------------
     {
-        const unsigned int n_vert = 4;
+        constexpr unsigned int n_vert = 4u;
         vertex_colored_t vertices[n_vert];
         const float blx_ = (float)margin_xl_pix_;
         const float bly_ = (float)margin_yb_pix_;
@@ -1129,7 +1129,7 @@ void Canvas<T>::DrawFrame(void) const
 
     // Draw wires. Wires indices have already been sent. -------------------------
     {
-        const unsigned int n_wires = 4;
+        constexpr unsigned int n_wires = 4u;
         glUseProgram(_progID_onscr_w);
         glBindVertexArray(_vaoID_frame);
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, _iboID_frame_onscr_w);
@@ -1257,7 +1257,7 @@ void Canvas<T>::DrawCursor(const double xs, const double ys) const
 
     // Send vertices and colors. -------------------------------------------------
     {
-        const unsigned int n_vert = 4;
+        constexpr unsigned int n_vert = 4u;
         vertex_colored_t vertices[n_vert];
         const float blx_ = (float)margin_xl_pix_;
         const float bly_ = (float)margin_yb_pix_;
@@ -1280,7 +1280,7 @@ void Canvas<T>::DrawCursor(const double xs, const double ys) const
     }
     // Draw wires. Wires indices have already been sent. -------------------------
     {
-        const unsigned int n_wires = 2;
+        constexpr unsigned int n_wires = 2u;
         glUseProgram(_progID_onscr_w);
         glBindVertexArray(_vaoID_cursor);
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, _iboID_cursor_onscr_w);
@@ -1311,7 +1311,7 @@ void Canvas<T>::DrawSelRectangle(const double xs0, const double ys0,
 
     // Send vertices and colors. -------------------------------------------------
     {
-        const unsigned int n_vert = 4;
+        constexpr unsigned int n_vert = 4u;
         vertex_colored_t vertices[n_vert];
         const Vec4f p0r = this->TransformToVisrange(xs0, ys0);
         const Vec4f p1r = this->TransformToVisrange(xs1, ys1);
@@ -1334,7 +1334,7 @@ void Canvas<T>::DrawSelRectangle(const double xs0, const double ys0,
     // Draw. ---------------------------------------------------------------------
     {
         // Draw wires. Wires indices have already been sent. ---------------------
-        const unsigned int n_wires = 4;
+        constexpr unsigned int n_wires = 4u;
         glUseProgram(_progID_w);
         glBindVertexArray(_vaoID_sel);
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, _iboID_sel_w);
