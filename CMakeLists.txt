@@ -12,6 +12,7 @@ set(SOURCES
 	source/canvas_manager.cpp
 	source/glfw_callback_functions.cpp
 	source/main.cpp
+	source/shader_program.cpp
 	source/stb_image_write_impl.cpp
 	source/text_renderer.cpp
 	source/user_window.cpp

@@ -1,5 +1,7 @@
 #pragma once
 
+#include <string>
+
 typedef unsigned int GLuint;
 
 namespace tiny_graph_plot
@@ -8,7 +10,7 @@ namespace tiny_graph_plot
 class BufferSet
 {
 public:
-	explicit BufferSet();
+	explicit BufferSet(const char* const name);
 	~BufferSet();
 	BufferSet(const BufferSet& other) = delete;
 	BufferSet(BufferSet&& other) = delete;
@@ -23,6 +25,7 @@ public:
 	void Draw(const unsigned int n_primitives) const;
 	void DrawMarkers(const unsigned int n_primitives) const;
 private:
+	const std::string name_;
 	GLuint vao_;
 	GLuint vbo_;
 	GLuint ibo_;

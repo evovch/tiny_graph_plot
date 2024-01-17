@@ -1,12 +1,14 @@
 #include "canvas.h"
 
-#include <cstdlib>
 #include <cstdio>
+#include <cstdlib>
 #include <cmath>
 #include <algorithm>
+
 #include "GL/glew.h"
 #include "GLFW/glfw3.h"
 #include "stb_image_write.h"
+
 #include "canvas_shader_sources.h"
 #include "graph.h"
 #include "histogram1d.h"
@@ -29,7 +31,17 @@ using tiny_gl_text_renderer::quad_t;
 
 template<typename T>
 Canvas<T>::Canvas(GLFWwindow* window, const unsigned int w, const unsigned int h)
-:   UserWindow(window, w, h)
+:   UserWindow(window, w, h),
+    buf_set_axes_("axes"),
+    buf_set_vref_("vref"),
+    buf_set_cursor_("cursor"),
+    buf_set_circles_("circles"),
+    prog_sel_q_("prog_sel_quads"),
+    prog_onscr_q_("prog_onscr_quads"),
+    prog_w_("prog_wires"),
+    prog_onscr_w_("prog_onscr_wires"),
+    prog_m_("prog_markers"),
+    prog_c_("prog_circles")
 {
 #ifdef DEBUG_CALLS
     printf("Canvas::Canvas\n");
@@ -74,17 +86,6 @@ Canvas<T>::~Canvas(void)
         glDeleteBuffers(1, &_iboID_sel_w);
     }
 
-    // Programs ------------------------------------------------------------------
-    {
-        glDeleteProgram(_progID_sel_q);
-        glDeleteProgram(_progID_onscr_q);
-        //glDeleteProgram(_progID_tr);
-        glDeleteProgram(_progID_w);
-        glDeleteProgram(_progID_onscr_w);
-        glDeleteProgram(_progID_m);
-        glDeleteProgram(_progID_c);
-    }
-
     // objects of the _graphs container should NOT be
     // explicitly deleted here as the pointers are not owning
 }
@@ -115,7 +116,7 @@ void Canvas<T>::Show(void)
 
     this->SendFrameVerticesToGPU();
 
-    glProgramUniform1f(_progID_c, _circle_r_unif_c, (float)circle_r_);
+    glProgramUniform1f(prog_c_.GetProgId(), _circle_r_unif_c, (float)circle_r_);
 
     SizeInfo total_size; // Zeroed on construction
     _total_xy_range = _graphs.at(0)->GetXYrange();
@@ -339,18 +340,24 @@ void Canvas<T>::Draw(void) /*const*/
     this->DrawFrame();
     this->SwitchToFrame();
     SizeInfo cur_offset; // Zeroed on construction
+
+    glPushDebugGroup(GL_DEBUG_SOURCE_APPLICATION, 0, -1, "Draw graphs");
     for (const auto* const gr : _graphs) {
         if (gr->GetVisible()) {
             this->DrawDrawable(gr, cur_offset);
         }
         cur_offset += gr->GetSizeInfo();
     }
+    glPopDebugGroup();
+
+    glPushDebugGroup(GL_DEBUG_SOURCE_APPLICATION, 0, -1, "Draw histograms");
     for (const auto* const histo : _histograms) {
         if (histo->GetVisible()) {
             this->DrawDrawable(histo, cur_offset);
         }
         cur_offset += histo->GetSizeInfo();
     }
+    glPopDebugGroup();
 
     this->SwitchToFullWindow();
     this->UpdateTexAxesValues();
@@ -370,6 +377,7 @@ void Canvas<T>::Init(void)
 #endif
 
     // VAOs, VBOs, IBOs ----------------------------------------------------------
+    glPushDebugGroup(GL_DEBUG_SOURCE_APPLICATION, 0, -1, "Init buffers");
     {
         glGenVertexArrays(1, &_vaoID_grid);
         glGenBuffers(1, &_vboID_grid);
@@ -399,142 +407,39 @@ void Canvas<T>::Init(void)
 
         buf_set_circles_.Generate();
     }
+    glPopDebugGroup();
 
     // Programs and uniforms -----------------------------------------------------
+    glPushDebugGroup(GL_DEBUG_SOURCE_APPLICATION, 0, -1, "Init programs");
+    {
     // Quads / visible range space
-    {
-        _progID_sel_q = glCreateProgram();
-        GLuint vp_shader_sel_q = glCreateShader(GL_VERTEX_SHADER);
-        glShaderSource(vp_shader_sel_q, 1, (const GLchar**)&canvas_sel_q_vp_source, NULL);
-        glCompileShader(vp_shader_sel_q);
-        glAttachShader(_progID_sel_q, vp_shader_sel_q);
-        GLuint fp_shader_sel_q = glCreateShader(GL_FRAGMENT_SHADER);
-        glShaderSource(fp_shader_sel_q, 1, (const GLchar**)&canvas_sel_q_fp_source, NULL);
-        glCompileShader(fp_shader_sel_q);
-        glAttachShader(_progID_sel_q, fp_shader_sel_q);
-        glLinkProgram(_progID_sel_q);
-        glDetachShader(_progID_sel_q, vp_shader_sel_q);
-        glDetachShader(_progID_sel_q, fp_shader_sel_q);
-        glDeleteShader(vp_shader_sel_q);
-        glDeleteShader(fp_shader_sel_q);
-        _s2v_unif_sel_q = glGetUniformLocation(_progID_sel_q, "screen2viewport");
-        _v2c_unif_sel_q = glGetUniformLocation(_progID_sel_q, "viewport2clip");
-        _s2c_unif_sel_q = glGetUniformLocation(_progID_sel_q, "screen2clip");
-        _r2c_unif_sel_q = glGetUniformLocation(_progID_sel_q, "visrange2clip");
-    }
+    glPushDebugGroup(GL_DEBUG_SOURCE_APPLICATION, 0, -1, "Init program Q sce");
+    prog_sel_q_.Generate(canvas_sel_q_vp_source, nullptr, canvas_sel_q_fp_source);
+    glPopDebugGroup();
     // Quads / screen space
-    {
-        _progID_onscr_q = glCreateProgram();
-        GLuint vp_shader_onscr_q = glCreateShader(GL_VERTEX_SHADER);
-        glShaderSource(vp_shader_onscr_q, 1, (const GLchar**)&canvas_onscr_q_vp_source, NULL);
-        glCompileShader(vp_shader_onscr_q);
-        glAttachShader(_progID_onscr_q, vp_shader_onscr_q);
-        GLuint fp_shader_onscr_q = glCreateShader(GL_FRAGMENT_SHADER);
-        glShaderSource(fp_shader_onscr_q, 1, (const GLchar**)&canvas_onscr_q_fp_source, NULL);
-        glCompileShader(fp_shader_onscr_q);
-        glAttachShader(_progID_onscr_q, fp_shader_onscr_q);
-        glLinkProgram(_progID_onscr_q);
-        glDetachShader(_progID_onscr_q, vp_shader_onscr_q);
-        glDetachShader(_progID_onscr_q, fp_shader_onscr_q);
-        glDeleteShader(vp_shader_onscr_q);
-        glDeleteShader(fp_shader_onscr_q);
-        _fr_bg_unif_onscr_q = glGetUniformLocation(_progID_onscr_q, "drawcolor");
-        ////_s2v_unif_onscr_q = glGetUniformLocation(_progID_onscr_q, "screen2viewport");
-        ////_v2c_unif_onscr_q = glGetUniformLocation(_progID_onscr_q, "viewport2clip");
-        _s2c_unif_onscr_q = glGetUniformLocation(_progID_onscr_q, "screen2clip");
-        ////_r2c_unif_onscr_q = glGetUniformLocation(_progID_onscr_q, "visrange2clip");
-    }
+    glPushDebugGroup(GL_DEBUG_SOURCE_APPLICATION, 0, -1, "Init program Q scr");
+    prog_onscr_q_.Generate(canvas_onscr_q_vp_source, nullptr, canvas_onscr_q_fp_source);
+    _fr_bg_unif_onscr_q = glGetUniformLocation(prog_onscr_q_.GetProgId(), "drawcolor");
+    glPopDebugGroup();
     // Wires / visible range space
-    {
-        _progID_w = glCreateProgram();
-        GLuint vp_shader_w = glCreateShader(GL_VERTEX_SHADER);
-        glShaderSource(vp_shader_w, 1, (const GLchar**)&canvas_w_vp_source, NULL);
-        glCompileShader(vp_shader_w);
-        glAttachShader(_progID_w, vp_shader_w);
-        GLuint fp_shader_w = glCreateShader(GL_FRAGMENT_SHADER);
-        glShaderSource(fp_shader_w, 1, (const GLchar**)&canvas_w_fp_source, NULL);
-        glCompileShader(fp_shader_w);
-        glAttachShader(_progID_w, fp_shader_w);
-        glLinkProgram(_progID_w);
-        glDetachShader(_progID_w, vp_shader_w);
-        glDetachShader(_progID_w, fp_shader_w);
-        glDeleteShader(vp_shader_w);
-        glDeleteShader(fp_shader_w);
-        _s2v_unif_w = glGetUniformLocation(_progID_w, "screen2viewport");
-        _v2c_unif_w = glGetUniformLocation(_progID_w, "viewport2clip");
-        _s2c_unif_w = glGetUniformLocation(_progID_w, "screen2clip");
-        _r2c_unif_w = glGetUniformLocation(_progID_w, "visrange2clip");
-    }
+    glPushDebugGroup(GL_DEBUG_SOURCE_APPLICATION, 0, -1, "Init program W sce");
+    prog_w_.Generate(canvas_w_vp_source, nullptr, canvas_w_fp_source);
+    glPopDebugGroup();
     // Wires / screen space
-    {
-        _progID_onscr_w = glCreateProgram();
-        GLuint vp_shader_onscr_w = glCreateShader(GL_VERTEX_SHADER);
-        glShaderSource(vp_shader_onscr_w, 1, (const GLchar**)&canvas_onscr_w_vp_source, NULL);
-        glCompileShader(vp_shader_onscr_w);
-        glAttachShader(_progID_onscr_w, vp_shader_onscr_w);
-        GLuint fp_shader_onscr_w = glCreateShader(GL_FRAGMENT_SHADER);
-        glShaderSource(fp_shader_onscr_w, 1, (const GLchar**)&canvas_onscr_w_fp_source, NULL);
-        glCompileShader(fp_shader_onscr_w);
-        glAttachShader(_progID_onscr_w, fp_shader_onscr_w);
-        glLinkProgram(_progID_onscr_w);
-        glDetachShader(_progID_onscr_w, vp_shader_onscr_w);
-        glDetachShader(_progID_onscr_w, fp_shader_onscr_w);
-        glDeleteShader(vp_shader_onscr_w);
-        glDeleteShader(fp_shader_onscr_w);
-        ////_s2v_unif_onscr_w = glGetUniformLocation(_progID_onscr_w, "screen2viewport");
-        ////_v2c_unif_onscr_w = glGetUniformLocation(_progID_onscr_w, "viewport2clip");
-        _s2c_unif_onscr_w = glGetUniformLocation(_progID_onscr_w, "screen2clip");
-        ////_r2c_unif_onscr_w = glGetUniformLocation(_progID_onscr_w, "visrange2clip");
-    }
+    glPushDebugGroup(GL_DEBUG_SOURCE_APPLICATION, 0, -1, "Init program W scr");
+    prog_onscr_w_.Generate(canvas_onscr_w_vp_source, nullptr, canvas_onscr_w_fp_source);
+    glPopDebugGroup();
     // Markers / visible range space
-    {
-        _progID_m = glCreateProgram();
-        GLuint vp_shader_m = glCreateShader(GL_VERTEX_SHADER);
-        glShaderSource(vp_shader_m, 1, (const GLchar**)&canvas_m_vp_source, NULL);
-        glCompileShader(vp_shader_m);
-        glAttachShader(_progID_m, vp_shader_m);
-        GLuint fp_shader_m = glCreateShader(GL_FRAGMENT_SHADER);
-        glShaderSource(fp_shader_m, 1, (const GLchar**)&canvas_m_fp_source, NULL);
-        glCompileShader(fp_shader_m);
-        glAttachShader(_progID_m, fp_shader_m);
-        glLinkProgram(_progID_m);
-        glDetachShader(_progID_m, vp_shader_m);
-        glDetachShader(_progID_m, fp_shader_m);
-        glDeleteShader(vp_shader_m);
-        glDeleteShader(fp_shader_m);
-        _s2v_unif_m = glGetUniformLocation(_progID_m, "screen2viewport");
-        _v2c_unif_m = glGetUniformLocation(_progID_m, "viewport2clip");
-        _s2c_unif_m = glGetUniformLocation(_progID_m, "screen2clip");
-        _r2c_unif_m = glGetUniformLocation(_progID_m, "visrange2clip");
-    }
+    glPushDebugGroup(GL_DEBUG_SOURCE_APPLICATION, 0, -1, "Init program M sce");
+    prog_m_.Generate(canvas_m_vp_source, nullptr, canvas_m_fp_source);
+    glPopDebugGroup();
     // Circles / visible range space
-    {
-        _progID_c = glCreateProgram();
-        GLuint vp_shader_c = glCreateShader(GL_VERTEX_SHADER);
-        glShaderSource(vp_shader_c, 1, (const GLchar**)&canvas_c_vp_source, NULL);
-        glCompileShader(vp_shader_c);
-        glAttachShader(_progID_c, vp_shader_c);
-        GLuint gp_shader_c = glCreateShader(GL_GEOMETRY_SHADER);
-        glShaderSource(gp_shader_c, 1, (const GLchar**)&canvas_c_gp_source, NULL);
-        glCompileShader(gp_shader_c);
-        glAttachShader(_progID_c, gp_shader_c);
-        GLuint fp_shader_c = glCreateShader(GL_FRAGMENT_SHADER);
-        glShaderSource(fp_shader_c, 1, (const GLchar**)&canvas_c_fp_source, NULL);
-        glCompileShader(fp_shader_c);
-        glAttachShader(_progID_c, fp_shader_c);
-        glLinkProgram(_progID_c);
-        glDetachShader(_progID_c, vp_shader_c);
-        glDetachShader(_progID_c, gp_shader_c);
-        glDetachShader(_progID_c, fp_shader_c);
-        glDeleteShader(vp_shader_c);
-        glDeleteShader(gp_shader_c);
-        glDeleteShader(fp_shader_c);
-        //_s2v_unif_c = glGetUniformLocation(_progID_c, "screen2viewport");
-        _v2c_unif_c = glGetUniformLocation(_progID_c, "viewport2clip");
-        //_s2c_unif_c = glGetUniformLocation(_progID_c, "screen2clip");
-        _r2c_unif_c = glGetUniformLocation(_progID_c, "visrange2clip");
-        _circle_r_unif_c = glGetUniformLocation(_progID_c, "circle_r");
+    glPushDebugGroup(GL_DEBUG_SOURCE_APPLICATION, 0, -1, "Init program C sce");
+    prog_c_.Generate(canvas_c_vp_source, canvas_c_gp_source, canvas_c_fp_source);
+    _circle_r_unif_c = glGetUniformLocation(prog_c_.GetProgId(), "circle_r");
+    glPopDebugGroup();
     }
+    glPopDebugGroup();
 
     // Send fixed data to GPU ----------------------------------------------------
 
@@ -552,7 +457,7 @@ void Canvas<T>::Init(void)
 	glEnable(GL_MULTISAMPLE);
     // This has to be done after the program has been compiled and the uniform
     // variable located
-    glProgramUniform4fv(_progID_onscr_q, _fr_bg_unif_onscr_q, 1,
+    glProgramUniform4fv(prog_onscr_q_.GetProgId(), _fr_bg_unif_onscr_q, 1,
         in_frame_bg_color_.GetData());
     // In principle, can be omitted
     //glProgramUniform1f(_progID_c, _circle_r_unif_c, (float)circle_r_);
@@ -842,6 +747,8 @@ void Canvas<T>::DrawGrid(void) const
         return;
     }
 
+    glPushDebugGroup(GL_DEBUG_SOURCE_APPLICATION, 0, -1, "Draw grid");
+
     // Draw wires. Wires indices have already been sent. -------------------------
     {
         unsigned int n_wires_fine_x; unsigned int n_wires_fine_y;
@@ -853,7 +760,7 @@ void Canvas<T>::DrawGrid(void) const
             _grid.GetWiresCoarseData(n_wires_coarse_x, n_wires_coarse_y);
         (void)wires_coarse; // unused returned value.
 
-        glUseProgram(_progID_w);
+        prog_w_.Use();
         glBindVertexArray(_vaoID_grid);
         if (enable_vgrid_) {
             // Fine grid
@@ -884,8 +791,9 @@ void Canvas<T>::DrawGrid(void) const
                 (GLvoid*)((size_t)(n_wires_coarse_x) * sizeof(wire_t)));
         }
         //glBindVertexArray(0); // Not really needed.
-        //glUseProgram(0); // Not really needed.
     }
+
+    glPopDebugGroup();
 }
 
 // 2. Axes =======================================================================
@@ -903,6 +811,8 @@ void Canvas<T>::DrawAxes(void) const
     if (!enable_axes_) {
         return;
     }
+
+    glPushDebugGroup(GL_DEBUG_SOURCE_APPLICATION, 0, -1, "Draw axes");
 
     // Send vertices and colors. -------------------------------------------------
     {
@@ -926,11 +836,12 @@ void Canvas<T>::DrawAxes(void) const
     // Draw wires. Wires indices have already been sent. -------------------------
     {
         constexpr unsigned int n_wires = 2u;
-        glUseProgram(_progID_w);
+        prog_w_.Use();
         glLineWidth(axes_line_width_);
         buf_set_axes_.Draw(n_wires);
-        //glUseProgram(0); // Not really needed.
     }
+
+    glPopDebugGroup();
 }
 
 // 3. Vref =======================================================================
@@ -949,6 +860,8 @@ void Canvas<T>::DrawVref(void) const
         return;
     }
 
+    glPushDebugGroup(GL_DEBUG_SOURCE_APPLICATION, 0, -1, "Draw Vref");
+
     // Send vertices and colors. -------------------------------------------------
     {
         constexpr unsigned int n_vert = 2u;
@@ -965,11 +878,12 @@ void Canvas<T>::DrawVref(void) const
     // Draw wires. Wires indices have already been sent. -------------------------
     {
         constexpr unsigned int n_wires = 1u;
-        glUseProgram(_progID_w);
+        prog_w_.Use();
         glLineWidth(vref_line_width_);
         buf_set_vref_.Draw(n_wires);
-        //glUseProgram(0); // Not really needed.
     }
+
+    glPopDebugGroup();
 }
 
 // 4. Frame ======================================================================
@@ -1030,12 +944,11 @@ void Canvas<T>::FillInFrame(void) const
     // Draw quads. Quads indices have already been sent. -------------------------
     {
         constexpr unsigned int n_quads = 1u;
-        glUseProgram(_progID_onscr_q);
+        prog_onscr_q_.Use();
         glBindVertexArray(_vaoID_frame);
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, _iboID_frame_onscr_q);
         glDrawElements(GL_QUADS, 4 * n_quads, GL_UNSIGNED_INT, NULL);
         //glBindVertexArray(0); // Not really needed.
-        //glUseProgram(0); // Not really needed.
     }
 }
 
@@ -1056,13 +969,12 @@ void Canvas<T>::DrawFrame(void) const
     // Draw wires. Wires indices have already been sent. -------------------------
     {
         constexpr unsigned int n_wires = 4u;
-        glUseProgram(_progID_onscr_w);
+        prog_onscr_w_.Use();
         glLineWidth(2.0f);
         glBindVertexArray(_vaoID_frame);
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, _iboID_frame_onscr_w);
         glDrawElements(GL_LINES, 2 * n_wires, GL_UNSIGNED_INT, NULL);
         //glBindVertexArray(0); // Not really needed.
-        //glUseProgram(0); // Not really needed.
     }
 }
 
@@ -1137,30 +1049,32 @@ void Canvas<T>::DrawDrawable(const Drawable<T>* const p_graph, const SizeInfo& p
     glfwMakeContextCurrent(_window);
 #endif
 
+    glPushDebugGroup(GL_DEBUG_SOURCE_APPLICATION, 0, -1, "Draw drawable");
+
     const SizeInfo& cur_size = p_graph->GetSizeInfo();
 
     // Draw markers. Markers indices have already been sent. ---------------------
     {
-        glUseProgram(_progID_m);
+        prog_m_.Use();
         glPointSize(p_graph->GetMarkerSize());
         glBindVertexArray(_vaoID_graphs);
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, _iboID_graphs_m);
         glDrawElementsBaseVertex(GL_POINTS, 1 * cur_size._n_m, GL_UNSIGNED_INT,
             (GLvoid*)(p_offset._n_m * sizeof(marker_t)), (GLint)p_offset._n_v);
         //glBindVertexArray(0); // Not really needed.
-        //glUseProgram(0); // Not really needed.
     }
     // Draw wires. Wires indices have already been sent. -------------------------
     {
-        glUseProgram(_progID_w);
+        prog_w_.Use();
         glLineWidth(p_graph->GetLineWidth());
         glBindVertexArray(_vaoID_graphs);
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, _iboID_graphs_w);
         glDrawElementsBaseVertex(GL_LINES, 2 * cur_size._n_w, GL_UNSIGNED_INT,
             (GLvoid*)(p_offset._n_w * sizeof(wire_t)), (GLint)p_offset._n_v);
         //glBindVertexArray(0); // Not really needed.
-        //glUseProgram(0); // Not really needed.
     }
+
+    glPopDebugGroup();
 }
 
 // 6. Cursor =====================================================================
@@ -1180,6 +1094,8 @@ void Canvas<T>::DrawCursor(const double xs, const double ys) const
     }
 
     this->SwitchToFullWindow(); //TODO move outside?
+
+    glPushDebugGroup(GL_DEBUG_SOURCE_APPLICATION, 0, -1, "Draw cursor");
 
     // Send vertices and colors. -------------------------------------------------
     {
@@ -1203,14 +1119,15 @@ void Canvas<T>::DrawCursor(const double xs, const double ys) const
     // Draw wires. Wires indices have already been sent. -------------------------
     {
         constexpr unsigned int n_wires = 2u;
-        glUseProgram(_progID_onscr_w);
+        prog_onscr_w_.Use();
         glEnable(GL_LINE_STIPPLE);
         glLineStipple(1, 0x00FF);
         glLineWidth(cursor_line_width_);
         buf_set_cursor_.Draw(n_wires);
         glDisable(GL_LINE_STIPPLE);
-        //glUseProgram(0); // Not really needed.
     }
+
+    glPopDebugGroup();
 }
 
 // 7. Selection rectangle ========================================================
@@ -1227,6 +1144,8 @@ void Canvas<T>::DrawSelRectangle(const double xs0, const double ys0,
 #endif
 
     this->SwitchToFrame(); //TODO move outside?
+
+    glPushDebugGroup(GL_DEBUG_SOURCE_APPLICATION, 0, -1, "Draw selection rectangle");
 
     // Send vertices and colors. -------------------------------------------------
     {
@@ -1254,23 +1173,23 @@ void Canvas<T>::DrawSelRectangle(const double xs0, const double ys0,
     {
         // Draw wires. Wires indices have already been sent. ---------------------
         constexpr unsigned int n_wires = 4u;
-        glUseProgram(_progID_w);
+        prog_w_.Use();
         glLineWidth(2.0f);
         glBindVertexArray(_vaoID_sel);
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, _iboID_sel_w);
         glDrawElements(GL_LINES, 2 * n_wires, GL_UNSIGNED_INT, NULL);
         //glBindVertexArray(0); // Not really needed.
-        //glUseProgram(0); // Not really needed.
 
         // Draw quads. Quads indices have already been sent. ---------------------
         constexpr unsigned int n_quads = 1u;
-        glUseProgram(_progID_sel_q);
+        prog_sel_q_.Use();
         glBindVertexArray(_vaoID_sel);
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, _iboID_sel_q);
         glDrawElements(GL_QUADS, 4 * n_quads, GL_UNSIGNED_INT, NULL);
         //glBindVertexArray(0); // Not really needed.
-        //glUseProgram(0); // Not really needed.
     }
+
+    glPopDebugGroup();
 }
 
 // 8. Circles ====================================================================
@@ -1290,6 +1209,8 @@ void Canvas<T>::DrawCircles(const double xs, const double ys) const
     }
 
     this->SwitchToFrame(); //TODO move outside?
+
+    glPushDebugGroup(GL_DEBUG_SOURCE_APPLICATION, 0, -1, "Draw circles");
 
     const unsigned int n_vert = (unsigned int)_graphs.size();
     //const unsigned int n_markers = (unsigned int)_graphs.size();
@@ -1322,10 +1243,11 @@ void Canvas<T>::DrawCircles(const double xs, const double ys) const
     }
     // Draw. ---------------------------------------------------------------------
     {
-        glUseProgram(_progID_c);
+        prog_c_.Use();
         buf_set_circles_.DrawMarkers(n_markers);
-        //glUseProgram(0); // Not really needed.
     }
+
+    glPopDebugGroup();
 }
 
 // 9. Text =======================================================================
@@ -1885,33 +1807,12 @@ void Canvas<T>::UpdateMatricesReshape(void)
     //     0.0,                     0.0,                     1.0, 0.0,
     //    -1.0,                    -1.0,                     0.0, 1.0);
 
-    glProgramUniformMatrix4fv(_progID_sel_q, _s2v_unif_sel_q, 1, GL_FALSE, _screen_to_viewport.GetData());
-    glProgramUniformMatrix4fv(_progID_sel_q, _v2c_unif_sel_q, 1, GL_FALSE, _viewport_to_clip.GetData());
-    glProgramUniformMatrix4fv(_progID_sel_q, _s2c_unif_sel_q, 1, GL_FALSE, _screen_to_clip.GetData());
-
-    //glProgramUniformMatrix4fv(_progID_onscr_q, _s2v_unif_onscr_q, 1, GL_FALSE, _screen_to_viewport.GetData());
-    //glProgramUniformMatrix4fv(_progID_onscr_q, _v2c_unif_onscr_q, 1, GL_FALSE, _viewport_to_clip.GetData());
-    glProgramUniformMatrix4fv(_progID_onscr_q, _s2c_unif_onscr_q, 1, GL_FALSE, _screen_to_clip.GetData());
-
-    //glProgramUniformMatrix4fv(_progID_tr, _s2v_unif_tr, 1, GL_FALSE, _screen_to_viewport.GetData());
-    //glProgramUniformMatrix4fv(_progID_tr, _v2c_unif_tr, 1, GL_FALSE, _viewport_to_clip.GetData());
-    //glProgramUniformMatrix4fv(_progID_tr, _s2c_unif_tr, 1, GL_FALSE, _screen_to_clip.GetData());
-
-    glProgramUniformMatrix4fv(_progID_w, _s2v_unif_w, 1, GL_FALSE, _screen_to_viewport.GetData());
-    glProgramUniformMatrix4fv(_progID_w, _v2c_unif_w, 1, GL_FALSE, _viewport_to_clip.GetData());
-    glProgramUniformMatrix4fv(_progID_w, _s2c_unif_w, 1, GL_FALSE, _screen_to_clip.GetData());
-
-    ////glProgramUniformMatrix4fv(_progID_onscr_w, _s2v_unif_onscr_w, 1, GL_FALSE, _screen_to_viewport.GetData());
-    ////glProgramUniformMatrix4fv(_progID_onscr_w, _v2c_unif_onscr_w, 1, GL_FALSE, _viewport_to_clip.GetData());
-    glProgramUniformMatrix4fv(_progID_onscr_w, _s2c_unif_onscr_w, 1, GL_FALSE, _screen_to_clip.GetData());
-
-    glProgramUniformMatrix4fv(_progID_m, _s2v_unif_m, 1, GL_FALSE, _screen_to_viewport.GetData());
-    glProgramUniformMatrix4fv(_progID_m, _v2c_unif_m, 1, GL_FALSE, _viewport_to_clip.GetData());
-    glProgramUniformMatrix4fv(_progID_m, _s2c_unif_m, 1, GL_FALSE, _screen_to_clip.GetData());
-
-    //glProgramUniformMatrix4fv(_progID_c, _s2v_unif_c, 1, GL_FALSE, _screen_to_viewport.GetData());
-    glProgramUniformMatrix4fv(_progID_c, _v2c_unif_c, 1, GL_FALSE, _viewport_to_clip.GetData());
-    //glProgramUniformMatrix4fv(_progID_c, _s2c_unif_c, 1, GL_FALSE, _screen_to_clip.GetData());
+    prog_sel_q_.CommitCamera1(_screen_to_viewport, _viewport_to_clip, _screen_to_clip);
+    prog_onscr_q_.CommitCamera1(_screen_to_viewport, _viewport_to_clip, _screen_to_clip);
+    prog_w_.CommitCamera1(_screen_to_viewport, _viewport_to_clip, _screen_to_clip);
+    prog_onscr_w_.CommitCamera1(_screen_to_viewport, _viewport_to_clip, _screen_to_clip);
+    prog_m_.CommitCamera1(_screen_to_viewport, _viewport_to_clip, _screen_to_clip);
+    prog_c_.CommitCamera1(_screen_to_viewport, _viewport_to_clip, _screen_to_clip);
 }
 
 template<typename T>
@@ -1953,14 +1854,13 @@ void Canvas<T>::UpdateMatricesPanZoom(void)
 
     // Double precision matrix
     //_screen_to_visrange_hp = clip_to_visrange_hp * _screen_to_clip_hp;
-
-    glProgramUniformMatrix4fv(_progID_sel_q,   _r2c_unif_sel_q,   1, GL_FALSE, _visrange_to_clip.GetData());
-    ////glProgramUniformMatrix4fv(_progID_onscr_q, _r2c_unif_onscr_q, 1, GL_FALSE, _visrange_to_clip.GetData());
-    //glProgramUniformMatrix4fv(_progID_tr,      _r2c_unif_tr,      1, GL_FALSE, _visrange_to_clip.GetData());
-    glProgramUniformMatrix4fv(_progID_w,       _r2c_unif_w,       1, GL_FALSE, _visrange_to_clip.GetData());
-    ////glProgramUniformMatrix4fv(_progID_onscr_w, _r2c_unif_onscr_w, 1, GL_FALSE, _visrange_to_clip.GetData());
-    glProgramUniformMatrix4fv(_progID_m,       _r2c_unif_m,       1, GL_FALSE, _visrange_to_clip.GetData());
-    glProgramUniformMatrix4fv(_progID_c,       _r2c_unif_c,       1, GL_FALSE, _visrange_to_clip.GetData());
+    
+    prog_sel_q_.CommitCamera2(_visrange_to_clip);
+    prog_onscr_q_.CommitCamera2(_visrange_to_clip);
+    prog_w_.CommitCamera2(_visrange_to_clip);
+    prog_onscr_w_.CommitCamera2(_visrange_to_clip);
+    prog_m_.CommitCamera2(_visrange_to_clip);
+    prog_c_.CommitCamera2(_visrange_to_clip);
 }
 
 // ===============================================================================
@@ -2052,7 +1952,7 @@ void Canvas<T>::SetInFrameBackgroundColor(const color_t& color)
     glfwMakeContextCurrent(_window);
 #endif
     in_frame_bg_color_ = color;
-    glProgramUniform4fv(_progID_onscr_q, _fr_bg_unif_onscr_q, 1,
+    glProgramUniform4fv(prog_onscr_q_.GetProgId(), _fr_bg_unif_onscr_q, 1,
         in_frame_bg_color_.GetData());
 }
 

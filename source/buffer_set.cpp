@@ -7,7 +7,8 @@
 namespace tiny_graph_plot
 {
 
-BufferSet::BufferSet()
+BufferSet::BufferSet(const char* const name)
+:   name_(name)
 {
 }
 
@@ -24,6 +25,10 @@ void BufferSet::Generate()
     glGenVertexArrays(1, &vao_);
     glGenBuffers(1, &vbo_);
     glGenBuffers(1, &ibo_);
+    
+    glObjectLabel(GL_VERTEX_ARRAY, vao_, -1, (name_ + std::string("_vao")).c_str());
+    glObjectLabel(GL_BUFFER, vbo_, -1, (name_ + std::string("_vbo")).c_str());
+    glObjectLabel(GL_BUFFER, ibo_, -1, (name_ + std::string("_ibo")).c_str());
 }
 
 void BufferSet::Allocate(const unsigned int n_vert, const void* const data) const

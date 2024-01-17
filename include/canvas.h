@@ -2,14 +2,16 @@
 
 #include <vector>
 #include <string>
-#include "tiny_gl_text_renderer/text_renderer.h"
-#include "tiny_gl_text_renderer/data_types.h"
+
 #include "tiny_gl_text_renderer/colors.h"
+#include "tiny_gl_text_renderer/data_types.h"
 #include "tiny_gl_text_renderer/mat4.h"
+#include "tiny_gl_text_renderer/text_renderer.h"
 #include "buffer_set.h"
-#include "xy_range.h"
 #include "grid.h"
+#include "shader_program.h"
 #include "user_window.h"
+#include "xy_range.h"
 
 struct GLFWwindow;
 
@@ -23,6 +25,7 @@ using tiny_gl_text_renderer::Mat4f;
 using tiny_gl_text_renderer::Mat4d;
 
 typedef unsigned int GLuint;
+typedef int GLint;
 
 template<typename T> class CanvasManager;
 template<typename T> class Drawable;
@@ -75,75 +78,37 @@ private:
     void UpdateTexTextGridSize();
     void UpdateTexAxesValues();
 private:
-    // VAOs, VBOs, IBOs
-    GLuint _vaoID_grid;     //!< 1. Grid
+    // Buffers
+    GLuint _vaoID_grid;         //!< 1. Grid
     GLuint _vboID_grid;
     GLuint _iboID_grid_w;
     GLuint _iboID_grid_coarse_w;
-    BufferSet buf_set_axes_; //!< 2. Axes
-    BufferSet buf_set_vref_; //!< 3. Vref
-    GLuint _vaoID_frame;    //!< 4. Frame
+    BufferSet buf_set_axes_;    //!< 2. Axes
+    BufferSet buf_set_vref_;    //!< 3. Vref
+    GLuint _vaoID_frame;        //!< 4. Frame
     GLuint _vboID_frame;
     GLuint _iboID_frame_onscr_w;
     GLuint _iboID_frame_onscr_q;
-    GLuint _vaoID_graphs;   //!< 5. Graphs
+    GLuint _vaoID_graphs;       //!< 5. Graphs
     GLuint _vboID_graphs;
     GLuint _iboID_graphs_w;
     GLuint _iboID_graphs_m;
-    BufferSet buf_set_cursor_; //!< 6. Cursor
-    GLuint _vaoID_sel;      //!< 7. Select rectangle
+    BufferSet buf_set_cursor_;  //!< 6. Cursor
+    GLuint _vaoID_sel;          //!< 7. Select rectangle
     GLuint _vboID_sel;
     GLuint _iboID_sel_q;
     GLuint _iboID_sel_w;
     BufferSet buf_set_circles_; //!< 8. Circles
-    // Programs
-    GLuint _progID_sel_q;
-    GLuint _progID_onscr_q;
-    //GLuint _progID_tr;
-    GLuint _progID_w;
-    GLuint _progID_onscr_w;
-    GLuint _progID_m;
-    GLuint _progID_c;
-    // Uniforms
-    // --------------------
-    GLuint _fr_bg_unif_onscr_q; //!< In frame background color
-    // --------------------
-    GLuint _s2v_unif_sel_q; //!< screen-to-viewport matrix
-    GLuint _v2c_unif_sel_q; //!< viewport-to-clip matrix
-    GLuint _s2c_unif_sel_q; //!< screen-to-clip matrix
-    GLuint _r2c_unif_sel_q; //!< visrange-to-clip matrix
-    // --------------------------
-    ////GLuint _s2v_unif_onscr_q; //!< screen-to-viewport matrix
-    ////GLuint _v2c_unif_onscr_q; //!< viewport-to-clip matrix
-    GLuint _s2c_unif_onscr_q;     //!< screen-to-clip matrix
-    ////GLuint _v2c_unif_onscr_q; //!< visrange-to-clip matrix
-    // -------------------
-    //GLuint _s2v_unif_tr; //!< screen-to-viewport matrix
-    //GLuint _v2c_unif_tr; //!< viewport-to-clip matrix
-    //GLuint _s2c_unif_tr; //!< screen-to-clip matrix
-    //GLuint _r2c_unif_tr; //!< visrange-to-clip matrix
-    // --------------------------
-    ////GLuint _s2v_unif_onscr_w; //!< screen-to-viewport matrix
-    ////GLuint _v2c_unif_onscr_w; //!< viewport-to-clip matrix
-    GLuint _s2c_unif_onscr_w;     //!< screen-to-clip matrix
-    ////GLuint _r2c_unif_onscr_w; //!< visrange-to-clip matrix
-    // ----------------
-    GLuint _s2v_unif_w;  //!< screen-to-viewport matrix
-    GLuint _v2c_unif_w;  //!< viewport-to-clip matrix
-    GLuint _s2c_unif_w;  //!< screen-to-clip matrix
-    GLuint _r2c_unif_w;  //!< visrange-to-clip matrix
-    // ----------------
-    GLuint _s2v_unif_m; //!< screen-to-viewport matrix
-    GLuint _v2c_unif_m; //!< viewport-to-clip matrix
-    GLuint _s2c_unif_m; //!< screen-to-clip matrix
-    GLuint _r2c_unif_m; //!< visrange-to-clip matrix
-    // ----------------
-    //GLuint _s2v_unif_c; //!< screen-to-viewport matrix
-    GLuint _v2c_unif_c; //!< viewport-to-clip matrix
-    //GLuint _s2c_unif_c; //!< screen-to-clip matrix
-    GLuint _r2c_unif_c; //!< visrange-to-clip matrix
-    GLuint _circle_r_unif_c;
-    // ----------------
+    // Programs with camera uniforms
+    ShaderProgram prog_sel_q_;
+    ShaderProgram prog_onscr_q_;
+    ShaderProgram prog_w_;
+    ShaderProgram prog_onscr_w_;
+    ShaderProgram prog_m_;
+    ShaderProgram prog_c_;
+    // Other uniforms
+    GLint _fr_bg_unif_onscr_q; //!< In frame background color
+    GLint _circle_r_unif_c;
 private:
     std::vector<const Graph<T>*> _graphs;
     std::vector<const Histogram1d<T, unsigned long>*> _histograms;
