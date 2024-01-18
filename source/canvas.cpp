@@ -16,7 +16,6 @@
 namespace tiny_graph_plot
 {
 
-//#define DEBUG_CALLS
 #define SET_CONTEXT
 
 using tiny_gl_text_renderer::marker_t;
@@ -43,9 +42,6 @@ Canvas<T>::Canvas(GLFWwindow* window, const unsigned int w, const unsigned int h
     prog_m_("prog_markers"),
     prog_c_("prog_circles")
 {
-#ifdef DEBUG_CALLS
-    printf("Canvas::Canvas\n");
-#endif
 #ifdef SET_CONTEXT
     glfwMakeContextCurrent(_window);
 #endif
@@ -56,9 +52,6 @@ Canvas<T>::Canvas(GLFWwindow* window, const unsigned int w, const unsigned int h
 template<typename T>
 Canvas<T>::~Canvas(void)
 {
-#ifdef DEBUG_CALLS
-    printf("Canvas::~Canvas\n");
-#endif
 #ifdef SET_CONTEXT
     glfwMakeContextCurrent(_window);
 #endif
@@ -105,9 +98,6 @@ void Canvas<T>::AddHistogram(const Histogram1d<T, unsigned long>& p_histo)
 template<typename T>
 void Canvas<T>::Show(void)
 {
-#ifdef DEBUG_CALLS
-    printf("Canvas::Show\n");
-#endif
 #ifdef SET_CONTEXT
     glfwMakeContextCurrent(_window);
 #endif
@@ -325,9 +315,6 @@ void Canvas<T>::Show(void)
 template<typename T>
 void Canvas<T>::Draw(void) /*const*/
 {
-#ifdef DEBUG_CALLS
-    printf("Canvas::Draw\n");
-#endif
 #ifdef SET_CONTEXT
     glfwMakeContextCurrent(_window);
 #endif
@@ -369,9 +356,6 @@ void Canvas<T>::Draw(void) /*const*/
 template<typename T>
 void Canvas<T>::Init(void) 
 {
-#ifdef DEBUG_CALLS
-    printf("Canvas::Init\n");
-#endif
 #ifdef SET_CONTEXT
     glfwMakeContextCurrent(_window);
 #endif
@@ -466,9 +450,6 @@ void Canvas<T>::Init(void)
 template<typename T>
 void Canvas<T>::Clear(void) const
 {
-#ifdef DEBUG_CALLS
-    printf("Canvas::Clear\n");
-#endif
 #ifdef SET_CONTEXT
     glfwMakeContextCurrent(_window);
 #endif
@@ -479,9 +460,6 @@ void Canvas<T>::Clear(void) const
 template<typename T>
 void Canvas<T>::Reshape(int p_width, int p_height)
 {
-#ifdef DEBUG_CALLS
-    printf("Canvas::Reshape\n");
-#endif
 #ifdef SET_CONTEXT
     glfwMakeContextCurrent(_window);
 #endif
@@ -549,9 +527,6 @@ void Canvas<T>::SwitchToFrame(void) const
 template<typename T>
 void Canvas<T>::AllocateBuffersForFixedSizedData(void) const
 {
-#ifdef DEBUG_CALLS
-    printf("Canvas::AllocateBuffersForFixedSizedData\n");
-#endif
 #ifdef SET_CONTEXT
     glfwMakeContextCurrent(_window);
 #endif
@@ -610,9 +585,6 @@ void Canvas<T>::AllocateBuffersForFixedSizedData(void) const
 template<typename T>
 void Canvas<T>::SendFixedIndicesToGPU(void) const
 {
-#ifdef DEBUG_CALLS
-    printf("Canvas::SendFixedIndicesToGPU\n");
-#endif
 #ifdef SET_CONTEXT
     glfwMakeContextCurrent(_window);
 #endif
@@ -672,9 +644,6 @@ void Canvas<T>::SendFixedIndicesToGPU(void) const
 template<typename T>
 int Canvas<T>::SendGridToGPU(void)
 {
-#ifdef DEBUG_CALLS
-    printf("Canvas::SendGridToGPU\n");
-#endif
 #ifdef SET_CONTEXT
     glfwMakeContextCurrent(_window);
 #endif
@@ -736,9 +705,6 @@ int Canvas<T>::SendGridToGPU(void)
 template<typename T>
 void Canvas<T>::DrawGrid(void) const
 {
-#ifdef DEBUG_CALLS
-    printf("Canvas::DrawGrid\n");
-#endif
 #ifdef SET_CONTEXT
     glfwMakeContextCurrent(_window);
 #endif
@@ -801,9 +767,6 @@ void Canvas<T>::DrawGrid(void) const
 template<typename T>
 void Canvas<T>::DrawAxes(void) const
 {
-#ifdef DEBUG_CALLS
-    printf("Canvas::DrawAxes\n");
-#endif
 #ifdef SET_CONTEXT
     glfwMakeContextCurrent(_window);
 #endif
@@ -849,9 +812,6 @@ void Canvas<T>::DrawAxes(void) const
 template<typename T>
 void Canvas<T>::DrawVref(void) const
 {
-#ifdef DEBUG_CALLS
-    printf("Canvas::DrawVref\n");
-#endif
 #ifdef SET_CONTEXT
     glfwMakeContextCurrent(_window);
 #endif
@@ -891,9 +851,6 @@ void Canvas<T>::DrawVref(void) const
 template<typename T>
 void Canvas<T>::SendFrameVerticesToGPU(void) const
 {
-#ifdef DEBUG_CALLS
-    printf("Canvas::SendFrameVerticesToGPU\n");
-#endif
 #ifdef SET_CONTEXT
     glfwMakeContextCurrent(_window);
 #endif
@@ -926,9 +883,6 @@ void Canvas<T>::SendFrameVerticesToGPU(void) const
 template<typename T>
 void Canvas<T>::FillInFrame(void) const
 {
-#ifdef DEBUG_CALLS
-    printf("Canvas::FillInFrame\n");
-#endif
 #ifdef SET_CONTEXT
     glfwMakeContextCurrent(_window);
 #endif
@@ -955,9 +909,6 @@ void Canvas<T>::FillInFrame(void) const
 template<typename T>
 void Canvas<T>::DrawFrame(void) const
 {
-#ifdef DEBUG_CALLS
-    printf("Canvas::DrawFrame\n");
-#endif
 #ifdef SET_CONTEXT
     glfwMakeContextCurrent(_window);
 #endif
@@ -983,9 +934,6 @@ void Canvas<T>::DrawFrame(void) const
 template<typename T>
 void Canvas<T>::SendDrawableToGPU(const Drawable<T>* const p_graph, const SizeInfo& p_offset) const
 {
-#ifdef DEBUG_CALLS
-    printf("Canvas::SendGraphToGPU\n");
-#endif
 #ifdef SET_CONTEXT
     glfwMakeContextCurrent(_window);
 #endif
@@ -1042,9 +990,6 @@ void Canvas<T>::SendDrawableToGPU(const Drawable<T>* const p_graph, const SizeIn
 template<typename T>
 void Canvas<T>::DrawDrawable(const Drawable<T>* const p_graph, const SizeInfo& p_offset) const
 {
-#ifdef DEBUG_CALLS
-    printf("Canvas::DrawGraph\n");
-#endif
 #ifdef SET_CONTEXT
     glfwMakeContextCurrent(_window);
 #endif
@@ -1082,9 +1027,6 @@ void Canvas<T>::DrawDrawable(const Drawable<T>* const p_graph, const SizeInfo& p
 template<typename T>
 void Canvas<T>::DrawCursor(const double xs, const double ys) const
 {
-#ifdef DEBUG_CALLS
-    printf("Canvas::DrawCursor\n");
-#endif
 #ifdef SET_CONTEXT
     glfwMakeContextCurrent(_window);
 #endif
@@ -1136,9 +1078,6 @@ template<typename T>
 void Canvas<T>::DrawSelRectangle(const double xs0, const double ys0,
     const double xs1, const double ys1) const
 {
-#ifdef DEBUG_CALLS
-    printf("Canvas::DrawSelRectangle\n");
-#endif
 #ifdef SET_CONTEXT
     glfwMakeContextCurrent(_window);
 #endif
@@ -1197,9 +1136,6 @@ void Canvas<T>::DrawSelRectangle(const double xs0, const double ys0,
 template<typename T>
 void Canvas<T>::DrawCircles(const double xs, const double ys) const
 {
-#ifdef DEBUG_CALLS
-    printf("Canvas::DrawCircles\n");
-#endif
 #ifdef SET_CONTEXT
     glfwMakeContextCurrent(_window);
 #endif
@@ -1255,9 +1191,6 @@ void Canvas<T>::DrawCircles(const double xs, const double ys) const
 template<typename T>
 void Canvas<T>::UpdateTexTextCur(const double xs, const double ys)
 {
-#ifdef DEBUG_CALLS
-    printf("Canvas::UpdateTexTextCur\n");
-#endif
 #ifdef SET_CONTEXT
     glfwMakeContextCurrent(_window);
 #endif
@@ -1316,9 +1249,6 @@ void Canvas<T>::UpdateTexTextCur(const double xs, const double ys)
 template<typename T>
 void Canvas<T>::UpdateTexTextRef(const double xs, const double ys)
 {
-#ifdef DEBUG_CALLS
-    printf("Canvas::UpdateTexTextRef\n");
-#endif
 #ifdef SET_CONTEXT
     glfwMakeContextCurrent(_window);
 #endif
@@ -1350,9 +1280,6 @@ void Canvas<T>::UpdateTexTextRef(const double xs, const double ys)
 template<typename T>
 void Canvas<T>::UpdateTexTextGridSize(void)
 {
-#ifdef DEBUG_CALLS
-    printf("Canvas::UpdateTUpdateTexTextGridSizeexTextRef\n");
-#endif
 #ifdef SET_CONTEXT
     glfwMakeContextCurrent(_window);
 #endif
@@ -1373,9 +1300,6 @@ void Canvas<T>::UpdateTexTextGridSize(void)
 template<typename T>
 void Canvas<T>::UpdateTexAxesValues(void)
 {
-#ifdef DEBUG_CALLS
-    printf("Canvas::UpdateTexAxesValues\n");
-#endif
 #ifdef SET_CONTEXT
     glfwMakeContextCurrent(_window);
 #endif
@@ -1445,9 +1369,6 @@ void Canvas<T>::UpdateTexAxesValues(void)
 template<typename T>
 void Canvas<T>::CenterView(const double xs, const double ys)
 {
-#ifdef DEBUG_CALLS
-    printf("Canvas::Center: % 0.6f\t% 0.6f\n", xs, ys);
-#endif
 ////#ifdef SET_CONTEXT
 ////    glfwMakeContextCurrent(_window);
 ////#endif
@@ -1466,9 +1387,6 @@ void Canvas<T>::CenterView(const double xs, const double ys)
 template<typename T>
 void Canvas<T>::Pan(const double xs, const double ys)
 {
-#ifdef DEBUG_CALLS
-    printf("Canvas::Pan: % 0.6f\t% 0.6f\n", xs, ys);
-#endif
 ////#ifdef SET_CONTEXT
 ////    glfwMakeContextCurrent(_window);
 ////#endif
@@ -1489,9 +1407,6 @@ void Canvas<T>::Pan(const double xs, const double ys)
 template<typename T>
 void Canvas<T>::Zoom(const double xs, const double ys)
 {
-#ifdef DEBUG_CALLS
-    printf("Canvas::Zoom: % 0.6f\t% 0.6f\n", xs, ys);
-#endif
 ////#ifdef SET_CONTEXT
 ////    glfwMakeContextCurrent(_window);
 ////#endif
@@ -1558,10 +1473,6 @@ void Canvas<T>::ZoomY(const double xs, const double ys)
 template<typename T>
 void Canvas<T>::ZoomTo(const double xs0, const double ys0, const double xs1, const double ys1)
 {
-#ifdef DEBUG_CALLS
-    printf("Canvas::ZoomTo: % 0.6f\t% 0.6f\t% 0.6f\t% 0.6f\n",
-        xs0, ys0, xs1, ys1);
-#endif
     ////#ifdef SET_CONTEXT
     ////    glfwMakeContextCurrent(_window);
     ////#endif
@@ -1583,9 +1494,6 @@ void Canvas<T>::ZoomTo(const double xs0, const double ys0, const double xs1, con
 template<typename T>
 void Canvas<T>::ResetCamera(void)
 {
-#ifdef DEBUG_CALLS
-    printf("Canvas::ResetCamera\n");
-#endif
 ////#ifdef SET_CONTEXT
 ////    glfwMakeContextCurrent(_window);
 ////#endif
@@ -1599,9 +1507,6 @@ void Canvas<T>::ResetCamera(void)
 template<typename T>
 void Canvas<T>::SetPrevViewport(void)
 {
-#ifdef DEBUG_CALLS
-    printf("Canvas::SetPrevViewport\n");
-#endif
 ////#ifdef SET_CONTEXT
 ////    glfwMakeContextCurrent(_window);
 ////#endif
@@ -1615,9 +1520,6 @@ void Canvas<T>::SetPrevViewport(void)
 template<typename T>
 void Canvas<T>::FixedAspRatCamera(void)
 {
-#ifdef DEBUG_CALLS
-    printf("Canvas::FixedAspRatCamera\n");
-#endif
 ////#ifdef SET_CONTEXT
 ////    glfwMakeContextCurrent(_window);
 ////#endif
@@ -1646,17 +1548,13 @@ void Canvas<T>::FixedAspRatCamera(void)
 
     this->UpdateMatricesReshape();
     this->UpdateMatricesPanZoom();
-    int res = this->SendGridToGPU();
+    const int res = this->SendGridToGPU();
     if (res == 0) { this->UpdateTexTextGridSize(); }
 }
 
 template<typename T>
 void Canvas<T>::ExportSnapshot(void)
 {
-#ifdef DEBUG_CALLS
-    printf("Canvas::ExportSnapshot\n");
-#endif
-
 #ifdef _WIN32
     size_t len[2];
     char drive_dir[2][_MAX_PATH];
@@ -1729,9 +1627,6 @@ void Canvas<T>::ExportPNG(const char* const dir, const char* const filename) con
 template<typename T>
 void Canvas<T>::UpdateMatricesReshape(void)
 {
-#ifdef DEBUG_CALLS
-    printf("Canvas::UpdateMatricesReshape\n");
-#endif
 #ifdef SET_CONTEXT
     glfwMakeContextCurrent(_window);
 #endif
@@ -1818,9 +1713,6 @@ void Canvas<T>::UpdateMatricesReshape(void)
 template<typename T>
 void Canvas<T>::UpdateMatricesPanZoom(void)
 {
-#ifdef DEBUG_CALLS
-    printf("Canvas::UpdateMatricesPanZoom\n");
-#endif
 #ifdef SET_CONTEXT
     glfwMakeContextCurrent(_window);
 #endif
@@ -1868,9 +1760,6 @@ void Canvas<T>::UpdateMatricesPanZoom(void)
 template<typename T>
 void Canvas<T>::UpdateSizeLimits(void)
 {
-#ifdef DEBUG_CALLS
-    printf("Canvas::UpdateSizeLimits\n");
-#endif
 #ifdef SET_CONTEXT
     glfwMakeContextCurrent(_window);
 #endif
@@ -1888,9 +1777,6 @@ void Canvas<T>::UpdateSizeLimits(void)
 template<typename T>
 void Canvas<T>::FinalizeTextRenderer(void)
 {
-#ifdef DEBUG_CALLS
-    printf("Canvas::FinalizeTextRenderer\n");
-#endif
 #ifdef SET_CONTEXT
     glfwMakeContextCurrent(_window);
 #endif
@@ -1931,9 +1817,6 @@ void Canvas<T>::SetBrightColorScheme(void)
 template<typename T>
 void Canvas<T>::SetBackgroundColor(const color_t& color)
 {
-#ifdef DEBUG_CALLS
-    printf("Canvas::SetBackgroundColor\n");
-#endif
 #ifdef SET_CONTEXT
     glfwMakeContextCurrent(_window);
 #endif
@@ -1945,9 +1828,6 @@ void Canvas<T>::SetBackgroundColor(const color_t& color)
 template<typename T>
 void Canvas<T>::SetInFrameBackgroundColor(const color_t& color)
 {
-#ifdef DEBUG_CALLS
-    printf("Canvas::SetInFrameBackgroundColor\n");
-#endif
 #ifdef SET_CONTEXT
     glfwMakeContextCurrent(_window);
 #endif
