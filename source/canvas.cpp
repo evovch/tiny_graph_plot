@@ -1380,7 +1380,7 @@ void Canvas<T>::CenterView(const double xs, const double ys)
     _visible_range.MoveY((float)pr.y() - cur_center_y);
 
     this->UpdateMatricesPanZoom();
-    int res = this->SendGridToGPU();
+    const int res = this->SendGridToGPU();
     if (res == 0) { this->UpdateTexTextGridSize(); }
 }
 
@@ -1400,7 +1400,7 @@ void Canvas<T>::Pan(const double xs, const double ys)
     _visible_range.MoveY(-shift_y);
 
     this->UpdateMatricesPanZoom();
-    int res = this->SendGridToGPU();
+    const int res = this->SendGridToGPU();
     if (res == 0) { this->UpdateTexTextGridSize(); }
 }
 
@@ -1441,7 +1441,7 @@ void Canvas<T>::Zoom(const double xs, const double ys)
     }
 
     this->UpdateMatricesPanZoom();
-    int res = this->SendGridToGPU();
+    const int res = this->SendGridToGPU();
     if (res == 0) { this->UpdateTexTextGridSize(); }
 }
 
@@ -1487,7 +1487,7 @@ void Canvas<T>::ZoomTo(const double xs0, const double ys0, const double xs1, con
         static_cast<float>(std::fmax(p0r.y(), p1r.y())));
 
     this->UpdateMatricesPanZoom();
-    int res = this->SendGridToGPU();
+    const int res = this->SendGridToGPU();
     if (res == 0) { this->UpdateTexTextGridSize(); }
 }
 
@@ -1500,7 +1500,7 @@ void Canvas<T>::ResetCamera(void)
     _visible_range = _total_xy_range;
     this->UpdateMatricesReshape();
     this->UpdateMatricesPanZoom();
-    int res = this->SendGridToGPU();
+    const int res = this->SendGridToGPU();
     if (res == 0) { this->UpdateTexTextGridSize(); }
 }
 
@@ -1513,7 +1513,7 @@ void Canvas<T>::SetPrevViewport(void)
     _visible_range = _visible_range_start;
     this->UpdateMatricesReshape();
     this->UpdateMatricesPanZoom();
-    int res = this->SendGridToGPU();
+    const int res = this->SendGridToGPU();
     if (res == 0) { this->UpdateTexTextGridSize(); }
 }
 
