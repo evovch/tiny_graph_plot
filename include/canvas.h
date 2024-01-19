@@ -83,8 +83,8 @@ private:
     GLuint _vboID_grid;
     GLuint _iboID_grid_w;
     GLuint _iboID_grid_coarse_w;
-    BufferSet buf_set_axes_;    //!< 2. Axes
-    BufferSet buf_set_vref_;    //!< 3. Vref
+    BufferSet<vertex_colored_t> buf_set_axes_; //!< 2. Axes
+    BufferSet<vertex_colored_t> buf_set_vref_; //!< 3. Vref
     GLuint _vaoID_frame;        //!< 4. Frame
     GLuint _vboID_frame;
     GLuint _iboID_frame_onscr_w;
@@ -93,12 +93,12 @@ private:
     GLuint _vboID_graphs;
     GLuint _iboID_graphs_w;
     GLuint _iboID_graphs_m;
-    BufferSet buf_set_cursor_;  //!< 6. Cursor
+    BufferSet<vertex_colored_t> buf_set_cursor_; //!< 6. Cursor
     GLuint _vaoID_sel;          //!< 7. Select rectangle
     GLuint _vboID_sel;
     GLuint _iboID_sel_q;
     GLuint _iboID_sel_w;
-    BufferSet buf_set_circles_; //!< 8. Circles
+    BufferSet<vertex_colored_t> buf_set_circles_; //!< 8. Circles
     // Programs with camera uniforms
     ShaderProgram prog_sel_q_;
     ShaderProgram prog_onscr_q_;

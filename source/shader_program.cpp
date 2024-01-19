@@ -20,6 +20,9 @@ void ShaderProgram::Generate(
     const char* const gsh_src,
     const char* const fsh_src)
 {
+    const std::string debug_message = std::string("Init program ") + name_;
+    glPushDebugGroup(GL_DEBUG_SOURCE_APPLICATION, 0, -1, debug_message.c_str());
+
     prog_ = glCreateProgram();
 
     glObjectLabel(GL_PROGRAM, prog_, -1, name_.c_str());
@@ -60,6 +63,8 @@ void ShaderProgram::Generate(
     v2c_unif_ = glGetUniformLocation(prog_, "viewport2clip");
     s2c_unif_ = glGetUniformLocation(prog_, "screen2clip");
     r2c_unif_ = glGetUniformLocation(prog_, "visrange2clip");
+
+    glPopDebugGroup();
 }
 
 void ShaderProgram::Use() const

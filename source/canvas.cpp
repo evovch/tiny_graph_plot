@@ -16,7 +16,7 @@
 namespace tiny_graph_plot
 {
 
-#define SET_CONTEXT
+//#define SET_CONTEXT
 
 using tiny_gl_text_renderer::marker_t;
 using tiny_gl_text_renderer::wire_t;
@@ -326,8 +326,8 @@ void Canvas<T>::Draw(void) /*const*/
     this->SwitchToFullWindow();
     this->DrawFrame();
     this->SwitchToFrame();
-    SizeInfo cur_offset; // Zeroed on construction
 
+    SizeInfo cur_offset; // Zeroed on construction
     glPushDebugGroup(GL_DEBUG_SOURCE_APPLICATION, 0, -1, "Draw graphs");
     for (const auto* const gr : _graphs) {
         if (gr->GetVisible()) {
@@ -363,31 +363,63 @@ void Canvas<T>::Init(void)
     // VAOs, VBOs, IBOs ----------------------------------------------------------
     glPushDebugGroup(GL_DEBUG_SOURCE_APPLICATION, 0, -1, "Init buffers");
     {
+        {
         glGenVertexArrays(1, &_vaoID_grid);
         glGenBuffers(1, &_vboID_grid);
         glGenBuffers(1, &_iboID_grid_w);
         glGenBuffers(1, &_iboID_grid_coarse_w);
 
+        const std::string name("grid");
+        glObjectLabel(GL_VERTEX_ARRAY, _vaoID_grid, -1, (name + std::string("_vao")).c_str());
+        glObjectLabel(GL_BUFFER, _vboID_grid, -1, (name + std::string("_vbo")).c_str());
+        glObjectLabel(GL_BUFFER, _iboID_grid_w, -1, (name + std::string("_ibo")).c_str());
+        glObjectLabel(GL_BUFFER, _iboID_grid_coarse_w, -1, (name + std::string("_coarse_ibo")).c_str());
+        }
+
         buf_set_axes_.Generate();
 
         buf_set_vref_.Generate();
 
+        {
         glGenVertexArrays(1, &_vaoID_frame);
         glGenBuffers(1, &_vboID_frame);
         glGenBuffers(1, &_iboID_frame_onscr_w);
         glGenBuffers(1, &_iboID_frame_onscr_q);
 
+        const std::string name("frame");
+        glObjectLabel(GL_VERTEX_ARRAY, _vaoID_frame, -1, (name + std::string("_vao")).c_str());
+        glObjectLabel(GL_BUFFER, _vboID_frame, -1, (name + std::string("_vbo")).c_str());
+        glObjectLabel(GL_BUFFER, _iboID_frame_onscr_w, -1, (name + std::string("_w_ibo")).c_str());
+        glObjectLabel(GL_BUFFER, _iboID_frame_onscr_q, -1, (name + std::string("_q_ibo")).c_str());
+        }
+
+        {
         glGenVertexArrays(1, &_vaoID_graphs);
         glGenBuffers(1, &_vboID_graphs);
         glGenBuffers(1, &_iboID_graphs_w);
         glGenBuffers(1, &_iboID_graphs_m);
 
+        const std::string name("graphs");
+        glObjectLabel(GL_VERTEX_ARRAY, _vaoID_graphs, -1, (name + std::string("_vao")).c_str());
+        glObjectLabel(GL_BUFFER, _vboID_graphs, -1, (name + std::string("_vbo")).c_str());
+        glObjectLabel(GL_BUFFER, _iboID_graphs_w, -1, (name + std::string("_w_ibo")).c_str());
+        glObjectLabel(GL_BUFFER, _iboID_graphs_m, -1, (name + std::string("_m_ibo")).c_str());
+        }
+
         buf_set_cursor_.Generate();
 
+        {
         glGenVertexArrays(1, &_vaoID_sel);
         glGenBuffers(1, &_vboID_sel);
         glGenBuffers(1, &_iboID_sel_q);
         glGenBuffers(1, &_iboID_sel_w);
+
+        const std::string name("sel");
+        glObjectLabel(GL_VERTEX_ARRAY, _vaoID_sel, -1, (name + std::string("_vao")).c_str());
+        glObjectLabel(GL_BUFFER, _vboID_sel, -1, (name + std::string("_vbo")).c_str());
+        glObjectLabel(GL_BUFFER, _iboID_sel_q, -1, (name + std::string("_q_ibo")).c_str());
+        glObjectLabel(GL_BUFFER, _iboID_sel_w, -1, (name + std::string("_w_ibo")).c_str());
+        }
 
         buf_set_circles_.Generate();
     }
@@ -397,31 +429,19 @@ void Canvas<T>::Init(void)
     glPushDebugGroup(GL_DEBUG_SOURCE_APPLICATION, 0, -1, "Init programs");
     {
     // Quads / visible range space
-    glPushDebugGroup(GL_DEBUG_SOURCE_APPLICATION, 0, -1, "Init program Q sce");
     prog_sel_q_.Generate(canvas_sel_q_vp_source, nullptr, canvas_sel_q_fp_source);
-    glPopDebugGroup();
     // Quads / screen space
-    glPushDebugGroup(GL_DEBUG_SOURCE_APPLICATION, 0, -1, "Init program Q scr");
     prog_onscr_q_.Generate(canvas_onscr_q_vp_source, nullptr, canvas_onscr_q_fp_source);
     _fr_bg_unif_onscr_q = glGetUniformLocation(prog_onscr_q_.GetProgId(), "drawcolor");
-    glPopDebugGroup();
     // Wires / visible range space
-    glPushDebugGroup(GL_DEBUG_SOURCE_APPLICATION, 0, -1, "Init program W sce");
     prog_w_.Generate(canvas_w_vp_source, nullptr, canvas_w_fp_source);
-    glPopDebugGroup();
     // Wires / screen space
-    glPushDebugGroup(GL_DEBUG_SOURCE_APPLICATION, 0, -1, "Init program W scr");
     prog_onscr_w_.Generate(canvas_onscr_w_vp_source, nullptr, canvas_onscr_w_fp_source);
-    glPopDebugGroup();
     // Markers / visible range space
-    glPushDebugGroup(GL_DEBUG_SOURCE_APPLICATION, 0, -1, "Init program M sce");
     prog_m_.Generate(canvas_m_vp_source, nullptr, canvas_m_fp_source);
-    glPopDebugGroup();
     // Circles / visible range space
-    glPushDebugGroup(GL_DEBUG_SOURCE_APPLICATION, 0, -1, "Init program C sce");
     prog_c_.Generate(canvas_c_vp_source, canvas_c_gp_source, canvas_c_fp_source);
     _circle_r_unif_c = glGetUniformLocation(prog_c_.GetProgId(), "circle_r");
-    glPopDebugGroup();
     }
     glPopDebugGroup();
 
@@ -593,14 +613,14 @@ void Canvas<T>::SendFixedIndicesToGPU(void) const
     {
         constexpr unsigned int n_wires_axes = 2u;
         const wire_t wires[n_wires_axes] = { {0, 1}, {2, 3} };
-        buf_set_axes_.SendIndicesWires(n_wires_axes, wires);
+        buf_set_axes_.SendIndices(n_wires_axes, wires);
     }
 
     // Vref
     {
         constexpr unsigned int n_wires_vref = 1u;
         const wire_t wires[n_wires_vref] = { {0, 1} };
-        buf_set_vref_.SendIndicesWires(n_wires_vref, wires);
+        buf_set_vref_.SendIndices(n_wires_vref, wires);
     }
 
     // Frame
@@ -621,7 +641,7 @@ void Canvas<T>::SendFixedIndicesToGPU(void) const
     {
         constexpr unsigned int n_wires_cursor = 2u;
         const wire_t wires[n_wires_cursor] = { {0, 1}, {2, 3} };
-        buf_set_cursor_.SendIndicesWires(n_wires_cursor, wires);
+        buf_set_cursor_.SendIndices(n_wires_cursor, wires);
     }
 
     // Selection rectangle
@@ -917,6 +937,8 @@ void Canvas<T>::DrawFrame(void) const
         return;
     }
 
+    glPushDebugGroup(GL_DEBUG_SOURCE_APPLICATION, 0, -1, "Draw frame");
+
     // Draw wires. Wires indices have already been sent. -------------------------
     {
         constexpr unsigned int n_wires = 4u;
@@ -927,6 +949,8 @@ void Canvas<T>::DrawFrame(void) const
         glDrawElements(GL_LINES, 2 * n_wires, GL_UNSIGNED_INT, NULL);
         //glBindVertexArray(0); // Not really needed.
     }
+
+    glPopDebugGroup();
 }
 
 // 5. Graphs =====================================================================
@@ -1172,7 +1196,7 @@ void Canvas<T>::DrawCircles(const double xs, const double ys) const
 
         buf_set_circles_.Allocate(n_vert, vertices);
 
-        buf_set_circles_.SendIndicesMarkers(n_markers, markers);
+        buf_set_circles_.SendIndices(n_markers, markers);
 
         if (vertices != nullptr) delete[] vertices;
         if (markers != nullptr) delete[] markers;
@@ -1319,6 +1343,8 @@ void Canvas<T>::UpdateTexAxesValues(void)
 
     // X axis --------------------------------------------------------------------
 
+    glPushDebugGroup(GL_DEBUG_SOURCE_APPLICATION, 0, -1, "Update X axis labels");
+
     for (unsigned int i = 0; i < nx; i++) {
         const unsigned int idx0 = wires[i].v0;
         //const unsigned int idx1 = wires[i].v1;
@@ -1340,7 +1366,11 @@ void Canvas<T>::UpdateTexAxesValues(void)
         text_rend_.UpdateLabel(" ", _x_axis_values_lables_start_idx + (size_t)i);
     }
 
+    glPopDebugGroup();
+
     // Y axis --------------------------------------------------------------------
+
+    glPushDebugGroup(GL_DEBUG_SOURCE_APPLICATION, 0, -1, "Update Y axis labels");
 
     for (unsigned int i = 0; i < ny; i++) {
         const unsigned int idx0 = wires[nx_+i].v0;
@@ -1362,6 +1392,8 @@ void Canvas<T>::UpdateTexAxesValues(void)
     for (unsigned int i = ny; i < _n_y_axis_value_labels_max; i++) {
         text_rend_.UpdateLabel(" ", _y_axis_values_lables_start_idx + (size_t)i);
     }
+
+    glPopDebugGroup();
 }
 
 // ===============================================================================

@@ -12,24 +12,17 @@ namespace tiny_gl_text_renderer
 /*GLuint TextRenderer::_labels_counter = 0;*/
 
 TextRenderer::TextRenderer()
-:   prog_text_("prog_text")
+:   buf_set_text_("text"),
+    prog_text_("prog_text")
 {
     // Buffers.
-    glGenVertexArrays(1, &_vaoID);
-    glGenBuffers(1, &_vboID);
-    glGenBuffers(1, &_iboID);
+    buf_set_text_.Generate();
     // Programs.
-    glPushDebugGroup(GL_DEBUG_SOURCE_APPLICATION, 0, -1, "Init program text");
     prog_text_.Generate(text_rend_vp_source, nullptr, text_rend_fp_source);
-    glPopDebugGroup();
 }
 
 TextRenderer::~TextRenderer()
 {
-    // Buffers.
-    glDeleteVertexArrays(1, &_vaoID);
-    glDeleteBuffers(1, &_vboID);
-    glDeleteBuffers(1, &_iboID);
     // Textures.
     for (const Label& label : _labels) {
         glDeleteTextures(1, &label.tex_id_);
@@ -64,20 +57,17 @@ void TextRenderer::Reshape(int w, int h)
 
 void TextRenderer::Draw() const
 {
+    glPushDebugGroup(GL_DEBUG_SOURCE_APPLICATION, 0, -1, "Draw text");
+
     prog_text_.Use();
-    constexpr unsigned int n_quads = 1u;
-    glBindVertexArray(_vaoID);
-    {
-        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, _iboID);
-        size_t i_label = 0u;
-        for (const Label& label : _labels) {
-            glBindTexture(GL_TEXTURE_2D, label.tex_id_);
-            glDrawElements(GL_QUADS, 4u * n_quads, GL_UNSIGNED_INT,
-                           (GLvoid*)(i_label * sizeof(quad_t)));
-            i_label++;
-        }
-    }
-    //glBindVertexArray(0); // Not really needed.
+    // This lambda allows to loop over the labels inside BufferSet::DrawQuadsWithTextures()
+    // and access texture IDs without BufferSet knowing anything about the Label class.
+    auto get_label_tex_id = [&](const size_t i_label) -> GLuint {
+        return _labels[i_label].tex_id_;
+    };
+    buf_set_text_.DrawQuadsWithTextures(_labels.size(), get_label_tex_id);
+
+    glPopDebugGroup();
 }
 
 size_t TextRenderer::AddLabel(const char* string, const int x, const int y,
@@ -139,9 +129,61 @@ void TextRenderer::UpdateRotation(const float angle, const size_t i_label)
     this->SendToGPUverticesSingle(i_label);
 }
 
+void TextRenderer::RecalculateVertices()
+{
+    size_t i_label = 0u;
+    for (const Label& label : _labels) {
+        (void)label; // unused iterator variable.
+        this->RecalculateVerticesSingle(i_label);
+        i_label++;
+    }
+}
+
+void TextRenderer::SendToGPU() const
+{
+    // Vertices.
+    constexpr unsigned int vertices_per_label = 4u;
+    const unsigned int n_vert = _labels_counter * vertices_per_label;
+    const vertex_textured_t* const vertices = _vertices.data();
+    buf_set_text_.Allocate(n_vert, vertices);
+    // Indices.
+    constexpr unsigned int quads_per_label = 1u; 
+    const quad_t* const quads = _quads.data();
+    buf_set_text_.SendIndices(_labels_counter * quads_per_label, quads);
+    // Textures.
+    size_t i_label = 0u;
+    for (const Label& label : _labels) {
+        (void)label; // unused iterator variable.
+        this->SendToGPUtextureSingle(i_label);
+        i_label++;
+    }
+}
+
+void TextRenderer::SendToGPUverticesSingle(const size_t i_label) const
+{
+    // Vertices.
+    constexpr size_t vertices_per_label = 4u;
+    constexpr size_t n_vert = 1u * vertices_per_label;
+    const size_t offset = i_label * 4u;
+    const vertex_textured_t* const vertices = _vertices.data() + offset;
+    buf_set_text_.SendVertices(n_vert, vertices, offset);
+}
+
+void TextRenderer::SendToGPUtextureSingle(const size_t i_label) const
+{
+    // Textures.
+    const Label& label = _labels.at(i_label);
+    const size_t& tex_w = label.GetTexW();
+    const size_t& tex_h = label.GetTexH();
+    const float* const tex_data = label.GetTexData();
+    glBindTexture(GL_TEXTURE_2D, label.tex_id_);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, (GLsizei)tex_w, (GLsizei)tex_h, 0,
+        GL_RGBA, GL_FLOAT, tex_data);
+}
+
 void TextRenderer::AllocateVerticesAndQuadsMemory()
 {
-    _vertices.reserve(4 * _labels_counter);
+    _vertices.reserve(4u * _labels_counter);
 
     size_t i_label = 0u;
     for (const Label& label : _labels) {
@@ -161,16 +203,6 @@ void TextRenderer::AllocateVerticesAndQuadsMemory()
                             (unsigned int)i_label * 4u + 1u,
                             (unsigned int)i_label * 4u + 2u,
                             (unsigned int)i_label * 4u + 3u);
-        i_label++;
-    }
-}
-
-void TextRenderer::RecalculateVertices()
-{
-    size_t i_label = 0u;
-    for (const Label& label : _labels) {
-        (void)label; // unused iterator variable.
-        this->RecalculateVerticesSingle(i_label);
         i_label++;
     }
 }
@@ -196,63 +228,6 @@ void TextRenderer::RecalculateVerticesSingle(const size_t i_label)
     va1 = v_str_t(v1c.x(), (float)_h - v1c.y(), 0.0f, 1.0f, 1.0f, 0.0f);
     va2 = v_str_t(v2c.x(), (float)_h - v2c.y(), 0.0f, 1.0f, 1.0f, 1.0f);
     va3 = v_str_t(v3c.x(), (float)_h - v3c.y(), 0.0f, 1.0f, 0.0f, 1.0f);
-}
-
-void TextRenderer::SendToGPU() const
-{
-    using v_str_t = vertex_textured_t;
-    // Vertices.
-    const v_str_t* const vertices = _vertices.data();
-    glBindVertexArray(_vaoID);
-    {
-        glBindBuffer(GL_ARRAY_BUFFER, _vboID);
-        glBufferData(GL_ARRAY_BUFFER, _labels_counter * 4u * sizeof(v_str_t),
-            vertices, GL_STATIC_DRAW);
-        glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, sizeof(v_str_t),
-            (void*)offsetof(v_str_t, coords_));
-        glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(v_str_t),
-            (void*)offsetof(v_str_t, tex_coords_));
-        glEnableVertexAttribArray(0);
-        glEnableVertexAttribArray(1);
-    }
-    //glBindVertexArray(0); // Not really needed.
-    // Indices.
-    const quad_t* const quads = _quads.data();
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, _iboID);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, _labels_counter * 1u * sizeof(quad_t),
-        quads, GL_STATIC_DRAW);
-    // Textures.
-    size_t i_label = 0u;
-    for (const Label& label : _labels) {
-        (void)label; // unused iterator variable.
-        this->SendToGPUtextureSingle(i_label);
-        i_label++;
-    }
-}
-
-void TextRenderer::SendToGPUverticesSingle(const size_t i_label) const
-{
-    // Vertices.
-    const vertex_textured_t* const vertices = _vertices.data() + i_label * 4u;
-    glBindVertexArray(_vaoID);
-    {
-        glBindBuffer(GL_ARRAY_BUFFER, _vboID);
-        glBufferSubData(GL_ARRAY_BUFFER, i_label * 4u * sizeof(vertex_textured_t),
-            4u * sizeof(vertex_textured_t), vertices);
-    }
-    //glBindVertexArray(0); // Not really needed.
-}
-
-void TextRenderer::SendToGPUtextureSingle(const size_t i_label) const
-{
-    // Textures.
-    const Label& label = _labels.at(i_label);
-    const size_t& tex_w = label.GetTexW();
-    const size_t& tex_h = label.GetTexH();
-    const float* const tex_data = label.GetTexData();
-    glBindTexture(GL_TEXTURE_2D, label.tex_id_);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, (GLsizei)tex_w, (GLsizei)tex_h, 0,
-        GL_RGBA, GL_FLOAT, tex_data);
 }
 
 } // end of namespace tiny_gl_text_renderer

@@ -5,12 +5,11 @@
 #include "data_types.h"
 #include "mat4.h"
 #include "label.h"
+#include "../buffer_set.h" //TODO reorganize to avoid relative paths.
 #include "../shader_program.h" //TODO reorganize to avoid relative paths.
 
 namespace tiny_gl_text_renderer
 {
-
-typedef unsigned int GLuint;
 
 class TextRenderer
 {
@@ -36,22 +35,21 @@ public:
     void UpdatePositionX(const int x, const size_t i_label);
     void UpdatePositionY(const int y, const size_t i_label);
     void UpdateRotation(const float angle, const size_t i_label);
-    void AllocateVerticesAndQuadsMemory();
     void RecalculateVertices();
-    void RecalculateVerticesSingle(const size_t i_label);
     void SendToGPU() const;
     void SendToGPUverticesSingle(const size_t i_label) const;
     void SendToGPUtextureSingle(const size_t i_label) const;
 private:
+    void AllocateVerticesAndQuadsMemory();
+    void RecalculateVerticesSingle(const size_t i_label);
+private:
     unsigned int _w;
     unsigned int _h;
-    GLuint _vaoID;
-    GLuint _vboID;
-    GLuint _iboID;
+    tiny_graph_plot::BufferSet<vertex_textured_t> buf_set_text_; //TODO reorganize.
     tiny_graph_plot::ShaderProgram prog_text_; //TODO reorganize.
     Mat4f _screen_to_clip;
 private:
-    /*static*/ GLuint _labels_counter = 0;
+    unsigned int _labels_counter = 0u;
     std::vector<Label> _labels;
     std::vector<vertex_textured_t> _vertices;
     std::vector<quad_t> _quads;
