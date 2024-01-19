@@ -20,9 +20,9 @@ public:
 	void Generate();
 	void Allocate(const unsigned int n_vert, const void* const data = nullptr) const;
 	void SendVertices(const unsigned int n_vert, const void* const data) const;
-	void SendIndices(const unsigned int n_primitives, const void* const data) const;
+	void SendIndicesWires(const unsigned int n_primitives, const void* const data) const;
 	void SendIndicesMarkers(const unsigned int n_primitives, const void* const data) const;
-	void Draw(const unsigned int n_primitives) const;
+	void DrawWires(const unsigned int n_primitives) const;
 	void DrawMarkers(const unsigned int n_primitives) const;
 private:
 	const std::string name_;

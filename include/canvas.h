@@ -69,12 +69,12 @@ private:
     void DrawFrame() const;
     void SendDrawableToGPU(const Drawable<T>* const p_graph, const SizeInfo& p_offset) const;
     void DrawDrawable     (const Drawable<T>* const p_graph, const SizeInfo& p_offset) const;
-    virtual void DrawCursor(const double xs, const double ys) const override;
+    virtual void DrawCursor      (const double xs,  const double ys) const override;
     virtual void DrawSelRectangle(const double xs0, const double ys0,
-                          const double xs1, const double ys1) const override;
-    virtual void DrawCircles(const double xs, const double ys) const override;
-    virtual void UpdateTexTextCur(const double xs, const double ys) override;
-    virtual void UpdateTexTextRef(const double xs, const double ys) override;
+                                  const double xs1, const double ys1) const override;
+    virtual void DrawCircles     (const double xs,  const double ys) const override;
+    virtual void UpdateTexTextCur(const double xs,  const double ys) override;
+    virtual void UpdateTexTextRef(const double xs,  const double ys) override;
     void UpdateTexTextGridSize();
     void UpdateTexAxesValues();
 private:

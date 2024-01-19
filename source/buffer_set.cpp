@@ -33,14 +33,14 @@ void BufferSet::Generate()
 
 void BufferSet::Allocate(const unsigned int n_vert, const void* const data) const
 {
-    using tiny_gl_text_renderer::vertex_colored_t;
+    using v_str_t = tiny_gl_text_renderer::vertex_colored_t;
     glBindVertexArray(vao_);
     glBindBuffer(GL_ARRAY_BUFFER, vbo_);
-    glBufferData(GL_ARRAY_BUFFER, n_vert * sizeof(vertex_colored_t), data, GL_STATIC_DRAW);
-    glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, sizeof(vertex_colored_t),
-        (void*)offsetof(vertex_colored_t, coords_));
-    glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, sizeof(vertex_colored_t),
-        (void*)offsetof(vertex_colored_t, color_));
+    glBufferData(GL_ARRAY_BUFFER, n_vert * sizeof(v_str_t), data, GL_STATIC_DRAW);
+    glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, sizeof(v_str_t),
+        (void*)offsetof(v_str_t, coords_));
+    glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, sizeof(v_str_t),
+        (void*)offsetof(v_str_t, color_));
     glEnableVertexAttribArray(0);
     glEnableVertexAttribArray(1);
     //glBindVertexArray(0); // Not really needed.
@@ -48,14 +48,14 @@ void BufferSet::Allocate(const unsigned int n_vert, const void* const data) cons
 
 void BufferSet::SendVertices(const unsigned int n_vert, const void* const data) const
 {
-    using tiny_gl_text_renderer::vertex_colored_t;
+    using v_str_t = tiny_gl_text_renderer::vertex_colored_t;
     glBindVertexArray(vao_);
     glBindBuffer(GL_ARRAY_BUFFER, vbo_);
-    glBufferSubData(GL_ARRAY_BUFFER, 0, n_vert * sizeof(vertex_colored_t), data);
+    glBufferSubData(GL_ARRAY_BUFFER, 0, n_vert * sizeof(v_str_t), data);
     //glBindVertexArray(0); // Not really needed.
 }
 
-void BufferSet::SendIndices(const unsigned int n_primitives, const void* const data) const
+void BufferSet::SendIndicesWires(const unsigned int n_primitives, const void* const data) const
 {
     using tiny_gl_text_renderer::wire_t;
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo_);
@@ -69,7 +69,7 @@ void BufferSet::SendIndicesMarkers(const unsigned int n_primitives, const void* 
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, n_primitives * sizeof(marker_t), data, GL_STATIC_DRAW);
 }
 
-void BufferSet::Draw(const unsigned int n_primitives) const
+void BufferSet::DrawWires(const unsigned int n_primitives) const
 {
     constexpr unsigned int n_indices = 2u; // GL_LINES
     glBindVertexArray(vao_);

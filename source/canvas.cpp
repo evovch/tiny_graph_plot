@@ -593,14 +593,14 @@ void Canvas<T>::SendFixedIndicesToGPU(void) const
     {
         constexpr unsigned int n_wires_axes = 2u;
         const wire_t wires[n_wires_axes] = { {0, 1}, {2, 3} };
-        buf_set_axes_.SendIndices(n_wires_axes, wires);
+        buf_set_axes_.SendIndicesWires(n_wires_axes, wires);
     }
 
     // Vref
     {
         constexpr unsigned int n_wires_vref = 1u;
         const wire_t wires[n_wires_vref] = { {0, 1} };
-        buf_set_vref_.SendIndices(n_wires_vref, wires);
+        buf_set_vref_.SendIndicesWires(n_wires_vref, wires);
     }
 
     // Frame
@@ -621,7 +621,7 @@ void Canvas<T>::SendFixedIndicesToGPU(void) const
     {
         constexpr unsigned int n_wires_cursor = 2u;
         const wire_t wires[n_wires_cursor] = { {0, 1}, {2, 3} };
-        buf_set_cursor_.SendIndices(n_wires_cursor, wires);
+        buf_set_cursor_.SendIndicesWires(n_wires_cursor, wires);
     }
 
     // Selection rectangle
@@ -801,7 +801,7 @@ void Canvas<T>::DrawAxes(void) const
         constexpr unsigned int n_wires = 2u;
         prog_w_.Use();
         glLineWidth(axes_line_width_);
-        buf_set_axes_.Draw(n_wires);
+        buf_set_axes_.DrawWires(n_wires);
     }
 
     glPopDebugGroup();
@@ -840,7 +840,7 @@ void Canvas<T>::DrawVref(void) const
         constexpr unsigned int n_wires = 1u;
         prog_w_.Use();
         glLineWidth(vref_line_width_);
-        buf_set_vref_.Draw(n_wires);
+        buf_set_vref_.DrawWires(n_wires);
     }
 
     glPopDebugGroup();
@@ -1065,7 +1065,7 @@ void Canvas<T>::DrawCursor(const double xs, const double ys) const
         glEnable(GL_LINE_STIPPLE);
         glLineStipple(1, 0x00FF);
         glLineWidth(cursor_line_width_);
-        buf_set_cursor_.Draw(n_wires);
+        buf_set_cursor_.DrawWires(n_wires);
         glDisable(GL_LINE_STIPPLE);
     }
 

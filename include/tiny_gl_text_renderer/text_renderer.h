@@ -26,7 +26,6 @@ public:
     void FirstReshape(int w, int h);
     void Reshape(int w, int h);
     void Draw() const;
-    void DrawSingle(const size_t i_label) const;
     size_t AddLabel(const char* string, const int x, const int y,
         const color_t& color, const float scaling = 1.0f,
         const float angle = 0.0f);
