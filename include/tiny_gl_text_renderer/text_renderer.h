@@ -5,6 +5,7 @@
 #include "data_types.h"
 #include "mat4.h"
 #include "label.h"
+#include "../shader_program.h" //TODO reorganize to avoid relative paths.
 
 namespace tiny_gl_text_renderer
 {
@@ -44,11 +45,10 @@ public:
 private:
     unsigned int _w;
     unsigned int _h;
-    GLuint _progID;
     GLuint _vaoID;
     GLuint _vboID;
     GLuint _iboID;
-    GLuint _s2c_unif;
+    tiny_graph_plot::ShaderProgram prog_text_; //TODO reorganize.
     Mat4f _screen_to_clip;
 private:
     /*static*/ GLuint _labels_counter = 0;

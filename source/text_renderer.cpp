@@ -12,27 +12,16 @@ namespace tiny_gl_text_renderer
 /*GLuint TextRenderer::_labels_counter = 0;*/
 
 TextRenderer::TextRenderer()
+:   prog_text_("prog_text")
 {
     // Buffers.
     glGenVertexArrays(1, &_vaoID);
     glGenBuffers(1, &_vboID);
     glGenBuffers(1, &_iboID);
     // Programs.
-    _progID = glCreateProgram();
-    GLuint vp_shader = glCreateShader(GL_VERTEX_SHADER);
-    glShaderSource(vp_shader, 1, (const GLchar**)&text_rend_vp_source, nullptr);
-    glCompileShader(vp_shader);
-    glAttachShader(_progID, vp_shader);
-    GLuint fp_shader = glCreateShader(GL_FRAGMENT_SHADER);
-    glShaderSource(fp_shader, 1, (const GLchar**)&text_rend_fp_source, nullptr);
-    glCompileShader(fp_shader);
-    glAttachShader(_progID, fp_shader);
-    glLinkProgram(_progID);
-    glDetachShader(_progID, vp_shader);
-    glDetachShader(_progID, fp_shader);
-    glDeleteShader(vp_shader);
-    glDeleteShader(fp_shader);
-    _s2c_unif = glGetUniformLocation(_progID, "screen2clip");
+    glPushDebugGroup(GL_DEBUG_SOURCE_APPLICATION, 0, -1, "Init program text");
+    prog_text_.Generate(text_rend_vp_source, nullptr, text_rend_fp_source);
+    glPopDebugGroup();
 }
 
 TextRenderer::~TextRenderer()
@@ -41,7 +30,6 @@ TextRenderer::~TextRenderer()
     glDeleteVertexArrays(1, &_vaoID);
     glDeleteBuffers(1, &_vboID);
     glDeleteBuffers(1, &_iboID);
-    glDeleteProgram(_progID);
     // Textures.
     for (const Label& label : _labels) {
         glDeleteTextures(1, &label.tex_id_);
@@ -55,8 +43,7 @@ void TextRenderer::UpdateScreenToClipMatrix()
          0.0f,             2.0f / (float)_h, 0.0f, 0.0f,
          0.0f,             0.0f,             1.0f, 0.0f,
         -1.0f,            -1.0f,             0.0f, 1.0f);
-    glProgramUniformMatrix4fv(_progID, _s2c_unif, 1, GL_FALSE,
-        _screen_to_clip.GetData());
+    prog_text_.CommitCamera1(Mat4f(), Mat4f(), _screen_to_clip);
 }
 
 void TextRenderer::FirstReshape(int w, int h)
@@ -77,7 +64,7 @@ void TextRenderer::Reshape(int w, int h)
 
 void TextRenderer::Draw() const
 {
-    glUseProgram(_progID);
+    prog_text_.Use();
     constexpr unsigned int n_quads = 1u;
     glBindVertexArray(_vaoID);
     {
@@ -91,7 +78,6 @@ void TextRenderer::Draw() const
         }
     }
     //glBindVertexArray(0); // Not really needed.
-    //glUseProgram(0); // Not really needed.
 }
 
 size_t TextRenderer::AddLabel(const char* string, const int x, const int y,
